@@ -9,11 +9,13 @@
     "dist"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --p ./tsconfig.build.json && vite build",
+    "dev": "npm run lint && vite",
+    "build": "npm run lint && tsc --p ./tsconfig.build.json && vite build",
     "prepublishOnly": "npm run build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "peerDependencies": {
     "react": "18.3.1",
@@ -23,13 +25,20 @@
     "@types/node": "22.0.0",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
-    "@typescript-eslint/eslint-plugin": "7.15.0",
-    "@typescript-eslint/parser": "7.15.0",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/parser": "^7.15.0",
     "@vitejs/plugin-react": "4.3.1",
-    "eslint": "8.57.0",
-    "eslint-plugin-react-hooks": "4.6.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "0.4.7",
     "glob": "11.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.7",
+    "prettier": "^3.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "typescript": "^5.5.4",
@@ -39,5 +48,18 @@
   },
   "sideEffects": [
     "**/*.css"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npx lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js, jsx,ts,tsx}": [
+      "eslint --quiet --fix"
+    ],
+    "*.{json,js,ts,jsx,tsx,html}": [
+      "prettier --write --ignore-unknown"
+    ]
+  }
 }
