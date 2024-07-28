@@ -1,0 +1,55 @@
+name: Bump version on push to main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        version: 20.5.1
+        cache: npm
+        registry-url: https://registry.npmjs.org
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Bump version
+      id: bump_version
+      run: |
+        current_version=$(jq -r '.version' package.json)
+        IFS='.' read -r -a version_parts <<< "$current_version"
+        major=${version_parts[0]}
+        minor=${version_parts[1]}
+        patch=${version_parts[2]}
+        new_patch=$((patch + 1))
+        new_version="$major.$minor.$new_patch"
+        jq ".version = \"$new_version\"" package.json > package.tmp.json
+        mv package.tmp.json package.json
+        echo "New version: $new_version"
+        echo "::set-output name=new_version::$new_version"
+
+    - name: Commit updated version
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add package.json
+        git commit -m "Bump version to ${{ steps.bump_version.outputs.new_version }}"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: Trigger Release components package workflow
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: version-bumped
