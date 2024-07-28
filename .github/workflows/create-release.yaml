@@ -1,46 +1,14 @@
-name: Create Release
-
-on:
+on: 
   push:
     branches:
-      - main
+      - master
 
 jobs:
-  create_release:
+  release-on-push:
     runs-on: ubuntu-latest
-
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Get the latest tag
-        id: get_tag
-        run: echo ::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))
-
-      - name: Bump version and create tag
-        id: bump_version
-        run: |
-          TAG=$(echo ${{ steps.get_tag.outputs.tag }} | sed 's/^v//')
-          IFS='.' read -r -a VERSION <<< "$TAG"
-          NEW_VERSION="${VERSION[0]}.$((VERSION[1]+1)).0"
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          git tag -a "v$NEW_VERSION" -m "Release v$NEW_VERSION"
-          git push origin "v$NEW_VERSION"
-
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: rymndhng/release-on-push-action@master
         with:
-          tag_name: "v${{ env.NEW_VERSION }}"
-          release_name: "v${{ env.NEW_VERSION }}"
-          body: |
-            ## Changes
-            $(git log --oneline $(git describe --tags --abbrev=0)..HEAD)
-          draft: false
-          prerelease: false
+          bump_version_scheme: minor
