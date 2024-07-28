@@ -11,6 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Verify SSH key secret
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" | head -c 10
+
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
