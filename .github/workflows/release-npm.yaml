@@ -2,7 +2,7 @@ name: Release components package
 
 on:
  repository_dispatch:
-    types: [release-created]
+    types: [create-npm-package]
 
 jobs:
   build:

@@ -2,7 +2,7 @@ name: Create Release
 
 on:
  repository_dispatch:
-    types: [version-bumped]
+    types: [create-tag-release]
 
 jobs:
   create_release:
@@ -53,4 +53,4 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          event-type: release-created
+          event-type: create-npm-package
