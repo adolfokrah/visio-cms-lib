@@ -1,30 +1,46 @@
+name: Create Release
+
 on:
   push:
     branches:
       - main
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
-name: Create Release
 
 jobs:
-  build:
-    name: Create Release
+  create_release:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@master
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get the latest tag
+        id: get_tag
+        run: echo ::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))
+
+      - name: Bump version and create tag
+        id: bump_version
+        run: |
+          TAG=$(echo ${{ steps.get_tag.outputs.tag }} | sed 's/^v//')
+          IFS='.' read -r -a VERSION <<< "$TAG"
+          NEW_VERSION="${VERSION[0]}.$((VERSION[1]+1)).0"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          git tag -a "v$NEW_VERSION" -m "Release v$NEW_VERSION"
+          git push origin "v$NEW_VERSION"
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: "v${{ env.NEW_VERSION }}"
+          release_name: "v${{ env.NEW_VERSION }}"
           body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+            ## Changes
+            $(git log --oneline $(git describe --tags --abbrev=0)..HEAD)
           draft: false
           prerelease: false
