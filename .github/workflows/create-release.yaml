@@ -1,24 +1,51 @@
 name: Create Release
 
-on: 
+on:
   push:
     branches:
       - main
 
 jobs:
-  release-on-push:
+  create_release:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
-      - id: release
-        uses: rymndhng/release-on-push-action@master
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          bump_version_scheme: minor
-          tag_prefix: v
-          
-      - name: Check Output Parameters
+          node-version: '14'
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Get version from package.json
+        id: get_version
         run: |
-          echo "Got tag name ${{ steps.release.outputs.tag_name }}"
-          echo "Got release version ${{ steps.release.outputs.version }}"
-          echo "Upload release artifacts to ${{ steps.release.outputs.upload_url }}"
+          VERSION=$(jq -r '.version' package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Setup Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create tag
+        run: |
+          git tag -a "v${{ env.VERSION }}" -m "Release v${{ env.VERSION }}"
+          git push https://${{ secrets.ACTIONS_PAT }}@github.com/${{ github.repository }}.git "v${{ env.VERSION }}"
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "v${{ env.VERSION }}"
+          release_name: "v${{ env.VERSION }}"
+          body: |
+            ## Changes
+            $(git log --oneline $(git describe --tags --abbrev=0)..HEAD)
+          draft: false
+          prerelease: false
