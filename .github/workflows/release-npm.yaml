@@ -11,24 +11,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        with:
-          version: 8
-          run_install: false
-
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           version: 20.5.1
-          cache: pnpm
+          cache: npm
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Publish 🚀
-        shell: bash
-        run: pnpm publish packages/components --access public --no-git-checks
+        run: npm publish packages/components --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
