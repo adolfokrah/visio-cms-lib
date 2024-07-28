@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -49,3 +49,9 @@ jobs:
             $(git log --oneline $(git describe --tags --abbrev=0)..HEAD)
           draft: false
           prerelease: false
+      
+      - name: Trigger Release components package workflow
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: release-created
