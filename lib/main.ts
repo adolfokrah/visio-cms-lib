@@ -1,3 +1,12 @@
 export { Button } from './components/ui/button';
-export { Input } from './components/Input';
-export { Label } from './components/Label';
+export { Input } from './components/ui/input';
+export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
+export { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion';
+export { Textarea } from './components/ui/textarea';
+export { RadioGroup, RadioGroupItem } from './components/ui/radio-group';
+export { Label } from './components/ui/label';
+export { TagInput } from './components/ui/tag-input';
+export { Avatar, AvatarFallback, AvatarImage } from './components/ui/avatar';
+export { Popover, PopoverContent, PopoverTrigger } from './components/ui/popover';
+export { ImageBox } from './components/ui/image-box';

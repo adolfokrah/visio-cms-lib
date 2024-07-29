@@ -10,11 +10,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'visio-cms-bg-primary visio-cms-text-primary-foreground visio-cms-shadow hover:visio-cms-bg-primary/90',
+          'visio-cms-bg-primary visio-cms-text-primary-foreground visio-cms-shadow hover:visio-cms-bg-dark-green',
         destructive:
           'visio-cms-bg-destructive visio-cms-text-destructive-foreground visio-cms-shadow-sm hover:visio-cms-bg-destructive/90',
         outline:
-          'visio-cms-border visio-cms-border-input visio-cms-bg-background visio-cms-shadow-sm hover:visio-cms-bg-accent hover:visio-cms-text-accent-foreground',
+          'visio-cms-border visio-cms-border-white visio-cms-bg-background visio-cms-shadow-sm hover:visio-cms-bg-dark-800 hover:visio-cms-text-accent-foreground',
         secondary:
           'visio-cms-bg-secondary visio-cms-text-secondary-foreground visio-cms-shadow-sm hover:visio-cms-bg-secondary/80',
         ghost: 'hover:visio-cms-bg-accent hover:visio-cms-text-accent-foreground',
@@ -22,14 +22,14 @@ const buttonVariants = cva(
       },
       size: {
         default: 'visio-cms-h-9 visio-cms-px-4 visio-cms-py-2',
-        sm: 'visio-cms-h-8 visio-cms-rounded-md visio-cms-px-3 visio-cms-text-xs',
+        sm: 'visio-cms-h-7 visio-cms-rounded-md visio-cms-px-2 visio-cms-text-xs visio-cms-font-regular',
         lg: 'visio-cms-h-10 visio-cms-rounded-md visio-cms-px-8',
         icon: 'visio-cms-h-9 visio-cms-w-9',
       },
     },
     defaultVariants: {
       variant: 'default',
-      size: 'default',
+      size: 'sm',
     },
   },
 );

@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
-  content: ['./lib/**/*.{ts,tsx}'],
+  content: ['./lib/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
   prefix: 'visio-cms-',
   theme: {
     container: {
@@ -12,12 +12,22 @@ module.exports = {
       },
     },
     extend: {
+      fontWeight: {
+        regular: '350',
+      },
       colors: {
         border: 'hsl(var(--visio-cms-border))',
         input: 'hsl(var(--visio-cms-input))',
         ring: 'hsl(var(--visio-cms-ring))',
         background: 'hsl(var(--visio-cms-background))',
         foreground: 'hsl(var(--visio-cms-foreground))',
+        'dark-green': 'hsl(var(--visio-cms-brand-dark-green))',
+        white: 'hsl(var(--visio-cms-brand-white))',
+        dark: {
+          900: 'hsl(var(--visio-cms-brand-dark-900))',
+          800: 'hsl(var(--visio-cms-brand-dark-800))',
+          700: 'hsl(var(--visio-cms-brand-dark-700))',
+        },
         primary: {
           DEFAULT: 'hsl(var(--visio-cms-primary))',
           foreground: 'hsl(var(--visio-cms-primary-foreground))',
