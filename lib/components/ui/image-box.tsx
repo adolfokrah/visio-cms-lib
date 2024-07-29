@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from './button';
 import { RefreshCcw, Trash } from 'lucide-react';
 
