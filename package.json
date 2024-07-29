@@ -10,12 +10,13 @@
   ],
   "scripts": {
     "dev": "npm run lint && vite",
-    "build": "npm run lint && tsc --p ./tsconfig.build.json && vite build",
+    "build": "npm run lint && tsc --p ./tsconfig.build.json && vite build && npm run build:css",
     "prepublishOnly": "npm run build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepare": "husky install",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "build:css": "postcss ./lib/styles.css -o ./dist/lib.css --verbose"
   },
   "peerDependencies": {
     "react": "18.3.1",
@@ -28,6 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^7.15.0",
     "@typescript-eslint/parser": "^7.15.0",
     "@vitejs/plugin-react": "4.3.1",
+    "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -38,17 +40,17 @@
     "glob": "11.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.7",
+    "postcss": "^8.4.40",
+    "postcss-cli": "^11.0.0",
     "prettier": "^3.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "tailwindcss": "^3.4.7",
     "typescript": "^5.5.4",
     "vite": "5.3.4",
     "vite-plugin-dts": "4.0.0-beta.1",
     "vite-plugin-lib-inject-css": "2.1.1"
   },
-  "sideEffects": [
-    "**/*.css"
-  ],
   "husky": {
     "hooks": {
       "pre-commit": "npx lint-staged"
@@ -61,5 +63,13 @@
     "*.{json,js,ts,jsx,tsx,html}": [
       "prettier --write --ignore-unknown"
     ]
+  },
+  "dependencies": {
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss-animate": "^1.0.7"
   }
 }

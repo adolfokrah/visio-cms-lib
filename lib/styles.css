@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --visio-cms-background: 0 0% 100%;
+    --visio-cms-foreground: 224 71.4% 4.1%;
+    --visio-cms-card: 0 0% 100%;
+    --visio-cms-card-foreground: 224 71.4% 4.1%;
+    --visio-cms-popover: 0 0% 100%;
+    --visio-cms-popover-foreground: 224 71.4% 4.1%;
+    --visio-cms-primary: 220.9 39.3% 11%;
+    --visio-cms-primary-foreground: 210 20% 98%;
+    --visio-cms-secondary: 220 14.3% 95.9%;
+    --visio-cms-secondary-foreground: 220.9 39.3% 11%;
+    --visio-cms-muted: 220 14.3% 95.9%;
+    --visio-cms-muted-foreground: 220 8.9% 46.1%;
+    --visio-cms-accent: 220 14.3% 95.9%;
+    --visio-cms-accent-foreground: 220.9 39.3% 11%;
+    --visio-cms-destructive: 0 84.2% 60.2%;
+    --visio-cms-destructive-foreground: 210 20% 98%;
+    --visio-cms-border: 220 13% 91%;
+    --visio-cms-input: 220 13% 91%;
+    --visio-cms-ring: 224 71.4% 4.1%;
+    --visio-cms-radius: 0.5rem;
+    --visio-cms-chart-1: 12 76% 61%;
+    --visio-cms-chart-2: 173 58% 39%;
+    --visio-cms-chart-3: 197 37% 24%;
+    --visio-cms-chart-4: 43 74% 66%;
+    --visio-cms-chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --visio-cms-background: 224 71.4% 4.1%;
+    --visio-cms-foreground: 210 20% 98%;
+    --visio-cms-card: 224 71.4% 4.1%;
+    --visio-cms-card-foreground: 210 20% 98%;
+    --visio-cms-popover: 224 71.4% 4.1%;
+    --visio-cms-popover-foreground: 210 20% 98%;
+    --visio-cms-primary: 210 20% 98%;
+    --visio-cms-primary-foreground: 220.9 39.3% 11%;
+    --visio-cms-secondary: 215 27.9% 16.9%;
+    --visio-cms-secondary-foreground: 210 20% 98%;
+    --visio-cms-muted: 215 27.9% 16.9%;
+    --visio-cms-muted-foreground: 217.9 10.6% 64.9%;
+    --visio-cms-accent: 215 27.9% 16.9%;
+    --visio-cms-accent-foreground: 210 20% 98%;
+    --visio-cms-destructive: 0 62.8% 30.6%;
+    --visio-cms-destructive-foreground: 210 20% 98%;
+    --visio-cms-border: 215 27.9% 16.9%;
+    --visio-cms-input: 215 27.9% 16.9%;
+    --visio-cms-ring: 216 12.2% 83.9%;
+    --visio-cms-chart-1: 220 70% 50%;
+    --visio-cms-chart-2: 160 60% 45%;
+    --visio-cms-chart-3: 30 80% 55%;
+    --visio-cms-chart-4: 280 65% 60%;
+    --visio-cms-chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply visio-cms-border-border;
+  }
+  body {
+    @apply visio-cms-bg-background visio-cms-text-foreground;
+  }
+}

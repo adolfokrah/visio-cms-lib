@@ -1,4 +1,5 @@
-import { Button, Label, Input } from "../lib/main";
+import { Button, Label, Input } from '../lib/main';
+import '../lib/styles.css';
 
 function App() {
   return (
