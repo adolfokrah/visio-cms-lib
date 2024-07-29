@@ -43,7 +43,4 @@
   * {
     @apply visio-cms-border-border;
   }
-  body {
-    @apply visio-cms-bg-background visio-cms-text-foreground visio-cms-font-regular visio-cms-text-xs;
-  }
 }
