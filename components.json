@@ -5,13 +5,13 @@
   "tsx": true,
   "tailwind": {
     "config": "tailwind.config.ts",
-    "css": "lib/styles.css",
+    "css": "src/styles/tailwinds",
     "baseColor": "gray",
     "cssVariables": true,
     "prefix": "visio-cms-"
   },
   "aliases": {
-    "components": "lib/components",
-    "utils": "lib/utils"
+    "components": "src/components",
+    "utils": "src/lib/utils"
   }
 }

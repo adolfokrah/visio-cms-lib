@@ -26,8 +26,8 @@ import {
   PopoverContent,
   PopoverTrigger,
   ImageBox,
-} from '../lib/main';
-import '../lib/styles.css';
+} from './components';
+import './styles/tailwind.css';
 
 function App() {
   return (

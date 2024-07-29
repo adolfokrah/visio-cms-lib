@@ -1,44 +1,39 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react-swc';
+import path from 'path';
 import dts from 'vite-plugin-dts';
-import { extname, relative, resolve } from 'path';
-import { fileURLToPath } from 'node:url';
-import { glob } from 'glob';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), dts({ include: ['lib'], insertTypesEntry: true })],
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './lib'),
-    },
-  },
+  plugins: [
+    react(),
+    dts({
+      insertTypesEntry: true,
+    }),
+  ],
   build: {
-    copyPublicDir: false,
     lib: {
-      entry: resolve(__dirname, 'lib/main.ts'),
+      entry: path.resolve(__dirname, 'src/components/index.ts'),
+      name: 'visio-cms',
       formats: ['es'],
+      fileName: (format) => `[name].${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react/jsx-runtime'],
-      input: Object.fromEntries(
-        glob
-          .sync('lib/**/*.{ts,tsx}', {
-            ignore: ['lib/**/*.d.ts'],
-          })
-          .map((file) => [
-            // The name of the entry point
-            // lib/nested/foo.ts becomes nested/foo
-            relative('lib', file.slice(0, file.length - extname(file).length)),
-            // The absolute path to the entry file
-            // lib/nested/foo.ts becomes /project/lib/nested/foo.ts
-            fileURLToPath(new URL(file, import.meta.url)),
-          ]),
-      ),
+      external: ['react', 'react-dom'],
       output: {
-        assetFileNames: 'assets/[name][extname]',
-        entryFileNames: '[name].js',
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
+        inlineDynamicImports: false,
+        preserveModules: true,
+        preserveModulesRoot: 'src',
       },
+    },
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
     },
   },
 });

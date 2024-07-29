@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from '../../utils';
+import { cn } from '../../lib/utils';
 
 const buttonVariants = cva(
   'visio-cms-inline-flex visio-cms-items-center visio-cms-justify-center visio-cms-whitespace-nowrap visio-cms-rounded-md visio-cms-text-sm visio-cms-font-medium visio-cms-transition-colors focus-visible:visio-cms-outline-none focus-visible:visio-cms-ring-1 focus-visible:visio-cms-ring-ring disabled:visio-cms-pointer-events-none disabled:visio-cms-opacity-50',

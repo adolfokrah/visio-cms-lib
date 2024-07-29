@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as LabelPrimitive from '@radix-ui/react-label';
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from '../../utils';
+import { cn } from '../../lib/utils';
 
 const labelVariants = cva(
   'visio-cms-text-xs visio-cms-font-regular visio-cms-font-medium visio-cms-leading-none peer-disabled:visio-cms-cursor-not-allowed peer-disabled:visio-cms-opacity-70',
