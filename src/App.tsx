@@ -99,7 +99,9 @@ function App() {
           </PopoverContent>
         </Popover>
         <br />
+        <br />
         <ImageBox imageSrc="https://static.vecteezy.com/system/resources/previews/027/127/451/non_2x/uber-logo-uber-icon-transparent-free-png.png" />
+        <br />
         <br />
         <TooltipProvider>
           <Tooltip>

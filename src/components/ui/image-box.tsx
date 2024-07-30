@@ -2,23 +2,21 @@ import { Button } from './button';
 import { RefreshCcw, Trash, UploadCloudIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
 import { cn } from '@/lib/utils';
+import SVGPattern from './svg-pattern';
 
 const ImageBox = (props: { imageSrc?: string }) => {
   const { imageSrc } = props;
 
   return (
     <div
-      className={
-        'visio-cms-bg-dark-900 visio-cms-group visio-cms-bg-no-repeat visio-cms-bg-cover visio-cms-rounded-md visio-cms-p-2 visio-cms-relative visio-cms-h-60 visio-cms-w-full'
-      }
-      style={{
-        backgroundImage: 'url(../../image-bg.png)',
-      }}
+      className={'visio-cms-bg-dark-900 visio-cms-group  visio-cms-rounded-md  visio-cms-relative  visio-cms-w-full'}
     >
+      <SVGPattern />
+
       {imageSrc && (
         <img
           src={imageSrc}
-          className="visio-cms-w-full visio-cms-object-contain visio-cms-h-full visio-cms-rounded-md"
+          className="visio-cms-w-full visio-cms-object-contain visio-cms-h-full visio-cms-rounded-md visio-cms-absolute visio-cms-left-0 visio-cms-top-0"
         />
       )}
 
