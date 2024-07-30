@@ -17,7 +17,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'visio-cms-flex visio-cms-h-9 visio-cms-w-full visio-cms-items-center visio-cms-justify-between visio-cms-whitespace-nowrap visio-cms-rounded-md visio-cms-border visio-cms-border-input visio-cms-bg-dark-900 visio-cms-px-3 visio-cms-py-2 visio-cms-text-xs visio-cms-shadow-sm placeholder:visio-cms-text-muted-foreground focus:visio-cms-outline-none  disabled:visio-cms-cursor-not-allowed disabled:visio-cms-opacity-50 [&>span]:visio-cms-line-clamp-1',
+      'visio-cms-flex visio-cms-text-white visio-cms-h-9 visio-cms-w-full visio-cms-items-center visio-cms-justify-between visio-cms-whitespace-nowrap visio-cms-rounded-md visio-cms-border visio-cms-border-input visio-cms-bg-dark-900 visio-cms-px-3 visio-cms-py-2 visio-cms-text-xs visio-cms-shadow-sm placeholder:visio-cms-text-muted-foreground focus:visio-cms-outline-none  disabled:visio-cms-cursor-not-allowed disabled:visio-cms-opacity-50 [&>span]:visio-cms-line-clamp-1',
       className,
     )}
     {...props}

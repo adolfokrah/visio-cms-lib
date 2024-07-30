@@ -26,7 +26,7 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        'visio-cms-flex visio-cms-flex-1 visio-cms-items-center visio-cms-justify-between visio-cms-py-4 visio-cms-text-xs visio-cms-font-regular visio-cms-transition-all [&[data-state=open]>svg]:visio-cms-rotate-180',
+        'visio-cms-flex visio-cms-text-white visio-cms-flex-1 visio-cms-items-center visio-cms-justify-between visio-cms-py-4 visio-cms-text-xs visio-cms-font-regular visio-cms-transition-all [&[data-state=open]>svg]:visio-cms-rotate-180',
         className,
       )}
       {...props}
@@ -44,7 +44,7 @@ const AccordionContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Content
     ref={ref}
-    className="visio-cms-overflow-hidden visio-cms-text-xs data-[state=closed]:visio-cms-animate-accordion-up data-[state=open]:visio-cms-animate-accordion-down"
+    className="visio-cms-overflow-hidden visio-cms-text-white visio-cms-text-xs data-[state=closed]:visio-cms-animate-accordion-up data-[state=open]:visio-cms-animate-accordion-down"
     {...props}
   >
     <div className={cn('visio-cms-pb-4 visio-cms-pt-0', className)}>{children}</div>

@@ -19,7 +19,7 @@ const RadioGroupItem = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        'visio-cms-aspect-square visio-cms-bg-white visio-cms-h-4 visio-cms-w-4 visio-cms-rounded-full  visio-cms-text-primary  focus:visio-cms-outline-none disabled:visio-cms-cursor-not-allowed disabled:visio-cms-opacity-50 visio-cms-grid visio-cms-place-items-center',
+        'visio-cms-aspect-square  visio-cms-bg-white visio-cms-h-4 visio-cms-w-4 visio-cms-rounded-full  visio-cms-text-primary  focus:visio-cms-outline-none disabled:visio-cms-cursor-not-allowed disabled:visio-cms-opacity-50 visio-cms-grid visio-cms-place-items-center',
         className,
       )}
       {...props}
