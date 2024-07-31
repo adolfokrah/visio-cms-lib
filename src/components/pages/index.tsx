@@ -5,19 +5,34 @@ import RegisterPage from './auth/register-page';
 import { ProjectConfigurationContext } from '@/lib/contexts/project-config-context';
 import { ProjectConfiguration } from '@/lib/types';
 import { Toaster } from '@/components/ui/sonner';
+import { PAGES } from '@/lib/constants';
+import UpdatePasswordPage from './auth/update-password';
+import PageNotFound from './error-pages/page-not-found';
 
 const router = createBrowserRouter([
   {
-    path: '/cms/login',
+    path: PAGES.LOGIN,
     element: <LoginPage />,
   },
   {
-    path: '/cms/forgotten-password',
+    path: PAGES.FORGOTTEN_PASSWORD,
     element: <ForgottenPasswordPage />,
   },
   {
-    path: '/cms/register',
+    path: PAGES.REGISTER,
     element: <RegisterPage />,
+  },
+  {
+    path: PAGES.UPDATE_PASSWORD,
+    element: <UpdatePasswordPage />,
+  },
+  {
+    path: PAGES.PAGE_NOT_FOUND,
+    element: <PageNotFound />,
+  },
+  {
+    path: '/',
+    element: <PageNotFound />,
   },
 ]);
 

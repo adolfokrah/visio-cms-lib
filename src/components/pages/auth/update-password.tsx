@@ -1,55 +1,46 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import VisioLogo from '@/components/ui/visio-logo';
-import { useNavigate } from 'react-router-dom';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import useAuth from '@/lib/hooks/useAuth';
 import ErrorAlert from '@/components/ui/error-alert';
 import { Loader } from 'lucide-react';
+import { getQueryParamsFromUrl } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 import { PAGES } from '@/lib/constants';
+import { useEffect } from 'react';
 
-export default function LoginPage() {
+export default function UpdatePasswordPage() {
+  const { onUpdatePassword, updatePasswordForm, errorMessage, setErrorMessage, loading } = useAuth();
+  const path = getQueryParamsFromUrl(window.location.href.replace('/#/g', '&'));
   const navigate = useNavigate();
-  const { onLogin, loginForm, errorMessage, setErrorMessage, loading } = useAuth();
+
+  useEffect(() => {
+    if (path['error_code'] || !path['token']) {
+      navigate(PAGES.PAGE_NOT_FOUND);
+    }
+  }, [path]);
 
   return (
     <div className="visio-cms-bg-dark-900 visio-cms-px-3 visio-cms-text-white visio-cms-text-xs visio-cms-h-screen visio-cms-flex visio-cms-items-center visio-cms-place-content-center">
       <div className="visio-cms-w-full md:visio-cms-w-[350px] ">
-        <VisioLogo className="visio-cms-m-auto visio-cms-mb-[54px]" />
-        <h3 className="visio-cms-text-xl visio-cms-text-center">Welcome to visio cms</h3>
+        <h3 className="visio-cms-text-xl visio-cms-text-center">Update your password</h3>
         <ErrorAlert
           errorMessage={errorMessage}
           key={errorMessage}
           onClearError={() => setErrorMessage('')}
           className="visio-cms-mt-4"
         />
-        <Form {...loginForm}>
-          <form className="visio-cms-mt-[35px] visio-cms-space-y-[25px]" onSubmit={loginForm.handleSubmit(onLogin)}>
+        <Form {...updatePasswordForm}>
+          <form
+            className="visio-cms-mt-[35px] visio-cms-space-y-[25px]"
+            onSubmit={updatePasswordForm.handleSubmit((data) => onUpdatePassword(data, atob(path['token'])))}
+          >
             <FormField
-              control={loginForm.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem className=" visio-cms-flex visio-cms-flex-col visio-cms-gap-[6px]">
-                  <FormLabel className="visio-cms-ml-[2px]">Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="!visio-cms-bg-dark-800"
-                      type="email"
-                      placeholder="Enter your email address"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={loginForm.control}
-              name="password"
+              control={updatePasswordForm.control}
+              name="newPassword"
               render={({ field }) => (
                 <FormItem className="visio-cms-flex visio-cms-flex-col visio-cms-gap-[6px]">
-                  <FormLabel className="visio-cms-ml-[2px]">Password</FormLabel>
+                  <FormLabel className="visio-cms-ml-[2px]">New Password</FormLabel>
                   <FormControl>
                     <Input
                       autoComplete="false"
@@ -63,12 +54,28 @@ export default function LoginPage() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={updatePasswordForm.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem className="visio-cms-flex visio-cms-flex-col visio-cms-gap-[6px]">
+                  <FormLabel className="visio-cms-ml-[2px]">Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete="false"
+                      className="!visio-cms-bg-dark-800"
+                      type="password"
+                      placeholder="Repeat password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <Button disabled={loading} className="visio-cms-w-full" type="submit">
-              {loading ? <Loader size={16} className="visio-cms-animate-spin" /> : 'Login'}
-            </Button>
-            <Button className="visio-cms-w-full" variant={'link'} onClick={() => navigate(PAGES.FORGOTTEN_PASSWORD)}>
-              Forgotten password?
+              {loading ? <Loader size={16} className="visio-cms-animate-spin" /> : 'Update Password'}
             </Button>
           </form>
         </Form>
