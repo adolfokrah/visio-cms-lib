@@ -74,21 +74,31 @@ export default function useAuth() {
     const lastName = data.lastName;
     setLoading(true);
     try {
-      const { error } = await db.auth.signUp({
+      const { data: users } = await db.from('users').select('id').eq('email', email).limit(1);
+      if (users?.length) {
+        setErrorMessage('User already exist');
+        return;
+      }
+      const metaData = {
+        first_name: firstName,
+        last_name: lastName,
+      };
+      const { error, data: d } = await db.auth.signUp({
         email,
         password,
         options: {
-          data: {
-            firstName,
-            lastName,
-          },
+          data: metaData,
         },
       });
-      if (error) {
-        setErrorMessage(error?.message);
+
+      const { error: insertError } = await db.from('users').insert({ id: d.user?.id, ...metaData, email });
+
+      if (error || insertError) {
+        setErrorMessage(error?.message || insertError?.message || '');
         return;
       }
-      navigate(PAGES.BUILDER);
+      console.log(d);
+      // navigate(PAGES.BUILDER);
     } catch (e) {
       setErrorMessage('Ops! an error occurred');
     } finally {
