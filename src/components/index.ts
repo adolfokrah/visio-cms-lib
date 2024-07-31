@@ -11,3 +11,4 @@ export { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 export { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 export { ImageBox } from './ui/image-box';
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+export { default as Cms } from './pages';
