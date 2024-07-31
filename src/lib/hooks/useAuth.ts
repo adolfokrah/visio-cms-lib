@@ -3,9 +3,11 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import useDb from './useDb';
-import { toast } from 'sonner';
+import { useState } from 'react';
 
 export default function useAuth() {
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const db = useDb();
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -18,21 +20,23 @@ export default function useAuth() {
   async function onLogin(data: z.infer<typeof loginSchema>) {
     const email = data.email;
     const password = data.password;
-
-    const { data: responseData, error } = await db.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      toast('Failed', {
-        description: error?.message,
+    setLoading(true);
+    try {
+      const { data: responseData, error } = await db.auth.signInWithPassword({
+        email,
+        password,
       });
-      return;
+      if (error) {
+        setErrorMessage(error?.message);
+        return;
+      }
+      console.log(responseData);
+    } catch (e) {
+      setErrorMessage('Ops! an error occurred');
+    } finally {
+      setLoading(false);
     }
-
-    console.log(responseData);
   }
 
-  return { onLogin, loginForm };
+  return { onLogin, loginForm, errorMessage, setErrorMessage, loading };
 }
