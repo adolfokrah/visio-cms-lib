@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import useDb from './useDb';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PAGES } from '../constants';
 import { toast } from 'sonner';
@@ -13,6 +13,13 @@ export default function useAuth() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const db = useDb();
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await db.auth.getUser();
+      if (data.user) navigate(PAGES.BUILDER);
+    })();
+  }, [navigate, db.auth]);
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -88,6 +95,7 @@ export default function useAuth() {
         password,
         options: {
           data: metaData,
+          emailRedirectTo: `${window.location.protocol}//${window.location.host}${PAGES.LOGIN}`,
         },
       });
 
@@ -97,8 +105,7 @@ export default function useAuth() {
         setErrorMessage(error?.message || insertError?.message || '');
         return;
       }
-      console.log(d);
-      // navigate(PAGES.BUILDER);
+      navigate(PAGES.BUILDER);
     } catch (e) {
       setErrorMessage('Ops! an error occurred');
     } finally {

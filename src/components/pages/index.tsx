@@ -31,8 +31,8 @@ const router = createBrowserRouter([
     element: <PageNotFound />,
   },
   {
-    path: '/',
-    element: <PageNotFound />,
+    path: '/cms/',
+    element: <LoginPage />,
   },
 ]);
 

@@ -18,7 +18,7 @@ export default function UpdatePasswordPage() {
     if (path['error_code'] || !path['token']) {
       navigate(PAGES.PAGE_NOT_FOUND);
     }
-  }, [path]);
+  }, [path, navigate]);
 
   return (
     <div className="visio-cms-bg-dark-900 visio-cms-px-3 visio-cms-text-white visio-cms-text-xs visio-cms-h-screen visio-cms-flex visio-cms-items-center visio-cms-place-content-center">
