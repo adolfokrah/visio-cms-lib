@@ -1,11 +1,26 @@
+import Navbar from '@/components/layout/nav-bar';
 import SmallerScreenWarning from '../error-pages/smaller-screen-warning-page';
+import LeftSideBar from '@/components/layout/left-side-bar';
+import RightSideBar from '@/components/layout/right-side-bar';
+import Canvas from '@/components/layout/canvas';
 
 export default function Builder() {
   return (
     <>
       <SmallerScreenWarning />
-      <div className="visio-cms-bg-dark-900 visio-cms-hidden lg:visio-cms-block visio-cms-px-3 visio-cms-text-white visio-cms-text-xs visio-cms-h-screen">
-        builder heeey!!!
+      <div className="visio-cms-bg-dark-900 visio-cms-hidden lg:visio-cms-block visio-cms-text-white visio-cms-text-xs visio-cms-h-screen">
+        <Navbar />
+        <div className="visio-cms-flex">
+          <div className="visio-cms-w-60">
+            <LeftSideBar />
+          </div>
+          <div className="visio-cms-col-span-5 visio-cms-flex-1">
+            <Canvas />
+          </div>
+          <div className="visio-cms-w-60 ">
+            <RightSideBar />
+          </div>
+        </div>
       </div>
     </>
   );

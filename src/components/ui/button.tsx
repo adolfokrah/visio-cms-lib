@@ -14,7 +14,7 @@ const buttonVariants = cva(
         destructive:
           'visio-cms-bg-destructive visio-cms-text-destructive-foreground visio-cms-shadow-sm hover:visio-cms-bg-destructive/90',
         outline:
-          'visio-cms-border visio-cms-border-white visio-cms-bg-background visio-cms-shadow-sm hover:visio-cms-bg-dark-800 hover:visio-cms-text-accent-foreground',
+          'visio-cms-border visio-cms-border-white visio-cms-bg-transparent visio-cms-shadow-sm hover:visio-cms-bg-dark-800 hover:visio-cms-text-accent-foreground',
         secondary:
           'visio-cms-bg-secondary visio-cms-text-secondary-foreground visio-cms-shadow-sm hover:visio-cms-bg-secondary/80',
         ghost: 'hover:visio-cms-bg-accent hover:visio-cms-text-accent-foreground',

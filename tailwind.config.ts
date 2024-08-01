@@ -71,11 +71,31 @@ module.exports = {
           from: { height: 'var(--visio-cms-radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'slide-from-top': {
+          from: { transform: 'translateY(-100%)', opacity: '0' },
+          to: { transform: 'translateY(0)', opacity: '1' },
+        },
+        'slide-from-left': {
+          from: { transform: 'translateX(-100%)', opacity: '0' },
+          to: { transform: 'translateX(0)', opacity: '1' },
+        },
+        'slide-from-right': {
+          from: { transform: 'translateX(100%)', opacity: '0' },
+          to: { transform: 'translateX(0)', opacity: '1' },
+        },
+        'fade-in': {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         spin: 'spin 1s linear infinite',
+        'slide-from-top': 'slide-from-top 0.3s ease-in',
+        'slide-from-left': 'slide-from-left 0.3s ease-in',
+        'slide-from-right': 'slide-from-right 0.3s ease-in',
+        'fade-in': 'fade-in 1s ease-in',
       },
     },
   },
