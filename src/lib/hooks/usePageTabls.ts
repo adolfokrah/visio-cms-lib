@@ -125,7 +125,13 @@ const usePageTabs = () => {
     });
   };
 
-  return { visibleTabs, hiddenTabs, containerRef, pages, tabRefs, setSelectedTab, handleTabClick };
+  const handleRemovePage = (name: string) => {
+    setPages((prevState) => {
+      return prevState.filter((page) => page.name != name);
+    });
+  };
+
+  return { visibleTabs, hiddenTabs, containerRef, pages, tabRefs, setSelectedTab, handleTabClick, handleRemovePage };
 };
 
 export default usePageTabs;

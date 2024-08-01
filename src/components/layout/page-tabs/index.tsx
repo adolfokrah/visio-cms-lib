@@ -11,10 +11,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export default function PageTabs() {
-  const { hiddenTabs, containerRef, pages, handleTabClick, tabRefs } = usePageTabs();
+  const { hiddenTabs, containerRef, pages, handleTabClick, tabRefs, handleRemovePage } = usePageTabs();
 
   return (
-    <div className="visio-cms-bg-dark-800 visio-cms-flex visio-cms-justify-between visio-cms-items-center">
+    <div className="visio-cms-bg-dark-800 visio-cms-h-[40px] visio-cms-flex visio-cms-justify-between visio-cms-items-center">
       <div
         className="visio-cms-flex  visio-cms-overflow-x-hidden visio-cms-whitespace-nowrap visio-cms-flex-1"
         ref={containerRef}
@@ -37,14 +37,18 @@ export default function PageTabs() {
               color={active ? 'hsl(var(--visio-cms-primary))' : 'rgb(148 163 184 / var(--tw-text-opacity))'}
             />
             {name}
-            <X size={12} className="visio-cms-invisible group-hover:visio-cms-visible" />
+            <X
+              size={12}
+              className="visio-cms-invisible group-hover:visio-cms-visible"
+              onClick={() => handleRemovePage(name)}
+            />
           </div>
         ))}
       </div>
       {hiddenTabs.length ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="!visio-cms-bg-transparent hover:!visio-cms-bg-dark-900">
+            <Button className="!visio-cms-bg-transparent hover:!visio-cms-bg-dark-900 ">
               <MoreVerticalIcon size={16} />
             </Button>
           </DropdownMenuTrigger>
@@ -63,7 +67,11 @@ export default function PageTabs() {
                     <FileIcon size={12} color="rgb(148 163 184 / var(--tw-text-opacity))" />
                     {name}
                   </div>
-                  <X size={12} className="visio-cms-invisible group-hover:visio-cms-visible" />
+                  <X
+                    size={12}
+                    className="visio-cms-invisible group-hover:visio-cms-visible"
+                    onClick={() => handleRemovePage(name)}
+                  />
                 </DropdownMenuItem>
               ))}
           </DropdownMenuContent>

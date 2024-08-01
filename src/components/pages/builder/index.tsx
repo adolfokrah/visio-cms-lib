@@ -2,6 +2,7 @@ import Navbar from '@/components/layout/nav-bar';
 import SmallerScreenWarning from '../error-pages/smaller-screen-warning-page';
 import LeftSideBar from '@/components/layout/left-side-bar';
 import RightSideBar from '@/components/layout/right-side-bar';
+import PageTabs from '@/components/layout/page-tabs';
 import Canvas from '@/components/layout/canvas';
 
 export default function Builder() {
@@ -15,7 +16,10 @@ export default function Builder() {
             <LeftSideBar />
           </div>
           <div className="visio-cms-flex-1 visio-cms-max-w-[calc(100vw-480px)] visio-cms-mx-auto">
-            <Canvas />
+            <div className="visio-cms-pt-[42px] visio-cms-animate-fade-in">
+              <PageTabs />
+              <Canvas />
+            </div>
           </div>
           <div className="visio-cms-w-60 visio-cms-shrink-0">
             <RightSideBar />
