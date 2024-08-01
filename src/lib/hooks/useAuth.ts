@@ -12,7 +12,7 @@ import { useAuthState } from '../states/useAuthState';
 export default function useAuth() {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const { user, fetchingUser } = useAuthState();
+  const { user } = useAuthState();
   const navigate = useNavigate();
   const db = supabase();
 
@@ -164,6 +164,5 @@ export default function useAuth() {
     onSendPasswordResetLink,
     updatePasswordForm,
     onUpdatePassword,
-    fetchingUser,
   };
 }

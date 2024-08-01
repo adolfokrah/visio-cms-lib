@@ -45,13 +45,13 @@ const router = createBrowserRouter([
 
 export default function Auth(projectConfiguration: ProjectConfiguration) {
   const { setConfiguration, supabaseProjectUrl, supabaseAnonKey } = useProjectConfigurationState();
-  const { fetchUser } = useAuthState();
+  const { fetchUser, fetchingUser } = useAuthState();
   useEffect(() => {
     setConfiguration(projectConfiguration);
     fetchUser();
   }, [projectConfiguration, setConfiguration, fetchUser]);
 
-  if (!supabaseProjectUrl.length && !supabaseAnonKey.length) return null;
+  if ((!supabaseProjectUrl.length && !supabaseAnonKey.length) || fetchingUser) return null;
 
   return (
     <>
