@@ -6,7 +6,7 @@
   :root {
     --visio-cms-background: var(--visio-cms-brand-dark-900);
     --visio-cms-foreground: 210 20% 98%;
-    --visio-cms-card: var(--visio-cms-brand-dark-900);
+    --visio-cms-card: var(--visio-cms-brand-dark-800);
     --visio-cms-card-foreground: 210 20% 98%;
     --visio-cms-popover: var(--visio-cms-brand-dark-800);
     --visio-cms-popover-foreground: 210 20% 98%;
@@ -42,5 +42,8 @@
 @layer base {
   * {
     @apply visio-cms-border-border;
+  }
+  .visio-cms-dialog-close-btn {
+    @apply visio-cms-hidden;
   }
 }
