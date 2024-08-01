@@ -11,8 +11,8 @@ export default function Canvas() {
   return (
     <TransformWrapper>
       <TransformComponent
-        wrapperClass="visio-cms-w-full visio-cms-h-[calc(100vh-84px)] "
-        contentClass="visio-cms-h-[900px] visio-cms-w-[1200px]"
+        wrapperClass="!visio-cms-w-[calc(100vw-480px)] !visio-cms-h-[calc(100vh-84px)]  !visio-cms-mx-auto"
+        contentClass="!visio-cms-h-[900px] visio-cms-w-[1200px] visio-cms-mx-auto"
         contentStyle={{ width: RESPONSIVE_VIEWS.find((view) => view.view === activePage.selectedView)?.size }}
       >
         <div className="visio-cms-w-full visio-cms-pt-32">
