@@ -1,36 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { usePagesState } from '../states/usePagesState';
 
 const usePageTabs = () => {
-  const data = [
-    { name: 'Home page', active: false },
-    { name: 'About page', active: true },
-    { name: 'Services page', active: false },
-    { name: 'Contact page', active: false },
-    { name: 'Blog page', active: false },
-    { name: 'Portfolio page', active: false },
-    { name: 'Testimonials page', active: false },
-    { name: 'FAQ page', active: false },
-    { name: 'Pricing page', active: false },
-    { name: 'Terms and Conditions page', active: false },
-    { name: 'Privacy Policy page', active: false },
-    { name: 'Careers page', active: false },
-    { name: 'Support page', active: false },
-    { name: 'Resources page', active: false },
-    { name: 'Partners page', active: false },
-    { name: 'Events page', active: false },
-    { name: 'Newsletter page', active: false },
-    { name: 'Sitemap page', active: false },
-    { name: 'User Dashboard page', active: false },
-    { name: 'Admin Panel page', active: false },
-    { name: 'Settings page', active: false },
-    { name: 'Help Center page', active: false },
-    { name: 'Contact Us page', active: false },
-    { name: '404 Not Found page', active: false },
-    { name: 'Coming Soon page', active: false },
-    { name: 'Accessibility page', active: false },
-  ];
-
-  const [pages, setPages] = useState(data);
+  const { pages, setPages } = usePagesState();
   const [visibleTabs, setVisibleTabs] = useState<string[]>([]);
   const [hiddenTabs, setHiddenTabs] = useState<string[]>([]);
   const [selectedTab, setSelectedTab] = useState<string | null>(null); // Track selected tab
@@ -120,15 +92,13 @@ const usePageTabs = () => {
 
   const handleTabClick = (name: string) => {
     setSelectedTab(name);
-    setPages((prevState) => {
-      return prevState.map((page) => ({ ...page, active: page.name == name }));
-    });
+    const newPages = pages.map((page) => ({ ...page, active: page.name == name }));
+    setPages(newPages);
   };
 
   const handleRemovePage = (name: string) => {
-    setPages((prevState) => {
-      return prevState.filter((page) => page.name != name);
-    });
+    const newPages = pages.filter((page) => page.name != name);
+    setPages(newPages);
   };
 
   return { visibleTabs, hiddenTabs, containerRef, pages, tabRefs, setSelectedTab, handleTabClick, handleRemovePage };

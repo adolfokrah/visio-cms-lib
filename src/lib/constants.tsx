@@ -1,6 +1,6 @@
 import { DesktopIcon, MobileIcon } from '@radix-ui/react-icons';
-import { ResponsiveViews } from './states/useResponsiveBarState';
 import { TabletIcon } from 'lucide-react';
+import { ResponsiveViews } from './states/usePagesState';
 
 export const CMS_BASE_PATH = '/cms';
 
