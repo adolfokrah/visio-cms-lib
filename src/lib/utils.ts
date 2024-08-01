@@ -1,5 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { createClient } from '@supabase/supabase-js';
+import { useProjectConfigurationState } from './states/useProjectConfigState';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -23,3 +25,9 @@ export function getQueryParamsFromUrl(url: string): Record<string, string> {
 
   return params;
 }
+
+export const supabase = () => {
+  const projectConfiguration = useProjectConfigurationState.getState();
+  const db = createClient(projectConfiguration.supabaseProjectUrl, projectConfiguration.supabaseAnonKey);
+  return db;
+};

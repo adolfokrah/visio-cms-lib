@@ -1,4 +1,4 @@
-const CMS_BASE_PATH = '/cms';
+export const CMS_BASE_PATH = '/cms';
 
 export const PAGES = {
   LOGIN: `${CMS_BASE_PATH}/login`,

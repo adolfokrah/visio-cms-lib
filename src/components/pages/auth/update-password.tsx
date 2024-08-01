@@ -10,7 +10,7 @@ import { PAGES } from '@/lib/constants';
 import { useEffect } from 'react';
 
 export default function UpdatePasswordPage() {
-  const { onUpdatePassword, updatePasswordForm, errorMessage, setErrorMessage, loading } = useAuth();
+  const { onUpdatePassword, updatePasswordForm, errorMessage, setErrorMessage, loading, fetchingUser } = useAuth();
   const path = getQueryParamsFromUrl(window.location.href.replace('/#/g', '&'));
   const navigate = useNavigate();
 
@@ -19,6 +19,8 @@ export default function UpdatePasswordPage() {
       navigate(PAGES.PAGE_NOT_FOUND);
     }
   }, [path, navigate]);
+
+  if (fetchingUser) return null;
 
   return (
     <div className="visio-cms-bg-dark-900 visio-cms-px-3 visio-cms-text-white visio-cms-text-xs visio-cms-h-screen visio-cms-flex visio-cms-items-center visio-cms-place-content-center">

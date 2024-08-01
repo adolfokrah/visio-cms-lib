@@ -2,24 +2,23 @@ import { forgottenPasswordSchema, loginSchema, registrationSchema, updatePasswor
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import useDb from './useDb';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PAGES } from '../constants';
 import { toast } from 'sonner';
+import { supabase } from '../utils';
+import { useAuthState } from '../states/useAuthState';
 
 export default function useAuth() {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const { user, fetchingUser } = useAuthState();
   const navigate = useNavigate();
-  const db = useDb();
+  const db = supabase();
 
   useEffect(() => {
-    (async () => {
-      const { data } = await db.auth.getUser();
-      if (data.user) navigate(PAGES.BUILDER);
-    })();
-  }, [navigate, db.auth]);
+    if (user) navigate(PAGES.BUILDER);
+  }, [user, navigate]);
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -165,5 +164,6 @@ export default function useAuth() {
     onSendPasswordResetLink,
     updatePasswordForm,
     onUpdatePassword,
+    fetchingUser,
   };
 }

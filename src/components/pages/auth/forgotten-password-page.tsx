@@ -6,8 +6,10 @@ import ErrorAlert from '@/components/ui/error-alert';
 import { Loader } from 'lucide-react';
 
 export default function ForgottenPasswordPage() {
-  const { onSendPasswordResetLink, forgottenPasswordForm, errorMessage, setErrorMessage, loading } = useAuth();
+  const { onSendPasswordResetLink, forgottenPasswordForm, errorMessage, setErrorMessage, loading, fetchingUser } =
+    useAuth();
 
+  if (fetchingUser) return null;
   return (
     <div className="visio-cms-bg-dark-900 visio-cms-px-3 visio-cms-text-white visio-cms-text-xs visio-cms-h-screen visio-cms-flex visio-cms-items-center visio-cms-place-content-center">
       <div className="visio-cms-w-full md:visio-cms-w-[350px] ">
