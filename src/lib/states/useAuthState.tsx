@@ -17,11 +17,12 @@ export const useAuthState = create<State & Actions>((set) => ({
   fetchUser: async () => {
     const db = supabase();
     const { data, error } = await db.auth.getUser();
+    set({ fetchingUser: false });
     if (error) {
       return;
     }
     if (data) {
-      set({ user: data.user, fetchingUser: false });
+      set({ user: data.user });
     }
   },
 }));
