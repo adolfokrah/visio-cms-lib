@@ -11,13 +11,13 @@ export default function Builder() {
       <div className="visio-cms-bg-dark-900 visio-cms-hidden lg:visio-cms-block visio-cms-text-white visio-cms-text-xs visio-cms-h-screen">
         <Navbar />
         <div className="visio-cms-flex">
-          <div className="visio-cms-w-60">
+          <div className="visio-cms-w-60 visio-cms-shrink-0">
             <LeftSideBar />
           </div>
-          <div className="visio-cms-col-span-5 visio-cms-flex-1">
+          <div className="visio-cms-flex-1 visio-cms-max-w-[calc(100vw-480px)] visio-cms-mx-auto">
             <Canvas />
           </div>
-          <div className="visio-cms-w-60 ">
+          <div className="visio-cms-w-60 visio-cms-shrink-0">
             <RightSideBar />
           </div>
         </div>

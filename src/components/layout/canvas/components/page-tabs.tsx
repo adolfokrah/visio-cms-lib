@@ -1,29 +1,30 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { FileIcon, Redo, Undo, X } from 'lucide-react';
+import { FileIcon, MoreVerticalIcon, Redo, Undo, X } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import usePageTabs from '@/lib/hooks/usePageTabls';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-const pages = [
-  {
-    name: 'Home page',
-    active: false,
-  },
-  {
-    name: 'About page',
-    active: true,
-  },
-  {
-    name: 'Services page',
-    active: false,
-  },
-];
 export default function PageTabs() {
+  const { hiddenTabs, containerRef, pages, handleTabClick, tabRefs } = usePageTabs();
+
   return (
     <div className="visio-cms-bg-dark-800 visio-cms-flex visio-cms-justify-between visio-cms-items-center">
-      <div className="visio-cms-flex">
+      <div
+        className="visio-cms-flex  visio-cms-overflow-x-hidden visio-cms-whitespace-nowrap visio-cms-flex-1"
+        ref={containerRef}
+      >
         {pages.map(({ name, active }) => (
           <div
             key={name}
+            id={name}
+            onClick={() => handleTabClick(name)}
+            ref={(el) => el && tabRefs.current.set(name, el)} // Store reference
             className={cn(
               'visio-cms-p-3 visio-cms-group visio-cms-text-slate-400 visio-cms-flex visio-cms-gap-2 visio-cms-cursor-pointer hover:visio-cms-bg-dark-700 visio-cms-items-center',
               {
@@ -40,6 +41,34 @@ export default function PageTabs() {
           </div>
         ))}
       </div>
+      {hiddenTabs.length ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="!visio-cms-bg-transparent hover:!visio-cms-bg-dark-900">
+              <MoreVerticalIcon size={16} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {pages
+              .filter((page) => hiddenTabs.includes(page.name))
+              .map(({ name }) => (
+                <DropdownMenuItem
+                  key={name}
+                  onClick={() => handleTabClick(name)}
+                  className={cn(
+                    'visio-cms-p-3 visio-cms-place-items-center visio-cms-justify-between visio-cms-group visio-cms-text-slate-400 visio-cms-flex visio-cms-gap-2 visio-cms-cursor-pointer hover:visio-cms-bg-dark-900 visio-cms-items-center',
+                  )}
+                >
+                  <div className="visio-cms-flex visio-cms-gap-2">
+                    <FileIcon size={12} color="rgb(148 163 184 / var(--tw-text-opacity))" />
+                    {name}
+                  </div>
+                  <X size={12} className="visio-cms-invisible group-hover:visio-cms-visible" />
+                </DropdownMenuItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : null}
 
       <div className="visio-cms-flex">
         <TooltipProvider>
