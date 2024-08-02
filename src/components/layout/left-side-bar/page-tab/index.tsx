@@ -16,6 +16,7 @@ export default function PagesTab() {
   useEffect(() => {
     setGroupedPagesState(groupedPages);
   }, [groupedPages, setGroupedPagesState]);
+
   const debounceSearch = useCallback(
     lodash.debounce((value) => {
       if (value.length > 0) {

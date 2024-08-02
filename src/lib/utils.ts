@@ -93,38 +93,6 @@ export function getGroupedPages(pages: Page[]): PageGroup[] {
   return groupedPages;
 }
 
-export function hasActiveChildren(pages: PageGroup[], parentId: string): boolean {
-  function checkActive(pages: PageGroup[], parentId: string): boolean {
-    for (const page of pages) {
-      // Check if the current page is the parent we are interested in
-      if (page.id === parentId) {
-        // If the parent is found, check all its children (including nested children)
-        return hasActiveDescendants(page.children || []);
-      } else if (page.children) {
-        // Recursively check in the children of the current page
-        if (checkActive(page.children, parentId)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  function hasActiveDescendants(pages: PageGroup[]): boolean {
-    for (const page of pages) {
-      if (page.active) {
-        return true;
-      }
-      if (page.children && hasActiveDescendants(page.children)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  return checkActive(pages, parentId);
-}
-
 export function getSearchedPages(pages: PageGroup[], pageName: string): PageGroup[] {
   // Helper function to recursively search for pages by name and accumulate results
   function findPages(pages: PageGroup[], pageName: string): PageGroup[] {

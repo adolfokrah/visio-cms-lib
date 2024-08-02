@@ -51,6 +51,7 @@ export type Page = {
   activeLanguageLocale: string;
   parentPage?: string;
   pinned: boolean;
+  isExpanded?: boolean;
 };
 
 type PagesStateType = {

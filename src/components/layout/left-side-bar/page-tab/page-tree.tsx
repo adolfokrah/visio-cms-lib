@@ -1,6 +1,6 @@
 import { usePagesState } from '@/lib/states/usePagesState';
 import { PageGroup } from '@/lib/types';
-import { cn, getAllSlugs, hasActiveChildren } from '@/lib/utils';
+import { cn, getAllSlugs } from '@/lib/utils';
 import { FolderOpen, Folder, MoreVerticalIcon, Circle } from 'lucide-react';
 import {
   DropdownMenu,
@@ -13,17 +13,15 @@ import { useState } from 'react';
 import { useGroupedPagesState } from '@/lib/states/useGroupedPagesState';
 
 export default function PageTree({ pageGroups }: { pageGroups: PageGroup[] }) {
-  const { groupedPagesState } = useGroupedPagesState();
   return (
     <div>
       {pageGroups.map((page) => {
-        const { name, slug, children, id, active } = page;
-        const open = hasActiveChildren(groupedPagesState, id);
+        const { name, slug, children, isExpanded } = page;
 
         return (
           <div key={name} title={slug}>
-            <PageItem page={page} open={open} />
-            {children.length > 0 && (open || active) && (
+            <PageItem page={page} open={isExpanded} />
+            {children.length > 0 && isExpanded && (
               <div className="visio-cms-pl-2">
                 <PageTree pageGroups={children} />
               </div>
@@ -42,6 +40,7 @@ function PageItem({ page, open }: { page: PageGroup; open?: boolean }) {
   const { groupedPagesState } = useGroupedPagesState();
   const [parentSlug, setParentSlug] = useState('/');
   const [parentPage, setParentPage] = useState('');
+
   return (
     <>
       <div
@@ -57,6 +56,7 @@ function PageItem({ page, open }: { page: PageGroup; open?: boolean }) {
             ...page,
             active: page.name == name,
             pinned: page.name == name ? true : page.pinned,
+            isExpanded: page.name == name ? (page?.isExpanded ? false : true) : page.isExpanded,
           }));
           setPages(newPages);
         }}
@@ -64,10 +64,15 @@ function PageItem({ page, open }: { page: PageGroup; open?: boolean }) {
         <div className="visio-cms-flex visio-cms-gap-2  visio-cms-items-center">
           {children.length > 0 ? (
             <>
-              {active || open ? (
+              {open ? (
                 <FolderOpen size={14} className="visio-cms-flex-shrink-0" />
               ) : (
-                <Folder size={14} className="visio-cms-flex-shrink-0 visio-cms-fill-white" />
+                <Folder
+                  size={14}
+                  className={cn('visio-cms-flex-shrink-0 visio-cms-fill-white', {
+                    '!visio-cms-fill-primary !visio-cms-text-primary': active,
+                  })}
+                />
               )}
             </>
           ) : (

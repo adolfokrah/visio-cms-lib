@@ -18,4 +18,5 @@ export type PageGroup = {
   children: PageGroup[];
   slug: string;
   parentPage?: string;
+  isExpanded?: boolean;
 };
