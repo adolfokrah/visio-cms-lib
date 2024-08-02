@@ -94,20 +94,29 @@ export function getGroupedPages(pages: Page[]): PageGroup[] {
 }
 
 export function hasActiveChildren(pages: PageGroup[], parentId: string): boolean {
-  // Helper function to recursively check if any child is active
   function checkActive(pages: PageGroup[], parentId: string): boolean {
     for (const page of pages) {
       // Check if the current page is the parent we are interested in
       if (page.id === parentId) {
-        // If any child is active, return true
-        if (page.children && page.children.some((child) => child.active || checkActive(child.children, parentId))) {
-          return true;
-        }
+        // If the parent is found, check all its children (including nested children)
+        return hasActiveDescendants(page.children || []);
       } else if (page.children) {
         // Recursively check in the children of the current page
         if (checkActive(page.children, parentId)) {
           return true;
         }
+      }
+    }
+    return false;
+  }
+
+  function hasActiveDescendants(pages: PageGroup[]): boolean {
+    for (const page of pages) {
+      if (page.active) {
+        return true;
+      }
+      if (page.children && hasActiveDescendants(page.children)) {
+        return true;
       }
     }
     return false;
@@ -136,4 +145,41 @@ export function getSearchedPages(pages: PageGroup[], pageName: string): PageGrou
   }
 
   return findPages(pages, pageName);
+}
+
+function findPageById(pages: PageGroup[], pageId: string): PageGroup | null {
+  for (const page of pages) {
+    if (page.id === pageId) {
+      return page;
+    }
+    const childPage = findPageById(page.children, pageId);
+    if (childPage) {
+      return childPage;
+    }
+  }
+  return null;
+}
+
+export function getAllSlugs(pages: PageGroup[], pageId: string): string[] {
+  const page = findPageById(pages, pageId);
+  if (!page) return [];
+
+  // If the page has no parent, return its own slug
+  if (!page.parentPage) {
+    return [page.slug];
+  }
+
+  const slugs: string[] = [];
+
+  // Helper function to recursively collect slugs
+  function collectSlugs(p: PageGroup) {
+    slugs.push(p.slug);
+    for (const child of p.children) {
+      collectSlugs(child);
+    }
+  }
+
+  collectSlugs(page);
+
+  return slugs;
 }

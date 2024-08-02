@@ -30,3 +30,5 @@ export const RESPONSIVE_VIEWS: ResponsiveViews[] = [
     icon: <MobileIcon />,
   },
 ];
+
+export const VISIO_DOCS_BASE_URL = 'https://www.visiocms.com/docs';

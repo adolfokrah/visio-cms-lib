@@ -7,6 +7,7 @@ export type ProjectConfiguration = {
   supabaseProjectUrl: string;
   supabaseAnonKey: string;
   supportedLanguages: Language[];
+  defaultLanguage: Language;
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 
