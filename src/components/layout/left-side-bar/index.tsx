@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import PagesTab from './page-tab';
 
 export default function LeftSideBar() {
   return (
@@ -9,7 +10,9 @@ export default function LeftSideBar() {
           <TabsTrigger value="layers">Layers</TabsTrigger>
           <TabsTrigger value="sections">Sections</TabsTrigger>
         </TabsList>
-        <TabsContent value="pages">Make changes to your account here.</TabsContent>
+        <TabsContent value="pages">
+          <PagesTab />
+        </TabsContent>
         <TabsContent value="layers">Change your password here.</TabsContent>
         <TabsContent value="sections">Sections.</TabsContent>
       </Tabs>

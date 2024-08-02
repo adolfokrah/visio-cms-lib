@@ -17,7 +17,7 @@ const buttonVariants = cva(
           'visio-cms-border visio-cms-border-white visio-cms-bg-transparent visio-cms-shadow-sm hover:visio-cms-bg-dark-800 hover:visio-cms-text-accent-foreground',
         secondary:
           'visio-cms-bg-secondary visio-cms-text-secondary-foreground visio-cms-shadow-sm hover:visio-cms-bg-secondary/80',
-        ghost: 'hover:visio-cms-bg-accent hover:visio-cms-text-accent-foreground',
+        ghost: 'hover:visio-cms-bg-dark-900 hover:visio-cms-text-accent-foreground',
         link: 'visio-cms-text-primary visio-cms-underline-offset-4 hover:visio-cms-underline',
       },
       size: {

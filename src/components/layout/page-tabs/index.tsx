@@ -12,6 +12,7 @@ import {
 
 export default function PageTabs() {
   const { hiddenTabs, containerRef, pages, handleTabClick, tabRefs, handleRemovePage } = usePageTabs();
+  const pinnedPages = pages.filter((page) => page.pinned);
 
   return (
     <div className="visio-cms-bg-dark-800 visio-cms-h-[40px] visio-cms-flex visio-cms-justify-between visio-cms-items-center">
@@ -19,7 +20,7 @@ export default function PageTabs() {
         className="visio-cms-flex  visio-cms-overflow-x-hidden visio-cms-whitespace-nowrap visio-cms-flex-1"
         ref={containerRef}
       >
-        {pages.map(({ name, active }) => (
+        {pinnedPages.map(({ name, active }) => (
           <div
             key={name}
             id={name}

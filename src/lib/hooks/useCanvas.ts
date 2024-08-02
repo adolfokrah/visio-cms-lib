@@ -16,8 +16,8 @@ export default function useCanvas({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      event.preventDefault();
       if (isMouseOver) {
+        event.preventDefault();
         if (event.key === 'z') {
           setZooming(true);
         }
@@ -128,7 +128,7 @@ export default function useCanvas({
         canvasElement.removeEventListener('click', handleMouseClicked);
       };
     }
-  }, [canvasWrapperRef, zooming, zoomingOut, controls]);
+  }, [canvasWrapperRef, zooming, zoomingOut, controls, setIsMouseOver]);
 
   useEffect(() => {
     const activePage = pages.find((page) => page.active);

@@ -46,4 +46,22 @@
   .visio-cms-dialog-close-btn {
     @apply visio-cms-hidden;
   }
+
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply visio-cms-bg-dark-900 visio-cms-rounded-md;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    @apply visio-cms-bg-dark-800 visio-cms-rounded-md;
+  }
+
+  .scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(-visio-cms-brand-dark-900)) hsl(var(-visio-cms-brand-dark-800));
+  }
 }

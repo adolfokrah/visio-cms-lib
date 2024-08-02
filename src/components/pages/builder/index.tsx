@@ -4,8 +4,19 @@ import LeftSideBar from '@/components/layout/left-side-bar';
 import RightSideBar from '@/components/layout/right-side-bar';
 import PageTabs from '@/components/layout/page-tabs';
 import Canvas from '@/components/layout/canvas';
+import { useAuthState } from '@/lib/states/useAuthState';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PAGES } from '@/lib/constants';
 
 export default function Builder() {
+  const { user } = useAuthState();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      navigate(PAGES.LOGIN);
+    }
+  }, [user]);
   return (
     <>
       <SmallerScreenWarning />

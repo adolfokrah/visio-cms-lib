@@ -9,7 +9,7 @@ export default function RightSideBar() {
           <TabsTrigger value="page">Page</TabsTrigger>
           <TabsTrigger value="theme">Theme</TabsTrigger>
         </TabsList>
-        <TabsContent value="properties">Make changes to your account here.</TabsContent>
+        <TabsContent value="properties">d</TabsContent>
         <TabsContent value="page">Change your password here.</TabsContent>
         <TabsContent value="theme">Sections.</TabsContent>
       </Tabs>

@@ -96,7 +96,11 @@ const usePageTabs = () => {
   };
 
   const handleRemovePage = (name: string) => {
-    const newPages = pages.filter((page) => page.name != name);
+    const newPages = pages.map((page) => ({
+      ...page,
+      active: page.name == name ? false : page.active,
+      pinned: page.name == name ? false : page.pinned,
+    }));
     setPages(newPages);
   };
 

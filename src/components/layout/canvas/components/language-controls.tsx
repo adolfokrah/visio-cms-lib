@@ -22,6 +22,7 @@ export default function LanguageControls() {
       <DropdownMenuContent className="visio-cms-w-[160px]">
         {supportedLanguages.map(({ language, locale }) => (
           <DropdownMenuItem
+            key={language}
             onClick={() => {
               const newPages = pages.map((page) => ({
                 ...page,

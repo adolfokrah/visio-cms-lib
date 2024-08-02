@@ -2,7 +2,8 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { createClient } from '@supabase/supabase-js';
 import { useProjectConfigurationState } from './states/useProjectConfigState';
-import { OsTypes } from './types';
+import { OsTypes, PageGroup } from './types';
+import { Page } from './states/usePagesState';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -62,3 +63,77 @@ export const getOS = (): OsTypes => {
   }
   return 'unknown'; // Fallback for unknown OS
 };
+
+export function getGroupedPages(pages: Page[]): PageGroup[] {
+  const pageMap = new Map<string, PageGroup>();
+
+  pages.forEach((page) => {
+    pageMap.set(page.id, { ...page, children: [] });
+  });
+
+  // Initialize the grouped pages array
+  const groupedPages: PageGroup[] = [];
+
+  // Populate the page map with parent-child relationships
+  pages.forEach((page) => {
+    if (page.parentPage) {
+      const parent = pageMap.get(page.parentPage);
+      const child = pageMap.get(page.id);
+      if (parent && child) {
+        parent.children.push(child);
+      }
+    } else {
+      const topLevelPage = pageMap.get(page.id);
+      if (topLevelPage) {
+        groupedPages.push(topLevelPage);
+      }
+    }
+  });
+
+  return groupedPages;
+}
+
+export function hasActiveChildren(pages: PageGroup[], parentId: string): boolean {
+  // Helper function to recursively check if any child is active
+  function checkActive(pages: PageGroup[], parentId: string): boolean {
+    for (const page of pages) {
+      // Check if the current page is the parent we are interested in
+      if (page.id === parentId) {
+        // If any child is active, return true
+        if (page.children && page.children.some((child) => child.active || checkActive(child.children, parentId))) {
+          return true;
+        }
+      } else if (page.children) {
+        // Recursively check in the children of the current page
+        if (checkActive(page.children, parentId)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  return checkActive(pages, parentId);
+}
+
+export function getSearchedPages(pages: PageGroup[], pageName: string): PageGroup[] {
+  // Helper function to recursively search for pages by name and accumulate results
+  function findPages(pages: PageGroup[], pageName: string): PageGroup[] {
+    let result: PageGroup[] = [];
+
+    for (const page of pages) {
+      // Check if the current page matches the search name
+      if (page.name.toLowerCase().includes(pageName)) {
+        result.push(page);
+      }
+
+      // Recursively search in the children
+      const foundInChildren = findPages(page.children, pageName);
+      result = result.concat(foundInChildren);
+    }
+
+    return result;
+  }
+
+  return findPages(pages, pageName);
+}

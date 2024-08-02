@@ -9,3 +9,12 @@ export type ProjectConfiguration = {
   supportedLanguages: Language[];
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
+
+export type PageGroup = {
+  id: string;
+  name: string;
+  active: boolean;
+  children: PageGroup[];
+  slug: string;
+  parentPage?: string;
+};
