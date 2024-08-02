@@ -9,4 +9,26 @@ export const useProjectConfigurationState = create<ProjectConfiguration & Action
   supabaseAnonKey: '',
   supabaseProjectUrl: '',
   setConfiguration: (data) => set(() => data),
+  supportedLanguages: [
+    {
+      language: 'English',
+      locale: 'en-us',
+    },
+    {
+      language: 'Spanish',
+      locale: 'es',
+    },
+    {
+      language: 'French',
+      locale: 'fr',
+    },
+    {
+      language: 'German',
+      locale: 'de',
+    },
+    {
+      language: 'Finish',
+      locale: 'fi',
+    },
+  ],
 }));

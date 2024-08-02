@@ -36,6 +36,7 @@ export type ResponsiveViews = {
   size: string;
   icon: React.ReactNode;
 };
+
 export type Page = {
   name: string;
   active: boolean;
@@ -45,6 +46,7 @@ export type Page = {
     positionX: number;
     positionY: number;
   };
+  activeLanguageLocale: string;
 };
 
 type PagesStateType = {
@@ -60,7 +62,7 @@ type PagesStateType = {
 export const usePagesState = create(
   persist<PagesStateType>(
     (set) => ({
-      pages: data.map((page) => ({ ...page, selectedView: RESPONSIVE_VIEWS[0].view })),
+      pages: data.map((page) => ({ ...page, selectedView: RESPONSIVE_VIEWS[0].view, activeLanguageLocale: 'en-us' })),
       selectedPage: data.find((page) => page.active)?.name || '',
       setSelectedPage: (selectedPage) => set(() => ({ selectedPage, pageSwitched: true })),
       pageSwitched: false,
