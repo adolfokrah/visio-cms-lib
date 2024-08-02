@@ -6,12 +6,15 @@ import useCanvas from '@/lib/hooks/useCanvas';
 import { Page, usePagesState } from '@/lib/states/usePagesState';
 import { useCallback, useRef } from 'react';
 import lodash from 'lodash';
+import CanvasControls from './components/canvas-controls';
+import { useCanvasState } from '@/lib/states/useCanvasState';
 
 export default function Canvas() {
   const { pages, setPages } = usePagesState();
   const activePage = pages.find((page) => page.active);
   const canvasWrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<ReactZoomPanPinchContentRef | null>(null);
+  const { panning } = useCanvasState();
 
   const debouncedOnTransformed = useCallback(
     lodash.debounce((_, state: { scale: number; positionX: number; positionY: number }) => {
@@ -45,10 +48,14 @@ export default function Canvas() {
         }}
         panning={{
           wheelPanning: true,
-          activationKeys: [' '],
+          ...(!panning && { activationKeys: [' '] }),
         }}
         onTransformed={debouncedOnTransformed}
+        initialPositionX={activePage?.canvasSettings?.positionX}
+        initialPositionY={activePage?.canvasSettings?.positionY}
+        initialScale={activePage?.canvasSettings?.scale}
       >
+        <CanvasControls />
         <Index activePage={activePage} canvasWrapperRef={canvasWrapperRef} />
       </TransformWrapper>
     </div>

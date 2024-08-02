@@ -1,21 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useControls } from 'react-zoom-pan-pinch';
 import { usePagesState } from '../states/usePagesState';
+import { useCanvasState } from '../states/useCanvasState';
 
 export default function useCanvas({
   canvasWrapperRef,
 }: {
   canvasWrapperRef: React.MutableRefObject<HTMLDivElement | null>;
 }) {
-  const [zooming, setZooming] = useState<boolean>(false);
-  const [zoomingOut, setZoomingOut] = useState<boolean>(false);
-  const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
-  const [panning, setPanning] = useState<boolean>(false);
+  const { zooming, zoomingOut, panning, isMouseOver, setZooming, setZoomingOut, setPanning, setIsMouseOver } =
+    useCanvasState();
   const controls = useControls();
   const { pages, pageSwitched, setPageSwitched } = usePagesState();
+  const activePage = pages.find((page) => page.active);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      event.preventDefault();
       if (isMouseOver) {
         if (event.key === 'z') {
           setZooming(true);
@@ -25,6 +26,39 @@ export default function useCanvas({
         }
         if (event.key === ' ') {
           setPanning(true); // Space bar is held down
+        }
+        if (event.metaKey || event.ctrlKey) {
+          switch (event.key) {
+            case '+':
+              controls.zoomIn();
+              break;
+            case '-':
+              controls.zoomOut();
+              break;
+            case '0':
+              controls.setTransform(
+                activePage?.canvasSettings?.positionX || 0,
+                activePage?.canvasSettings?.positionY || 0,
+                8,
+              );
+              break;
+            case '1':
+              controls.setTransform(
+                activePage?.canvasSettings?.positionX || 0,
+                activePage?.canvasSettings?.positionY || 0,
+                4.1,
+              );
+              break;
+            case '3':
+              controls.setTransform(
+                activePage?.canvasSettings?.positionX || 0,
+                activePage?.canvasSettings?.positionY || 0,
+                1,
+              );
+              break;
+            default:
+              return null;
+          }
         }
       }
     };

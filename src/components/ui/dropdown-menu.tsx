@@ -160,7 +160,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn('visio-cms--mx-1 visio-cms-my-1 visio-cms-h-px visio-cms-bg-muted', className)}
+    className={cn('visio-cms--mx-1  visio-cms-my-1 visio-cms-h-px visio-cms-bg-dark-700', className)}
     {...props}
   />
 ));
