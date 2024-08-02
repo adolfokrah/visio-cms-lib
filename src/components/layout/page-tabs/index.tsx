@@ -23,10 +23,11 @@ export default function PageTabs() {
           <div
             key={name}
             id={name}
+            title={name}
             onClick={() => handleTabClick(name)}
             ref={(el) => el && tabRefs.current.set(name, el)} // Store reference
             className={cn(
-              'visio-cms-p-3 visio-cms-group visio-cms-text-slate-400 visio-cms-flex visio-cms-gap-2 visio-cms-cursor-pointer hover:visio-cms-bg-dark-700 visio-cms-items-center',
+              'visio-cms-p-3 visio-cms-border-r visio-cms-border-dark-900 visio-cms-group visio-cms-text-slate-400 visio-cms-flex visio-cms-gap-2 visio-cms-cursor-pointer hover:visio-cms-bg-dark-700 visio-cms-items-center',
               {
                 '!visio-cms-bg-dark-900 !visio-cms-text-white': active,
               },
@@ -36,7 +37,9 @@ export default function PageTabs() {
               size={12}
               color={active ? 'hsl(var(--visio-cms-primary))' : 'rgb(148 163 184 / var(--tw-text-opacity))'}
             />
-            {name}
+            <div className="visio-cms-w-24 visio-cms-truncate visio-cms-overflow-hidden visio-cms-whitespace-nowrap">
+              {name}
+            </div>
             <X
               size={12}
               className="visio-cms-invisible group-hover:visio-cms-visible"

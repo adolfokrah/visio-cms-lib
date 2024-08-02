@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { RESPONSIVE_VIEWS } from '../constants';
-
+import { persist, createJSONStorage } from 'zustand/middleware';
 const data = [
   { name: 'Home page', active: false },
   { name: 'About page', active: true },
@@ -36,10 +36,15 @@ export type ResponsiveViews = {
   size: string;
   icon: React.ReactNode;
 };
-type Page = {
+export type Page = {
   name: string;
   active: boolean;
   selectedView: ResponsiveView;
+  canvasSettings?: {
+    scale: number;
+    positionX: number;
+    positionY: number;
+  };
 };
 
 type PagesStateType = {
@@ -50,18 +55,26 @@ type PagesStateType = {
   setPages: (pages: Page[]) => void;
 };
 
-export const usePagesState = create<PagesStateType>((set) => ({
-  pages: data.map((page) => ({ ...page, selectedView: RESPONSIVE_VIEWS[0].view })),
-  selectedPage: data.find((page) => page.active)?.name || '',
-  setSelectedPage: (selectedPage) => set(() => ({ selectedPage })),
-  setPageResponsiveView: (view) =>
-    set((state) => {
-      return {
-        pages: state.pages.map((page) => ({
-          ...page,
-          selectedView: state.selectedPage == page.name ? view : page.selectedView,
-        })),
-      };
+export const usePagesState = create(
+  persist<PagesStateType>(
+    (set) => ({
+      pages: data.map((page) => ({ ...page, selectedView: RESPONSIVE_VIEWS[0].view })),
+      selectedPage: data.find((page) => page.active)?.name || '',
+      setSelectedPage: (selectedPage) => set(() => ({ selectedPage })),
+      setPageResponsiveView: (view) =>
+        set((state) => {
+          return {
+            pages: state.pages.map((page) => ({
+              ...page,
+              selectedView: state.selectedPage == page.name ? view : page.selectedView,
+            })),
+          };
+        }),
+      setPages: (pages) => set(() => ({ pages, selectedPage: pages.find((page) => page.active)?.name || '' })),
     }),
-  setPages: (pages) => set(() => ({ pages, selectedPage: pages.find((page) => page.active)?.name || '' })),
-}));
+    {
+      name: 'pages-storage',
+      storage: createJSONStorage(() => sessionStorage),
+    },
+  ),
+);
