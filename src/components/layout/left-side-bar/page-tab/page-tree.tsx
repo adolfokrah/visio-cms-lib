@@ -1,7 +1,7 @@
 import { usePagesState } from '@/lib/states/usePagesState';
 import { PageGroup } from '@/lib/types';
 import { cn, getAllSlugs, hasActiveChildren } from '@/lib/utils';
-import { FileIcon, Folder, FolderOpen, MoreVerticalIcon } from 'lucide-react';
+import { FolderOpen, Folder, MoreVerticalIcon, Circle } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,19 +61,24 @@ function PageItem({ page, open }: { page: PageGroup; open?: boolean }) {
           setPages(newPages);
         }}
       >
-        <div className="visio-cms-flex visio-cms-gap-2 ">
+        <div className="visio-cms-flex visio-cms-gap-2  visio-cms-items-center">
           {children.length > 0 ? (
             <>
               {active || open ? (
                 <FolderOpen size={14} className="visio-cms-flex-shrink-0" />
               ) : (
-                <Folder size={14} className="visio-cms-flex-shrink-0" />
+                <Folder size={14} className="visio-cms-flex-shrink-0 visio-cms-fill-white" />
               )}
             </>
           ) : (
-            <FileIcon size={14} className="visio-cms-flex-shrink-0" />
+            <Circle
+              size={10}
+              className={cn('visio-cms-flex-shrink-0 visio-cms-text-slate-500 visio-cms-fill-slate-500', {
+                '!visio-cms-fill-primary !visio-cms-text-primary': active,
+              })}
+            />
           )}
-          <div className="visio-cms-truncate visio-cms-w-[calc(100%-20px)] visio-cms-flex-nowrap visio-cms-overflow-hidden">
+          <div className="visio-cms-truncate visio-cms-w-[calc(100%-10px)] visio-cms-flex-nowrap visio-cms-overflow-hidden">
             {name}
           </div>
         </div>

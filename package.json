@@ -43,7 +43,6 @@
     "clsx": "^2.1.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.417.0",
-    "lucide-solid": "^0.417.0",
     "next-themes": "^0.3.0",
     "react-hook-form": "^7.52.1",
     "react-router-dom": "^6.25.1",
