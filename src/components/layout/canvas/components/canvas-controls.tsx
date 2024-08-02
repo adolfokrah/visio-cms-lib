@@ -22,7 +22,7 @@ export default function CanvasControls() {
   const symbol = os == 'mac' ? '⌘' : 'Ctrl';
   const controls = useControls();
   return (
-    <div className=" visio-cms-fixed visio-cms-bottom-3 visio-cms-p-2 visio-cms-flex visio-cms-z-10 visio-cms-gap-3 visio-cms-bg-dark-800 visio-cms-border visio-cms-border-dark-700 visio-cms-rounded-xl visio-cms-w-[215px] visio-cms-left-[calc(50%-100px)]">
+    <div className=" visio-cms-fixed visio-cms-bottom-3 visio-cms-p-2 visio-cms-flex visio-cms-z-10 visio-cms-gap-3 visio-cms-bg-dark-800 visio-cms-border visio-cms-border-dark-700 visio-cms-rounded-xl visio-cms-w-[210px] visio-cms-left-[calc(50%-100px)]">
       <Button
         className={cn('visio-cms-bg-transparent hover:!visio-cms-bg-dark-700', {
           '!visio-cms-bg-dark-700': !panning && !zooming,

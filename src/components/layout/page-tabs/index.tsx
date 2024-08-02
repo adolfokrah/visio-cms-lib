@@ -43,7 +43,10 @@ export default function PageTabs() {
             <X
               size={12}
               className="visio-cms-invisible group-hover:visio-cms-visible"
-              onClick={() => handleRemovePage(name)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemovePage(name);
+              }}
             />
           </div>
         ))}
@@ -73,7 +76,10 @@ export default function PageTabs() {
                   <X
                     size={12}
                     className="visio-cms-invisible group-hover:visio-cms-visible"
-                    onClick={() => handleRemovePage(name)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemovePage(name);
+                    }}
                   />
                 </DropdownMenuItem>
               ))}
