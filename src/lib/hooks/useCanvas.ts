@@ -12,7 +12,7 @@ export default function useCanvas({
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const [panning, setPanning] = useState<boolean>(false);
   const controls = useControls();
-  const { pages } = usePagesState();
+  const { pages, pageSwitched, setPageSwitched } = usePagesState();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -98,16 +98,18 @@ export default function useCanvas({
 
   useEffect(() => {
     const activePage = pages.find((page) => page.active);
-    if (activePage) {
-      if (activePage.canvasSettings)
+
+    if (activePage && pageSwitched) {
+      if (activePage.canvasSettings) {
         controls.setTransform(
           activePage.canvasSettings.positionX,
           activePage.canvasSettings.positionY,
           activePage.canvasSettings.scale,
         );
-      else controls.resetTransform();
+        setPageSwitched(false);
+      } else controls.resetTransform();
     }
-  }, [pages, controls]);
+  }, [pages, controls, pageSwitched, setPageSwitched]);
 
   return {};
 }

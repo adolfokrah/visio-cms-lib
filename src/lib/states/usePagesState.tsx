@@ -53,6 +53,8 @@ type PagesStateType = {
   setSelectedPage: (name: string) => void;
   setPageResponsiveView: (view: ResponsiveView) => void;
   setPages: (pages: Page[]) => void;
+  pageSwitched?: boolean;
+  setPageSwitched: (flag: boolean) => void;
 };
 
 export const usePagesState = create(
@@ -60,7 +62,9 @@ export const usePagesState = create(
     (set) => ({
       pages: data.map((page) => ({ ...page, selectedView: RESPONSIVE_VIEWS[0].view })),
       selectedPage: data.find((page) => page.active)?.name || '',
-      setSelectedPage: (selectedPage) => set(() => ({ selectedPage })),
+      setSelectedPage: (selectedPage) => set(() => ({ selectedPage, pageSwitched: true })),
+      pageSwitched: false,
+      setPageSwitched: (pageSwitched) => set(() => ({ pageSwitched })),
       setPageResponsiveView: (view) =>
         set((state) => {
           return {

@@ -2,10 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { usePagesState } from '../states/usePagesState';
 
 const usePageTabs = () => {
-  const { pages, setPages } = usePagesState();
+  const { pages, setPages, selectedPage: selectedTab, setSelectedPage: setSelectedTab } = usePagesState();
   const [visibleTabs, setVisibleTabs] = useState<string[]>([]);
   const [hiddenTabs, setHiddenTabs] = useState<string[]>([]);
-  const [selectedTab, setSelectedTab] = useState<string | null>(null); // Track selected tab
   const containerRef = useRef<HTMLDivElement | null>(null);
   const tabRefs = useRef<Map<string, HTMLDivElement>>(new Map()); // Store tab references
 
