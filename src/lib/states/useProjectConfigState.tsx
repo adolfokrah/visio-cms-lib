@@ -2,13 +2,14 @@ import { create } from 'zustand';
 import { ProjectConfiguration } from '../types';
 
 type Actions = {
-  setConfiguration: (props: ProjectConfiguration) => void;
+  setConfiguration: (props: Pick<ProjectConfiguration, 'supabaseAnonKey' | 'supabaseProjectUrl'>) => void;
 };
 
 export const useProjectConfigurationState = create<ProjectConfiguration & Actions>((set) => ({
   supabaseAnonKey: '',
   supabaseProjectUrl: '',
-  setConfiguration: (data) => set(() => data),
+  setConfiguration: (data) =>
+    set(() => ({ supabaseAnonKey: data.supabaseAnonKey, supabaseProjectUrl: data.supabaseProjectUrl })),
   defaultLanguage: {
     language: 'English',
     locale: 'en-us',
