@@ -8,7 +8,7 @@ export default function Navbar() {
   const { user } = useAuthState();
   const userInitial = `${user?.user_metadata['first_name'].slice(0, 1)}${user?.user_metadata['last_name'].slice(0, 1)}`;
   return (
-    <div className="visio-cms-px-8 visio-cms-animate-slide-from-top visio-cms-fixed visio-cms-top-0 visio-cms-left-0 visio-cms-w-full visio-cms-bg-dark-700 visio-cms-flex visio-cms-justify-between">
+    <div className="visio-cms-px-8  visio-cms-z-30 visio-cms-animate-slide-from-top visio-cms-fixed visio-cms-top-0 visio-cms-left-0 visio-cms-w-full visio-cms-bg-dark-700 visio-cms-flex visio-cms-justify-between">
       <VisioLogo className="visio-cms-my-1" />
 
       <div className="visio-cms-justify-between visio-cms-flex visio-cms-gap-2">

@@ -1,9 +1,10 @@
 export default function SVGPattern() {
+  return null;
   return (
     <svg
       width="100%"
       height="100%"
-      viewBox="0 0 1080 1080"
+      viewBox="0 0 50 50"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"

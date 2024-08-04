@@ -9,7 +9,7 @@ export default function RightSideBar() {
 
   const activePage = useMemo(() => pages.find((page) => page.active), [pages]);
   return (
-    <div className="visio-cms-h-screen visio-cms-animate-slide-from-right visio-cms-bg-dark-800 visio-cms-pt-[50px] visio-cms-px-2">
+    <div className="visio-cms-h-screen visio-cms-animate-fade-in visio-cms-bg-dark-800 visio-cms-pt-[50px] visio-cms-px-2">
       <Tabs defaultValue="properties" className="visio-cms-w-full">
         <TabsList
           className={cn('visio-cms-grid visio-cms-w-full visio-cms-grid-cols-2', {

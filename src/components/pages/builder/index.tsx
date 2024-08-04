@@ -23,16 +23,16 @@ export default function Builder() {
       <div className="visio-cms-bg-dark-900 visio-cms-hidden lg:visio-cms-block visio-cms-text-white visio-cms-text-xs visio-cms-h-screen">
         <Navbar />
         <div className="visio-cms-flex">
-          <div className="visio-cms-w-60 visio-cms-shrink-0">
+          <div className="visio-cms-w-[300] visio-cms-shrink-0 visio-cms-z-10">
             <LeftSideBar />
           </div>
-          <div className="visio-cms-flex-1 visio-cms-max-w-[calc(100vw-480px)] visio-cms-mx-auto">
+          <div className="visio-cms-flex-1 visio-cms-max-w-[calc(100vw-514px)] visio-cms-relative visio-cms-mx-auto visio-cms-z-0">
             <div className="visio-cms-pt-[42px] visio-cms-animate-fade-in">
               <PageTabs />
               <Canvas />
             </div>
           </div>
-          <div className="visio-cms-w-60 visio-cms-shrink-0">
+          <div className="visio-cms-w-[300] visio-cms-shrink-0 visio-cms-z-10 visio-cms-relative">
             <RightSideBar />
           </div>
         </div>

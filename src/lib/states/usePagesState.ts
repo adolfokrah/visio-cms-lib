@@ -62,6 +62,14 @@ export type Page = {
     photo: string;
   };
   tags?: string;
+  seo?: {
+    meta: {
+      title: string;
+      description: string;
+      keywords: string;
+      featuredImage: string;
+    };
+  };
 };
 
 type PagesStateType = {

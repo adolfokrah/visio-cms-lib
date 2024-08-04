@@ -94,7 +94,7 @@ module.exports = {
         spin: 'spin 1s linear infinite',
         'slide-from-top': 'slide-from-top 0.3s ease-in',
         'slide-from-left': 'slide-from-left 0.3s ease-in',
-        'slide-from-right': 'slide-from-right 0.3s ease-in',
+        'slide-from-right': 'slide-from-right 0s ease-in',
         'fade-in': 'fade-in 1s ease-in',
       },
     },

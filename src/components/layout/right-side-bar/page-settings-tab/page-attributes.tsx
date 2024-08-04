@@ -6,6 +6,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { TagInput } from '@/components/ui/tag-input';
+import { formatStringToSlug } from '@/lib/utils';
 
 export default function PageAttributes() {
   const { pages, setPages } = usePagesState();
@@ -18,7 +19,7 @@ export default function PageAttributes() {
         setError('Page name can not be empty');
         return;
       }
-      const isPageNameExists = pages.find((page) => page.name.toLowerCase() === value.toLowerCase());
+      const isPageNameExists = pages.find((page) => page.name.toLowerCase() === value.toLowerCase() && !page.active);
 
       if (isPageNameExists) {
         setError(`Page name ${value} already exists`);
@@ -33,6 +34,24 @@ export default function PageAttributes() {
   const handleUpdatePageTag = useCallback(
     (value: string) => {
       setPages(pages.map((page) => ({ ...page, tags: page.active ? value : page.tags })));
+    },
+    [pages, setPages],
+  );
+
+  const handleUpdatePageSlug = useCallback(
+    (value: string) => {
+      const slug = `/${formatStringToSlug(value)}`;
+      if (!value) {
+        setError('Page slug can not be empty');
+        return;
+      }
+      const isPageNameExists = pages.find((page) => page.slug.toLowerCase() === slug.toLowerCase() && !page.active);
+
+      if (isPageNameExists) {
+        setError(`Page slug already exists`);
+        return;
+      }
+      setPages(pages.map((page) => ({ ...page, slug: page.active ? slug : page.slug })));
     },
     [pages, setPages],
   );
@@ -57,11 +76,17 @@ export default function PageAttributes() {
         }}
       />
       <Label className="!visio-cms-text-gray-300">Page name</Label>
-      <Input className="visio-cms-my-3" value={page?.name} onChange={(e) => handleUpdatePageName(e.target.value)} />
+      <Input
+        className="visio-cms-my-3"
+        defaultValue={page?.name}
+        key={page?.name}
+        onBlur={(e) => handleUpdatePageName(e.target.value)}
+        onChange={() => setError('')}
+      />
 
       <Label className="!visio-cms-text-gray-300">Author</Label>
       <div className="visio-cms-my-3">
-        <Button disabled className="visio-cms-w-full visio-cms-h-9 !visio-cms-bg-dark-900 !visio-cms-justify-start">
+        <Button className="visio-cms-w-full visio-cms-h-9 !visio-cms-bg-dark-900 !visio-cms-justify-start">
           <Avatar className="visio-cms-w-[30px] visio-cms-h-[30px]  visio-cms-text-xs  visio-cms-my-1">
             <AvatarImage src={page?.author?.photo} />
             <AvatarFallback>{authorInitial}</AvatarFallback>
@@ -80,6 +105,15 @@ export default function PageAttributes() {
           onTagRemoved={(value) => handleUpdatePageTag(value)}
         />
       </div>
+
+      <Label className="!visio-cms-text-gray-300">Page Slug</Label>
+      <Input
+        className="visio-cms-my-3"
+        defaultValue={page?.slug}
+        key={page?.slug}
+        onChange={() => setError('')}
+        onBlur={(e) => handleUpdatePageSlug(e.target.value)}
+      />
     </div>
   );
 }
