@@ -97,7 +97,7 @@
     "*.{js, jsx,ts,tsx}": [
       "eslint --quiet --fix"
     ],
-    "src/**/*.{tsx, ts}": [
+    "src/**/*.{ts,tsx}": [
       "tsc --noEmit"
     ]
   }
