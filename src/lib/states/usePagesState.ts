@@ -27,7 +27,7 @@ const data = [
   { id: '23', name: 'Contact Us page', slug: '/help-center-page/contact-us-page', active: false, parentPage: '22' },
   { id: '24', name: '404 Not Found page', slug: '/404-not-found-page', active: false },
   { id: '25', name: 'Coming Soon page', slug: '/coming-soon-page', active: false },
-  { id: '27', name: 'Accessibility page', slug: '/accessibility-page', active: false },
+  { id: '28', name: 'Accessibility page', slug: '/accessibility-page', active: false },
 ];
 
 export type ResponsiveView = 'Desktop' | 'Tablet' | 'Mobile';
@@ -87,7 +87,8 @@ export const usePagesState = create(
         author: {
           first_name: 'John',
           last_name: 'Doe',
-          photo: 'https://randomuser.me/api/portraits',
+          photo:
+            'https://images.squarespace-cdn.com/content/v1/65c0d13a012cd425e009bc0f/eb1f0fb6-0cb0-428b-ad4d-dbeb0d87441e/1+20190913_InnaBell_GlamHeadshot_16873_Retouched_Portfolio.jpg',
         },
       })),
       selectedPage: data.find((page) => page.active)?.name || '',
