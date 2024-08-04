@@ -90,13 +90,13 @@
   },
   "lint-staged": {
     "*.{js, jsx,ts,tsx}": [
-      "tsc && eslint --quiet --fix"
+      "eslint --quiet --fix"
     ],
     "*.{json,js,ts,jsx,tsx,html}": [
       "prettier --write --ignore-unknown"
     ],
-    "*.{ts, tsx}": [
-      "tsc"
+    "src/**/*.{ts, tsx}": [
+      "tsc --noEmit"
     ]
   }
 }
