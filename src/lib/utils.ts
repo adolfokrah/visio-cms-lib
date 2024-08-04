@@ -76,7 +76,7 @@ export function getGroupedPages(pages: Page[]): PageGroup[] {
 
   // Populate the page map with parent-child relationships
   pages.forEach((page) => {
-    if (page.parentPage) {
+    if (page.parentPage && page.parentPage != '') {
       const parent = pageMap.get(page.parentPage);
       const child = pageMap.get(page.id);
       if (parent && child) {
@@ -150,4 +150,13 @@ export function getAllSlugs(pages: PageGroup[], pageId: string): string[] {
   collectSlugs(page);
 
   return slugs;
+}
+
+export function formatStringToSlug(str: string): string {
+  return str
+    .replace(/^\/+|\/+$/g, '') // Remove leading and trailing slashes
+    .replace(/\/{2,}/g, '/') // Replace multiple consecutive slashes with a single slash
+    .replace(/ /g, '-') // Replace spaces with hyphens
+    .replace(/\/+$/g, '') // Remove trailing slashes after replacement
+    .replace(/^\/+/g, ''); // Remove leading slashes after replacement
 }

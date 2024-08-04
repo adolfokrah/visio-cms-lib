@@ -7,10 +7,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
+  DropdownMenuSubContent,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal,
 } from '@/components/ui/dropdown-menu';
 import AddNewPageForm from '../../add-new-page-form';
 import { useState } from 'react';
 import { useGroupedPagesState } from '@/lib/states/useGroupedPagesState';
+import DeletePageAction from './delete-page-action';
+import usePage from '@/lib/hooks/usePage';
 
 export default function PageTree({ pageGroups }: { pageGroups: PageGroup[] }) {
   return (
@@ -40,6 +47,8 @@ function PageItem({ page, open }: { page: PageGroup; open?: boolean }) {
   const { groupedPagesState } = useGroupedPagesState();
   const [parentSlug, setParentSlug] = useState('/');
   const [parentPage, setParentPage] = useState('');
+  const [openAlert, setOpenAlert] = useState(false);
+  const { duplicatePage } = usePage({});
 
   return (
     <>
@@ -111,8 +120,52 @@ function PageItem({ page, open }: { page: PageGroup; open?: boolean }) {
             >
               Add sub page
             </DropdownMenuItem>
-            <DropdownMenuItem>Delete page</DropdownMenuItem>
-            <DropdownMenuItem>Duplicate page</DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenAlert(true);
+              }}
+            >
+              Delete page
+            </DropdownMenuItem>
+
+            {page.parentPage && page.parentPage != '' ? (
+              <DropdownMenuGroup>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>Duplicate page</DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          duplicatePage({ page });
+                        }}
+                      >
+                        Under parent
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          duplicatePage({ page, isolate: true });
+                        }}
+                      >
+                        Isolate
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </DropdownMenuGroup>
+            ) : (
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  duplicatePage({ page, isolate: true });
+                }}
+              >
+                Duplicate page
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -123,6 +176,13 @@ function PageItem({ page, open }: { page: PageGroup; open?: boolean }) {
         }}
         parentSlug={parentSlug}
         parentPage={parentPage}
+      />
+      <DeletePageAction
+        page={page}
+        open={openAlert}
+        onClose={() => {
+          setOpenAlert(false);
+        }}
       />
     </>
   );

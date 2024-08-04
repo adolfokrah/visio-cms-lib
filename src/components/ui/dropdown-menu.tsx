@@ -27,7 +27,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      'visio-cms-flex visio-cms-cursor-default visio-cms-select-none visio-cms-items-center visio-cms-rounded-sm visio-cms-px-2 visio-cms-py-1.5 visio-cms-text-sm visio-cms-outline-none focus:visio-cms-bg-accent data-[state=open]:visio-cms-bg-accent',
+      'visio-cms-flex visio-cms-cursor-default visio-cms-select-none visio-cms-items-center visio-cms-rounded-sm visio-cms-px-2 visio-cms-py-1.5 visio-cms-text-xs visio-cms-outline-none focus:visio-cms-bg-dark-700 data-[state=open]:visio-cms-bg-dark-700',
       inset && 'visio-cms-pl-8',
       className,
     )}

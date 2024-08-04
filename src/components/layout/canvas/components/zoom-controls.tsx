@@ -21,7 +21,7 @@ export default function ZoomControls() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="!visio-cms-bg-dark-700">
+        <Button className="!visio-cms-bg-dark-700 viso-cms-w-[50px]">
           {activePage?.canvasSettings && mapScaleToPercentage(activePage?.canvasSettings?.scale)}
           {'%'}
           <ChevronDown size={16} />
