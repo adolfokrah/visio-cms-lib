@@ -27,7 +27,7 @@ const data = [
   { id: '23', name: 'Contact Us page', slug: '/help-center-page/contact-us-page', active: false, parentPage: '22' },
   { id: '24', name: '404 Not Found page', slug: '/404-not-found-page', active: false },
   { id: '25', name: 'Coming Soon page', slug: '/coming-soon-page', active: false },
-  { id: '26', name: 'Accessibility page', slug: '/accessibility-page', active: false },
+  { id: '28', name: 'Accessibility page', slug: '/accessibility-page', active: false },
 ];
 
 export type ResponsiveView = 'Desktop' | 'Tablet' | 'Mobile';
