@@ -9,10 +9,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useCallback } from 'react';
 
 export default function PageTabs() {
   const { hiddenTabs, containerRef, pages, handleTabClick, tabRefs, handleRemovePage } = usePageTabs();
   const pinnedPages = pages.filter((page) => page.pinned);
+
+  const tabClicked = useCallback(
+    (name: string) => {
+      handleTabClick(name);
+    },
+    [handleTabClick],
+  );
 
   return (
     <div className="visio-cms-bg-dark-800 visio-cms-h-[40px] visio-cms-flex visio-cms-justify-between visio-cms-items-center">
@@ -25,7 +33,7 @@ export default function PageTabs() {
             key={name}
             id={name}
             title={name}
-            onClick={() => handleTabClick(name)}
+            onClick={() => tabClicked(name)}
             ref={(el) => el && tabRefs.current.set(name, el)} // Store reference
             className={cn(
               'visio-cms-p-3 visio-cms-border-r visio-cms-border-dark-900 visio-cms-group visio-cms-text-slate-400 visio-cms-flex visio-cms-gap-2 visio-cms-cursor-pointer hover:visio-cms-bg-dark-700 visio-cms-items-center',

@@ -36,7 +36,8 @@ export type ResponsiveViews = {
   size: string;
   icon: React.ReactNode;
 };
-
+export type Status = 'Draft' | 'Publish';
+export type SchedulePublished = 'Now' | 'Later';
 export type Page = {
   id: string;
   name: string;
@@ -52,6 +53,9 @@ export type Page = {
   parentPage?: string;
   pinned: boolean;
   isExpanded?: boolean;
+  status: Status;
+  schedulePublished: SchedulePublished;
+  publishDate?: Date;
 };
 
 type PagesStateType = {
@@ -72,6 +76,8 @@ export const usePagesState = create(
         selectedView: RESPONSIVE_VIEWS[0].view,
         activeLanguageLocale: 'en-us',
         pinned: false,
+        status: 'Draft',
+        schedulePublished: 'Now',
       })),
       selectedPage: data.find((page) => page.active)?.name || '',
       setSelectedPage: (selectedPage) => set(() => ({ selectedPage, pageSwitched: true })),

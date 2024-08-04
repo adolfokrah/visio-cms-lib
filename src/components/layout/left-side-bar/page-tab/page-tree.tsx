@@ -14,7 +14,7 @@ import {
   DropdownMenuPortal,
 } from '@/components/ui/dropdown-menu';
 import AddNewPageForm from '../../add-new-page-form';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useGroupedPagesState } from '@/lib/states/useGroupedPagesState';
 import DeletePageAction from './delete-page-action';
 import usePage from '@/lib/hooks/usePage';
@@ -50,6 +50,17 @@ function PageItem({ page, open }: { page: PageGroup; open?: boolean }) {
   const [openAlert, setOpenAlert] = useState(false);
   const { duplicatePage } = usePage({});
 
+  const updateSelectedPage = useCallback(() => {
+    setSelectedPage(name);
+    const newPages = pages.map((page) => ({
+      ...page,
+      active: page.name == name,
+      pinned: page.name == name ? true : page.pinned,
+      isExpanded: page.name == name ? (page?.isExpanded ? false : true) : page.isExpanded,
+    }));
+    setPages(newPages);
+  }, [pages, setPages, setSelectedPage, name]);
+
   return (
     <>
       <div
@@ -59,16 +70,7 @@ function PageItem({ page, open }: { page: PageGroup; open?: boolean }) {
             'visio-cms-bg-dark-900 visio-cms-text-primary': active,
           },
         )}
-        onClick={() => {
-          setSelectedPage(name);
-          const newPages = pages.map((page) => ({
-            ...page,
-            active: page.name == name,
-            pinned: page.name == name ? true : page.pinned,
-            isExpanded: page.name == name ? (page?.isExpanded ? false : true) : page.isExpanded,
-          }));
-          setPages(newPages);
-        }}
+        onClick={updateSelectedPage}
       >
         <div className="visio-cms-flex visio-cms-gap-2  visio-cms-items-center">
           {children.length > 0 ? (
