@@ -96,6 +96,9 @@
   "lint-staged": {
     "*.{js, jsx,ts,tsx}": [
       "eslint --quiet --fix"
+    ],
+    "src/**/*.{tsx, ts}": [
+      "tsc --noEmit"
     ]
   }
 }
