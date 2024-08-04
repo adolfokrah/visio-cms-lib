@@ -50,7 +50,7 @@ export type Page = {
     positionY: number;
   };
   activeLanguageLocale: string;
-  parentPage?: string;
+  folderId?: string;
   pinned: boolean;
   isExpanded?: boolean;
   status: Status;

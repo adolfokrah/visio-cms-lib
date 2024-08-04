@@ -5,35 +5,32 @@ import { Loader } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Link } from 'react-router-dom';
 import { VISIO_DOCS_BASE_URL } from '@/lib/constants';
-import SlugInput from './slug-input';
 import CodeTag from '@/components/ui/code-tag';
 import usePage from '@/lib/hooks/usePage';
+import ErrorAlert from '@/components/ui/error-alert';
 
 export default function AddNewPageForm({
   open,
   onClose,
-  parentSlug,
-  parentPage,
+  folderId,
 }: {
   open: boolean;
   onClose: () => void;
-  parentSlug: string;
-  parentPage: string;
+  folderId: string;
 }) {
-  const { addPageForm, loading, onAddPage } = usePage({ onPageAdded: () => onClose() });
+  const { addPageForm, loading, onAddPage, error, setError } = usePage({ onPageAdded: () => onClose() });
   return (
     <Dialog open={open} onOpenChange={() => onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{parentSlug.length > 1 ? 'Add a sub page' : 'Add new page'}</DialogTitle>
+          <DialogTitle>Add new page</DialogTitle>
           <DialogDescription>
             <Form {...addPageForm}>
               <form
                 className="visio-cms-space-y-4"
-                onSubmit={addPageForm.handleSubmit((data) =>
-                  onAddPage({ ...data, slug: `${parentSlug}${data.slug}`, parentPage }),
-                )}
+                onSubmit={addPageForm.handleSubmit((data) => onAddPage({ ...data, folderId }))}
               >
+                <ErrorAlert errorMessage={error} onClearError={() => setError('')} className="visio-cms-bg-dark-900" />
                 <FormField
                   control={addPageForm.control}
                   name="name"
@@ -55,7 +52,7 @@ export default function AddNewPageForm({
                     <FormItem className=" visio-cms-flex visio-cms-flex-col visio-cms-gap-[6px]">
                       <FormLabel className="visio-cms-ml-[2px]">Slug</FormLabel>
                       <FormControl>
-                        <SlugInput {...field} parentSlug={parentSlug} />
+                        <Input type="text" placeholder="Enter slug" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

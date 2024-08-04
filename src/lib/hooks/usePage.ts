@@ -6,12 +6,17 @@ import { useState } from 'react';
 import { Page, usePagesState } from '../states/usePagesState';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { formatStringToSlug } from '../utils';
-import { PageGroup } from '../types';
+import { useAuthState } from '../states/useAuthState';
+import { useTreeView } from '../states/useTreeView';
+import { PageTreeItem } from '../types';
 
 export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
   const { pages, setPages } = usePagesState();
   const { defaultLanguage } = useProjectConfigurationState();
   const [loading, setLoading] = useState(false);
+  const { user } = useAuthState();
+  const [error, setError] = useState<string>('');
+  const { items, setItems } = useTreeView();
   const addPageForm = useForm<z.infer<typeof addNewPageFormSchema>>({
     resolver: zodResolver(addNewPageFormSchema),
     defaultValues: {
@@ -20,9 +25,22 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
     },
   });
 
-  const onAddPage = (data: z.infer<typeof addNewPageFormSchema> & { parentPage: string }) => {
+  const onAddPage = (data: z.infer<typeof addNewPageFormSchema> & { folderId: string }) => {
     setLoading(true);
     setTimeout(() => {
+      const pageWithSlugExists = pages.find((page) => page.slug == `/${formatStringToSlug(data.slug)}`);
+      if (pageWithSlugExists) {
+        setError('Slug already exists');
+        setLoading(false);
+        return;
+      }
+      const pageWithNameExists = pages.find((page) => page.name.toLowerCase() == data.name.toLowerCase());
+      if (pageWithNameExists) {
+        setError('Page with this name already exists');
+        setLoading(false);
+        return;
+      }
+
       const newPage: Page = {
         id: `${pages.length + 1}`,
         name: data.name,
@@ -31,15 +49,21 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
         selectedView: 'Desktop',
         activeLanguageLocale: defaultLanguage.locale,
         pinned: true,
+        status: 'Draft',
+        author: {
+          first_name: user?.user_metadata.first_name,
+          last_name: user?.user_metadata.last_name,
+          photo: user?.user_metadata.photo,
+        },
+        schedulePublished: 'Now',
+        folderId: data.folderId,
       };
 
-      if (data.parentPage.length) newPage.parentPage = data.parentPage;
       setPages([
         newPage,
         ...pages.map((page) => ({
           ...page,
           active: false,
-          isExpanded: page.id == data.parentPage ? true : page.isExpanded,
         })),
       ]);
       setLoading(false);
@@ -48,16 +72,17 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
     }, 1000);
   };
 
-  const deletePage = (pageId: string) => {
+  const deletePage = (page: PageTreeItem, withPages: boolean) => {
     setLoading(true);
     setTimeout(() => {
-      const newPages = pages.filter((page) => page.id != pageId);
-      setPages(newPages.map((page) => ({ ...page, parentPage: page.parentPage == pageId ? '' : page.parentPage })));
+      const newPages = pages.filter((fPage) => (withPages ? fPage.folderId != page.id : fPage.id != page.id));
+      setPages(newPages);
+      if (page.type == 'Folder') setItems(items.filter((item) => item.id != page.id));
       setLoading(false);
     }, 1000);
   };
 
-  const duplicatePage = ({ page, isolate = false }: { page: PageGroup; isolate?: boolean }) => {
+  const duplicatePage = ({ page }: { page: Page }) => {
     setLoading(true);
     setTimeout(() => {
       const foundPage = pages.find((fPage) => fPage.id == page.id);
@@ -65,24 +90,22 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
       if (foundPage) {
         const id = `${pages.length + 1}`;
         const slug = `${foundPage.slug}-${id}`;
-        const slugArray = slug.split('/');
 
         setPages([
+          ...pages.map((page) => ({ ...page, active: false })),
           {
             ...foundPage,
             id,
-            slug: isolate ? `/${slugArray[slugArray.length - 1]}` : slug,
+            slug: slug,
             name: `${foundPage.name}-${id}`,
-            parentPage: isolate ? '' : foundPage.parentPage,
             pinned: true,
             active: true,
           },
-          ...pages.map((page) => ({ ...page, active: false })),
         ]);
       }
       setLoading(false);
     }, 1000);
   };
 
-  return { addPageForm, loading, onAddPage, deletePage, duplicatePage };
+  return { addPageForm, loading, onAddPage, deletePage, duplicatePage, error, setError };
 }

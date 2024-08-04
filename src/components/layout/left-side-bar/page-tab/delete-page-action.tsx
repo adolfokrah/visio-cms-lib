@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import CodeTag from '@/components/ui/code-tag';
 import usePage from '@/lib/hooks/usePage';
-import { PageGroup } from '@/lib/types';
+import { PageTreeItem } from '@/lib/types';
 import { Loader } from 'lucide-react';
 
 export default function DeletePageAction({
@@ -18,19 +18,20 @@ export default function DeletePageAction({
   open,
   onClose,
 }: {
-  page: PageGroup;
+  page: PageTreeItem;
   onClose: () => void;
-  open: boolean;
+  open: { withPages: boolean } | null;
 }) {
   const { loading, deletePage } = usePage({});
   return (
-    <AlertDialog open={open} onOpenChange={onClose}>
+    <AlertDialog open={open != null} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription className="visio-cms-leading-7">
-            This action cannot be undone. This will permanently delete the page <CodeTag>{page.name}</CodeTag> and
-            remove it's data from your server.
+            This action cannot be undone. This will permanently delete the {page.type == 'Folder' ? 'folder' : 'page'}{' '}
+            <CodeTag>{page.name}</CodeTag> {open?.withPages && 'including all child pages'} and remove it's data from
+            your server.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -39,7 +40,7 @@ export default function DeletePageAction({
             disabled={loading}
             variant={'destructive'}
             className="visio-cms-min-w-[60px]"
-            onClick={() => deletePage(page.id)}
+            onClick={() => deletePage(page, open?.withPages || false)}
           >
             {loading ? <Loader size={16} className="visio-cms-animate-spin" /> : 'Continue'}
           </Button>

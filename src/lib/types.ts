@@ -1,3 +1,5 @@
+import { Page } from './states/usePagesState';
+
 export type Language = {
   language: string;
   locale: string;
@@ -11,12 +13,16 @@ export type ProjectConfiguration = {
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 
-export type PageGroup = {
+export type Folder = {
   id: string;
   name: string;
-  active: boolean;
-  children: PageGroup[];
-  slug: string;
-  parentPage?: string;
+  children: PageTreeItem[];
   isExpanded?: boolean;
+  type: 'Folder';
 };
+
+export type PageT = Page & {
+  type: 'Page';
+};
+
+export type PageTreeItem = Folder | PageT;

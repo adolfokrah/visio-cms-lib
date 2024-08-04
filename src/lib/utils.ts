@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { createClient } from '@supabase/supabase-js';
 import { useProjectConfigurationState } from './states/useProjectConfigState';
-import { OsTypes, PageGroup } from './types';
+import { Folder, OsTypes, PageTreeItem } from './types';
 import { Page } from './states/usePagesState';
 
 export function cn(...inputs: ClassValue[]) {
@@ -64,92 +64,25 @@ export const getOS = (): OsTypes => {
   return 'unknown'; // Fallback for unknown OS
 };
 
-export function getGroupedPages(pages: Page[]): PageGroup[] {
-  const pageMap = new Map<string, PageGroup>();
+export function generateTree(treeItems: PageTreeItem[], pages: Page[]): PageTreeItem[] {
+  const folders = treeItems.filter((item) => item.type === 'Folder') as Folder[];
+  const pageWithNoFolders = pages.filter((page) => !folders.find((folder) => folder.id === page.folderId));
+  const pagesWithFolders = pages.filter((page) => folders.find((folder) => folder.id === page.folderId));
 
-  pages.forEach((page) => {
-    pageMap.set(page.id, { ...page, children: [] });
+  folders.forEach((item) => {
+    const children = pagesWithFolders.filter((page) => page.folderId === item.id);
+    item.children = children.map((page) => ({ ...page, type: 'Page' }));
+    item.isExpanded = item.children.find((child) => child.type === 'Page' && child.active) ? true : item.isExpanded;
   });
 
-  // Initialize the grouped pages array
-  const groupedPages: PageGroup[] = [];
-
-  // Populate the page map with parent-child relationships
-  pages.forEach((page) => {
-    if (page.parentPage && page.parentPage != '') {
-      const parent = pageMap.get(page.parentPage);
-      const child = pageMap.get(page.id);
-      if (parent && child) {
-        parent.children.push(child);
-      }
-    } else {
-      const topLevelPage = pageMap.get(page.id);
-      if (topLevelPage) {
-        groupedPages.push(topLevelPage);
-      }
-    }
-  });
-
-  return groupedPages;
-}
-
-export function getSearchedPages(pages: PageGroup[], pageName: string): PageGroup[] {
-  // Helper function to recursively search for pages by name and accumulate results
-  function findPages(pages: PageGroup[], pageName: string): PageGroup[] {
-    let result: PageGroup[] = [];
-
-    for (const page of pages) {
-      // Check if the current page matches the search name
-      if (page.name.toLowerCase().includes(pageName)) {
-        result.push(page);
-      }
-
-      // Recursively search in the children
-      const foundInChildren = findPages(page.children, pageName);
-      result = result.concat(foundInChildren);
-    }
-
-    return result;
-  }
-
-  return findPages(pages, pageName);
-}
-
-function findPageById(pages: PageGroup[], pageId: string): PageGroup | null {
-  for (const page of pages) {
-    if (page.id === pageId) {
-      return page;
-    }
-    const childPage = findPageById(page.children, pageId);
-    if (childPage) {
-      return childPage;
-    }
-  }
-  return null;
-}
-
-export function getAllSlugs(pages: PageGroup[], pageId: string): string[] {
-  const page = findPageById(pages, pageId);
-  if (!page) return [];
-
-  // If the page has no parent, return its own slug
-  if (!page.parentPage) {
-    return [page.slug];
-  }
-
-  const slugs: string[] = [];
-
-  // Helper function to recursively collect slugs
-  function collectSlugs(p: PageGroup) {
-    slugs.push(p.slug);
-    for (const child of p.children) {
-      collectSlugs(child);
-    }
-  }
-
-  collectSlugs(page);
-
-  return slugs;
+  const tree = [
+    ...folders.map((folder) => ({
+      ...folder,
+      type: 'Folder',
+    })),
+    ...pageWithNoFolders.map((page) => ({ ...page, type: 'Page' })),
+  ] as PageTreeItem[];
+  return tree;
 }
 
 export function formatStringToSlug(str: string): string {
