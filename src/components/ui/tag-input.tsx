@@ -3,7 +3,17 @@ import { Input } from './input';
 import { Button } from './button';
 import { X } from 'lucide-react';
 
-const TagInput = ({ onChange, defaultValue }: { defaultValue?: string; onChange?: (value: string) => void }) => {
+const TagInput = ({
+  onChange,
+  defaultValue,
+  onBlur,
+  onTagRemoved,
+}: {
+  defaultValue?: string;
+  onChange?: (value: string) => void;
+  onBlur?: (value: string) => void;
+  onTagRemoved?: (tag: string) => void;
+}) => {
   const [tags, setTags] = useState<string[]>(
     defaultValue && defaultValue.length > 0 ? [...defaultValue.split(',')] : [],
   );
@@ -30,6 +40,7 @@ const TagInput = ({ onChange, defaultValue }: { defaultValue?: string; onChange?
   const handleTagRemove = (tagToRemove: string) => {
     const newTags = tags.filter((tag) => tag !== tagToRemove);
     if (onChange) onChange(newTags.length ? newTags.join(',') : '');
+    if (onTagRemoved) onTagRemoved(newTags.length ? newTags.join(',') : '');
     setTags(newTags);
   };
 
@@ -54,12 +65,15 @@ const TagInput = ({ onChange, defaultValue }: { defaultValue?: string; onChange?
         </div>
       ))}
       <Input
-        className="visio-cms-border-none visio-cms-w-max !p-0 visio-cms-h-8  visio-cms-shadow-none"
+        className="visio-cms-border-none !visio-cms-w-max  !p-0 visio-cms-h-8  visio-cms-shadow-none"
         type="text"
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleInputKeyDown}
         placeholder="Type and hit enter"
+        onBlur={() => {
+          if (onBlur) onBlur(tags.length ? tags.join(',') : '');
+        }}
       />
     </div>
   );

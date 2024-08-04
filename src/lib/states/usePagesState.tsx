@@ -56,6 +56,12 @@ export type Page = {
   status: Status;
   schedulePublished: SchedulePublished;
   publishDate?: Date;
+  author: {
+    first_name: string;
+    last_name: string;
+    photo: string;
+  };
+  tags?: string;
 };
 
 type PagesStateType = {
@@ -78,6 +84,11 @@ export const usePagesState = create(
         pinned: false,
         status: 'Draft',
         schedulePublished: 'Now',
+        author: {
+          first_name: 'John',
+          last_name: 'Doe',
+          photo: 'https://randomuser.me/api/portraits',
+        },
       })),
       selectedPage: data.find((page) => page.active)?.name || '',
       setSelectedPage: (selectedPage) => set(() => ({ selectedPage, pageSwitched: true })),

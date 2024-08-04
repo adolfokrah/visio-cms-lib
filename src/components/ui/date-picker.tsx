@@ -23,7 +23,7 @@ export function DatePicker({
       <PopoverTrigger asChild>
         <Button
           className={cn(
-            'visio-cms-w-full !visio-cms-justify-start visio-cms-font-regular !visio-cms-bg-dark-900',
+            'visio-cms-w-full visio-cms-h-9 !visio-cms-justify-start visio-cms-font-regular !visio-cms-bg-dark-900',
             !date && 'visio-cms-text-muted-foreground',
           )}
         >
