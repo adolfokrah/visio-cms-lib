@@ -72,7 +72,7 @@ function Index({
   useCanvas({ canvasWrapperRef });
   return (
     <TransformComponent
-      wrapperClass="!visio-cms-w-[calc(100vw-480px)] !visio-cms-h-[calc(100vh-84px)]  !visio-cms-mx-auto"
+      wrapperClass="!visio-cms-w-[calc(100vw-600px)] !visio-cms-h-[calc(100vh-84px)]  !visio-cms-mx-auto"
       contentClass="!visio-cms-h-[2000px] visio-cms-w-[1200px]"
       contentStyle={{ width: RESPONSIVE_VIEWS.find((view) => view.view === activePage?.selectedView)?.size }}
     >

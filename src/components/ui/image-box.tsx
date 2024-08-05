@@ -3,7 +3,7 @@ import { RefreshCcw, Trash, UploadCloudIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
 import { cn } from '@/lib/utils';
 
-const ImageBox = (props: { imageSrc?: string }) => {
+const ImageBox = (props: { imageSrc?: string; onImageChosen?: (imageUrl: string) => void }) => {
   const { imageSrc } = props;
 
   return (

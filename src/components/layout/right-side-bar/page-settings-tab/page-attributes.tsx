@@ -1,73 +1,17 @@
 import ErrorAlert from '@/components/ui/error-alert';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { usePagesState } from '@/lib/states/usePagesState';
-import { useCallback, useMemo, useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { TagInput } from '@/components/ui/tag-input';
-import { formatStringToSlug } from '@/lib/utils';
+import usePageSettings from '@/lib/hooks/usePageSettings';
 
 export default function PageAttributes() {
-  const { pages, setPages } = usePagesState();
-  const page = useMemo(() => pages.find((page) => page.active), [pages]);
-  const [error, setError] = useState<string>('');
-
-  const handleUpdatePageName = useCallback(
-    (value: string) => {
-      if (!value) {
-        setError('Page name can not be empty');
-        return;
-      }
-      const isPageNameExists = pages.find((page) => page.name.toLowerCase() === value.toLowerCase() && !page.active);
-
-      if (isPageNameExists) {
-        setError(`Page name ${value} already exists`);
-        return;
-      }
-      setPages(pages.map((page) => ({ ...page, name: page.active ? value : page.name })));
-      setError('');
-    },
-    [pages, setPages],
-  );
-
-  const handleUpdatePageTag = useCallback(
-    (value: string) => {
-      setPages(pages.map((page) => ({ ...page, tags: page.active ? value : page.tags })));
-    },
-    [pages, setPages],
-  );
-
-  const handleUpdatePageSlug = useCallback(
-    (value: string) => {
-      const slug = `/${formatStringToSlug(value)}`;
-      if (!value) {
-        setError('Page slug can not be empty');
-        return;
-      }
-      const isPageNameExists = pages.find((page) => page.slug.toLowerCase() === slug.toLowerCase() && !page.active);
-
-      if (isPageNameExists) {
-        setError(`Page slug already exists`);
-        return;
-      }
-      setPages(pages.map((page) => ({ ...page, slug: page.active ? slug : page.slug })));
-    },
-    [pages, setPages],
-  );
-
-  const authorInitial = useMemo(() => {
-    const author = page?.author;
-    if (author) {
-      const firstName = author.first_name || '';
-      const lastName = author.last_name || '';
-      return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
-    }
-    return '';
-  }, [page?.author]);
+  const { handleUpdatePageName, handleUpdatePageTag, handleUpdatePageSlug, authorInitial, error, setError, page } =
+    usePageSettings();
 
   return (
-    <div>
+    <div key={page?.name}>
       <ErrorAlert
         className="visio-cms-bg-dark-900 visio-cms-my-2"
         errorMessage={error}
@@ -79,7 +23,6 @@ export default function PageAttributes() {
       <Input
         className="visio-cms-my-3"
         defaultValue={page?.name}
-        key={page?.name}
         onBlur={(e) => handleUpdatePageName(e.target.value)}
         onChange={() => setError('')}
       />
@@ -100,7 +43,6 @@ export default function PageAttributes() {
       <div className="visio-cms-my-3">
         <TagInput
           defaultValue={page?.tags}
-          key={page?.tags}
           onBlur={(value) => handleUpdatePageTag(value)}
           onTagRemoved={(value) => handleUpdatePageTag(value)}
         />
@@ -110,7 +52,6 @@ export default function PageAttributes() {
       <Input
         className="visio-cms-my-3"
         defaultValue={page?.slug}
-        key={page?.slug}
         onChange={() => setError('')}
         onBlur={(e) => handleUpdatePageSlug(e.target.value)}
       />

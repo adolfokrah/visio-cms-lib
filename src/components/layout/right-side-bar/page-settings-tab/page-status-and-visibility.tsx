@@ -1,44 +1,12 @@
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
-import { SchedulePublished, Status, usePagesState } from '@/lib/states/usePagesState';
+import { SchedulePublished, Status } from '@/lib/states/usePagesState';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useCallback, useMemo } from 'react';
 import { DatePicker } from '@/components/ui/date-picker';
+import usePageSettings from '@/lib/hooks/usePageSettings';
 
 export default function PageStatusAndVisibility() {
-  const { pages, setPages } = usePagesState();
-  const page = useMemo(() => pages.find((page) => page.active), [pages]);
-
-  const updatePageStatus = useCallback(
-    (value: Status) => {
-      setPages(pages.map((page) => ({ ...page, status: page.active ? (value as Status) : page.status })));
-    },
-    [pages, setPages],
-  );
-
-  const updateSchedulePublished = useCallback(
-    (value: SchedulePublished) => {
-      setPages(
-        pages.map((page) => ({
-          ...page,
-          schedulePublished: page.active ? (value as SchedulePublished) : page.schedulePublished,
-        })),
-      );
-    },
-    [pages, setPages],
-  );
-
-  const handleUpdatePageDate = useCallback(
-    (value: Date) => {
-      setPages(
-        pages.map((page) => ({
-          ...page,
-          publishDate: page.active ? (value as Date) : page.publishDate,
-        })),
-      );
-    },
-    [pages, setPages],
-  );
+  const { handleUpdatePageDate, updateSchedulePublished, updatePageStatus, page } = usePageSettings();
 
   return (
     <>
