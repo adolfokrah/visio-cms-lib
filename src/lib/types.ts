@@ -10,6 +10,8 @@ export type ProjectConfiguration = {
   supabaseAnonKey: string;
   supportedLanguages: Language[];
   defaultLanguage: Language;
+  projectId: string;
+  bucketName: string;
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 
@@ -26,3 +28,10 @@ export type PageT = Page & {
 };
 
 export type PageTreeItem = Folder | PageT;
+
+export type MediaFile = {
+  mediaUrl: string;
+  altText: string;
+  width: number;
+  height: number;
+};

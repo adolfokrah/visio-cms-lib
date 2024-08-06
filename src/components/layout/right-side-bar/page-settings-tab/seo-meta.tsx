@@ -33,8 +33,15 @@ export default function SeoMeta() {
       <Label className="!visio-cms-text-gray-300">Featured Image</Label>
       <div className="visio-cms-my-3">
         <ImageBox
-          imageSrc={page?.seo?.meta?.featuredImage}
-          onImageChosen={(imageUrl) => updatePageMeta({ featuredImage: imageUrl })}
+          image={{
+            mediaUrl: page?.seo?.meta.featuredImage || '',
+            altText: 'Featured Image',
+            width: 0,
+            height: 0,
+          }}
+          onImageChosen={(image) => {
+            updatePageMeta({ featuredImage: image?.mediaUrl });
+          }}
         />
       </div>
     </div>

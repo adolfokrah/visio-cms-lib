@@ -101,7 +101,7 @@ export default function usePageSettings() {
                   title: value.title || page.seo?.meta.title || '',
                   description: value.description || page.seo?.meta.description || '',
                   keywords: value.keywords || page.seo?.meta.keywords || '',
-                  featuredImage: value.featuredImage || page.seo?.meta.featuredImage || '',
+                  featuredImage: value.featuredImage,
                 },
               }
             : page.seo,

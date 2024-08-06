@@ -67,7 +67,7 @@ export type Page = {
       title: string;
       description: string;
       keywords: string;
-      featuredImage: string;
+      featuredImage?: string;
     };
   };
 };

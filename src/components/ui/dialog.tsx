@@ -22,7 +22,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'visio-cms-fixed visio-cms-inset-0 visio-cms-z-50 visio-cms-bg-dark-900 visio-cms-opacity-10 visio-cms- data-[state=open]:visio-cms-animate-in data-[state=closed]:visio-cms-animate-out data-[state=closed]:visio-cms-fade-out-0 data-[state=open]:visio-cms-fade-in-0',
+      'visio-cms-fixed visio-cms-inset-0 visio-cms-z-50 visio-cms-bg-dark-900 visio-cms-opacity-55 visio-cms- data-[state=open]:visio-cms-animate-in data-[state=closed]:visio-cms-animate-out data-[state=closed]:visio-cms-fade-out-0 data-[state=open]:visio-cms-fade-in-0',
       className,
     )}
     {...props}
@@ -32,8 +32,8 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { onCloseButtonClicked?: () => void }
+>(({ className, children, onCloseButtonClicked, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -45,7 +45,10 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className=" visio-cms-text-white visio-cms-absolute visio-cms-right-4 visio-cms-top-4 visio-cms-rounded-sm visio-cms-opacity-70 visio-cms-ring-offset-background visio-cms-transition-opacity hover:visio-cms-opacity-100 focus:visio-cms-outline-none focus:visio-cms-ring-2 focus:visio-cms-ring-ring focus:visio-cms-ring-offset-2 disabled:visio-cms-pointer-events-none data-[state=open]:visio-cms-bg-accent data-[state=open]:visio-cms-text-muted-foreground">
+      <DialogPrimitive.Close
+        onClick={onCloseButtonClicked}
+        className=" visio-cms-text-white visio-cms-absolute visio-cms-right-4 visio-cms-top-4 visio-cms-rounded-sm visio-cms-opacity-70 visio-cms-ring-offset-background visio-cms-transition-opacity hover:visio-cms-opacity-100 focus:visio-cms-outline-none focus:visio-cms-ring-2 focus:visio-cms-ring-ring focus:visio-cms-ring-offset-2 disabled:visio-cms-pointer-events-none data-[state=open]:visio-cms-bg-accent data-[state=open]:visio-cms-text-muted-foreground"
+      >
         <Cross2Icon className="visio-cms-h-4 visio-cms-w-4" />
         <span className="visio-cms-sr-only">Close</span>
       </DialogPrimitive.Close>
