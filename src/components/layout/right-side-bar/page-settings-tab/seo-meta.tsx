@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import usePageSettings from '@/lib/hooks/usePageSettings';
 
 export default function SeoMeta() {
-  const { page, updatePageMeta } = usePageSettings();
+  const { page, updatePageMeta, updatePageFeaturedImage } = usePageSettings();
 
   return (
     <div key={page?.id}>
@@ -40,7 +40,7 @@ export default function SeoMeta() {
             height: 0,
           }}
           onImageChosen={(image) => {
-            updatePageMeta({ featuredImage: image?.mediaUrl });
+            updatePageFeaturedImage(image?.mediaUrl);
           }}
         />
       </div>

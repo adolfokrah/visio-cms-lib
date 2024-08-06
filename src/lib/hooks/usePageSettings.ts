@@ -101,7 +101,7 @@ export default function usePageSettings() {
                   title: value.title || page.seo?.meta.title || '',
                   description: value.description || page.seo?.meta.description || '',
                   keywords: value.keywords || page.seo?.meta.keywords || '',
-                  featuredImage: value.featuredImage,
+                  featuredImage: page.seo?.meta.featuredImage,
                 },
               }
             : page.seo,
@@ -110,6 +110,24 @@ export default function usePageSettings() {
     },
     [pages, setPages],
   );
+
+  const updatePageFeaturedImage = (image: string | undefined) => {
+    setPages(
+      pages.map((page) => ({
+        ...page,
+        seo: page.active
+          ? {
+              meta: {
+                title: page.seo?.meta.title || '',
+                description: page.seo?.meta.description || '',
+                keywords: page.seo?.meta.keywords || '',
+                featuredImage: image,
+              },
+            }
+          : page.seo,
+      })),
+    );
+  };
 
   return {
     handleUpdatePageDate,
@@ -123,5 +141,6 @@ export default function usePageSettings() {
     error,
     setError,
     updatePageMeta,
+    updatePageFeaturedImage,
   };
 }
