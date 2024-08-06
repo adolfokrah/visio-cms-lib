@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { supabase } from '../utils';
 import * as tus from 'tus-js-client';
@@ -13,12 +13,45 @@ export type Media = {
   width?: number;
   height?: number;
   altText?: string;
+  hashed_file_name?: string;
 };
 export default function useMediaExplorer() {
   const db = supabase();
   const { projectId, bucketName } = useProjectConfigurationState();
   const [files, setFiles] = useState<Media[]>([]);
   const [selectedFileAltText, setSelectedFileAltText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchFiles();
+  }, []);
+
+  const fetchFiles = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { data, error } = await db.from('uploaded_files').select('*');
+      if (error) {
+        throw new Error(error.message);
+      }
+      setFiles(
+        data.map((file) => ({
+          id: file.id,
+          uploadProgress: 100,
+          file: new File([], file.file_name),
+          mediaUrl: db.storage.from('media').getPublicUrl(file.hashed_file_name).data.publicUrl,
+          width: file.file_width,
+          height: file.file_height,
+          hashed_file_name: file.hashed_file_name,
+        })),
+      );
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   async function uploadFiles(mediaFiles: Media[]) {
     setFiles(() => [...mediaFiles, ...files]);
@@ -115,5 +148,14 @@ export default function useMediaExplorer() {
     setFiles((prevFiles) => prevFiles.map((file) => ({ ...file, selected: file.id === fileId })));
   }, []);
 
-  return { uploadFiles, files, handleSelectMediaType, selectedFileAltText, setSelectedFileAltText };
+  return {
+    uploadFiles,
+    files,
+    handleSelectMediaType,
+    selectedFileAltText,
+    setSelectedFileAltText,
+    loading,
+    error,
+    fetchFiles,
+  };
 }
