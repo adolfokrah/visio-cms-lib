@@ -58,7 +58,7 @@ export default function MediaExplorer({
           <DialogTitle>Media Explorer</DialogTitle>
 
           <DialogDescription>
-            <div className="visio-cms-grid visio-cms-grid-cols-7 visio-cms-h-[calc(100vh-200px)]">
+            <div className="visio-cms-grid visio-cms-grid-cols-7 visio-cms-max-h-[700px] visio-cms-h-[calc(100vh-200px)]">
               {loading ? (
                 <div className="visio-cms-col-span-7  visio-cms-h-full visio-cms-grid visio-cms-place-items-center">
                   <Loader size={16} className="visio-cms-animate-spin" />
@@ -93,7 +93,7 @@ export default function MediaExplorer({
                             <div className="visio-cms-mb-3">
                               <UploadButton uploadFiles={uploadFiles} />
                             </div>
-                            <div className="visio-cms-overflow-auto scrollbar-custom visio-cms-h-[calc(100vh-250px)] ">
+                            <div className="visio-cms-overflow-auto scrollbar-custom visio-cms-max-h-[650px]  visio-cms-h-[calc(100vh-250px)] ">
                               <div className="visio-cms-flex visio-cms-flex-wrap visio-cms-gap-2 ">
                                 {files.map((file) => (
                                   <div
