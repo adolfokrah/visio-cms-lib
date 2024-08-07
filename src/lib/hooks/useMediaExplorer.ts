@@ -33,13 +33,16 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
   }, []);
 
   useEffect(() => {
-    if (open == true && files.length) {
-      setFiles(
-        files.map((file) => ({
-          ...file,
-          selected: chosenImage?.mediaHash == file.hashed_file_name,
-        })),
-      );
+    if (open == true) {
+      setFiles((prevFiles) => {
+        if (prevFiles.length)
+          return prevFiles.map((file) => ({
+            ...file,
+            selected: chosenImage?.mediaHash == file.hashed_file_name,
+          }));
+        return [];
+      });
+
       setSelectedFileAltText(chosenImage?.altText || '');
     }
   }, [open, setFiles, chosenImage, setSelectedFileAltText]);
@@ -185,6 +188,7 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
       }
       await db.from('uploaded_files').delete().eq('hashed_file_name', file.hashed_file_name);
       setFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
+
       const newPages = pages.map((page) => ({
         ...page,
         seo:
