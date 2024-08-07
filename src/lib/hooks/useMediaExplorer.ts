@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { supabase } from '../utils';
 import * as tus from 'tus-js-client';
+import { toast } from 'sonner';
 
 export type Media = {
   id: string;
@@ -22,6 +23,7 @@ export default function useMediaExplorer() {
   const [selectedFileAltText, setSelectedFileAltText] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     fetchFiles();
@@ -148,6 +150,27 @@ export default function useMediaExplorer() {
     setFiles((prevFiles) => prevFiles.map((file) => ({ ...file, selected: file.id === fileId })));
   }, []);
 
+  const deleteFile = async (fileId: string) => {
+    setDeleting(true);
+    try {
+      const file = files.find((file) => file.id === fileId);
+      if (!file) {
+        throw new Error('File not found');
+      }
+      const { error } = await db.storage.from(bucketName).remove([file.hashed_file_name || '']);
+      if (error) {
+        throw new Error(error.message);
+      }
+      await db.from('uploaded_files').delete().eq('hashed_file_name', file.hashed_file_name);
+      setFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
+      toast.success('File deleted successfully');
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return {
     uploadFiles,
     files,
@@ -157,5 +180,7 @@ export default function useMediaExplorer() {
     loading,
     error,
     fetchFiles,
+    deleteFile,
+    deleting,
   };
 }

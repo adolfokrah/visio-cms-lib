@@ -1,15 +1,24 @@
 import { Button } from './button';
 import { RefreshCcw, Trash, UploadCloudIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
-import { cn } from '@/lib/utils';
+import { cn, supabase } from '@/lib/utils';
 import MediaExplorer from './media-explorer';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { MediaFile } from '@/lib/types';
+import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 
 const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile | null) => void }) => {
   const { image } = props;
+  const { bucketName } = useProjectConfigurationState();
   const [open, setOpen] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | undefined>(image?.mediaUrl);
+  const [mediaHash, setMediaHash] = useState<string | undefined>(image?.mediaHash);
+  const db = useMemo(() => supabase(), []);
+  const imagePublicUrl = useMemo(
+    () => db.storage.from(bucketName).getPublicUrl(mediaHash || '').data.publicUrl,
+    [mediaHash, db, bucketName],
+  );
+  console.log(imagePublicUrl);
+  console.log(mediaHash);
 
   return (
     <>
@@ -18,9 +27,9 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
           'visio-cms-bg-dark-900 visio-cms-group  visio-cms-rounded-md  visio-cms-relative  visio-cms-w-full visio-cms-h-48'
         }
       >
-        {imageUrl && (
+        {imagePublicUrl && (
           <img
-            src={imageUrl}
+            src={imagePublicUrl}
             className="visio-cms-w-full visio-cms-object-contain visio-cms-h-full visio-cms-rounded-md visio-cms-absolute visio-cms-left-0 visio-cms-top-0"
           />
         )}
@@ -29,14 +38,14 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
           className={cn(
             'visio-cms-absolute visio-cms-w-full visio-cms-h-full visio-cms-place-items-center visio-cms-top-0 visio-cms-left-0',
             {
-              'visio-cms-hidden group-hover:visio-cms-grid': imageUrl,
-              'visio-cms-grid': !imageUrl,
+              'visio-cms-hidden group-hover:visio-cms-grid': imagePublicUrl,
+              'visio-cms-grid': !imagePublicUrl,
             },
           )}
         >
           <div className="visio-cms-flex visio-cms-gap-2 visio-cms-justify-center">
             <TooltipProvider>
-              {!imageUrl ? (
+              {!imagePublicUrl ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
@@ -57,7 +66,7 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
                       <Button
                         className="!visio-cms-rounded-full !visio-cms-bg-dark-900 hover:!visio-cms-bg-dark-800 !visio-cms-h-11 !visio-cms-w-11"
                         onClick={() => {
-                          setImageUrl(undefined);
+                          setMediaHash(undefined);
                           props.onImageChosen?.(null);
                         }}
                       >
@@ -94,7 +103,7 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
         open={open}
         onImageChosen={(mediaFile) => {
           props.onImageChosen?.(mediaFile);
-          setImageUrl(mediaFile?.mediaUrl);
+          setMediaHash(mediaFile?.mediaHash);
           setOpen(false);
         }}
       />

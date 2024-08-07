@@ -34,13 +34,13 @@ export default function SeoMeta() {
       <div className="visio-cms-my-3">
         <ImageBox
           image={{
-            mediaUrl: page?.seo?.meta.featuredImage || '',
+            mediaHash: page?.seo?.meta.featuredImage || '',
             altText: 'Featured Image',
             width: 0,
             height: 0,
           }}
           onImageChosen={(image) => {
-            updatePageFeaturedImage(image?.mediaUrl);
+            updatePageFeaturedImage(image?.mediaHash);
           }}
         />
       </div>

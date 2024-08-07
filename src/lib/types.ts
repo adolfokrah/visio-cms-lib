@@ -30,7 +30,7 @@ export type PageT = Page & {
 export type PageTreeItem = Folder | PageT;
 
 export type MediaFile = {
-  mediaUrl: string;
+  mediaHash: string;
   altText: string;
   width: number;
   height: number;

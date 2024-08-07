@@ -16,6 +16,16 @@ import { Button } from '../button';
 import { Separator } from '../separator';
 import { Input } from '../input';
 import { MediaFile } from '@/lib/types';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 export default function MediaExplorer({
   open,
@@ -35,6 +45,8 @@ export default function MediaExplorer({
     loading,
     error,
     fetchFiles,
+    deleteFile,
+    deleting,
   } = useMediaExplorer();
   const selectedFile = files.find((file) => file.selected);
   return (
@@ -136,9 +148,33 @@ export default function MediaExplorer({
                                 Edit Image
                               </Button>
                               <br />
-                              <Button variant={'ghost'} className="visio-cms-text-destructive visio-cms-mb-2">
-                                Delete Permanently
-                              </Button>
+
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant={'ghost'} className="visio-cms-text-destructive visio-cms-mb-2">
+                                    Delete Permanently
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This action cannot be undone. This will permanently delete your account and remove
+                                      the image from our servers.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel className="visio-cms-text-white">Cancel</AlertDialogCancel>
+                                    <Button
+                                      onClick={() => {
+                                        deleteFile(selectedFile.id);
+                                      }}
+                                    >
+                                      {deleting ? <Loader size={16} className="visio-cms-animate-spin" /> : 'Continue'}
+                                    </Button>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
 
                               <Separator />
 
@@ -167,7 +203,7 @@ export default function MediaExplorer({
             <Button
               onClick={() => {
                 onImageChosen({
-                  mediaUrl: selectedFile.mediaUrl || '',
+                  mediaHash: selectedFile.hashed_file_name || '',
                   altText: selectedFileAltText,
                   width: selectedFile.width || 0,
                   height: selectedFile.height || 0,
