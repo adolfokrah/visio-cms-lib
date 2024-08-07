@@ -45,7 +45,7 @@ const TagInput = ({
   };
 
   return (
-    <div className="visio-cms-flex visio-cms-items-center visio-cms-bg-dark-900 visio-cms-rounded-md  visio-cms-p-1 visio-cms-gap-2 visio-cms-w-full visio-cms-flex-wrap">
+    <div className="visio-cms-flex visio-cms-items-center visio-cms-bg-dark-900 visio-cms-rounded-md   visio-cms-p-1 visio-cms-px-2 visio-cms-gap-2 visio-cms-w-full visio-cms-flex-wrap">
       {tags.map((tag, index) => (
         <div
           key={index}

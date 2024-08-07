@@ -13,12 +13,7 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
   const [open, setOpen] = useState(false);
   const [mediaHash, setMediaHash] = useState<string | undefined>(image?.mediaHash);
   const db = useMemo(() => supabase(), []);
-  const imagePublicUrl = useMemo(
-    () => db.storage.from(bucketName).getPublicUrl(mediaHash || '').data.publicUrl,
-    [mediaHash, db, bucketName],
-  );
-  console.log(imagePublicUrl);
-  console.log(mediaHash);
+  const imagePublicUrl = db.storage.from(bucketName).getPublicUrl(mediaHash || '').data.publicUrl;
 
   return (
     <>
@@ -27,7 +22,7 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
           'visio-cms-bg-dark-900 visio-cms-group  visio-cms-rounded-md  visio-cms-relative  visio-cms-w-full visio-cms-h-48'
         }
       >
-        {imagePublicUrl && (
+        {mediaHash && image?.mediaHash && (
           <img
             src={imagePublicUrl}
             className="visio-cms-w-full visio-cms-object-contain visio-cms-h-full visio-cms-rounded-md visio-cms-absolute visio-cms-left-0 visio-cms-top-0"
@@ -38,14 +33,14 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
           className={cn(
             'visio-cms-absolute visio-cms-w-full visio-cms-h-full visio-cms-place-items-center visio-cms-top-0 visio-cms-left-0',
             {
-              'visio-cms-hidden group-hover:visio-cms-grid': imagePublicUrl,
-              'visio-cms-grid': !imagePublicUrl,
+              'visio-cms-hidden group-hover:visio-cms-grid': mediaHash,
+              'visio-cms-grid': !mediaHash,
             },
           )}
         >
           <div className="visio-cms-flex visio-cms-gap-2 visio-cms-justify-center">
             <TooltipProvider>
-              {!imagePublicUrl ? (
+              {!mediaHash || !image?.mediaHash ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
@@ -99,8 +94,9 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
       </div>
 
       <MediaExplorer
-        onCloseModal={() => setOpen(false)}
         open={open}
+        onCloseModal={() => setOpen(false)}
+        chosenImage={image ? { ...image, mediaHash } : undefined}
         onImageChosen={(mediaFile) => {
           props.onImageChosen?.(mediaFile);
           setMediaHash(mediaFile?.mediaHash);

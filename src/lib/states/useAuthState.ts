@@ -19,6 +19,7 @@ export const useAuthState = create<State & Actions>((set) => ({
     const { data, error } = await db.auth.getUser();
     set({ fetchingUser: false });
     if (error) {
+      throw new Error(error.message);
       return;
     }
     if (data) {

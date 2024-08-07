@@ -34,8 +34,8 @@ export default function SeoMeta() {
       <div className="visio-cms-my-3">
         <ImageBox
           image={{
-            mediaHash: page?.seo?.meta.featuredImage || '',
-            altText: 'Featured Image',
+            mediaHash: page?.seo?.meta.featuredImage,
+            altText: '',
             width: 0,
             height: 0,
           }}

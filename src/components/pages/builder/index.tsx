@@ -16,7 +16,7 @@ export default function Builder() {
     if (!user) {
       navigate(PAGES.LOGIN);
     }
-  }, [user]);
+  }, [user, navigate]);
   return (
     <>
       <SmallerScreenWarning />

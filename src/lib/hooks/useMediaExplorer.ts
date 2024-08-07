@@ -3,6 +3,8 @@ import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { supabase } from '../utils';
 import * as tus from 'tus-js-client';
 import { toast } from 'sonner';
+import { usePagesState } from '../states/usePagesState';
+import { MediaFile } from '../types';
 
 export type Media = {
   id: string;
@@ -16,7 +18,7 @@ export type Media = {
   altText?: string;
   hashed_file_name?: string;
 };
-export default function useMediaExplorer() {
+export default function useMediaExplorer({ chosenImage, open }: { chosenImage: MediaFile | undefined; open: boolean }) {
   const db = supabase();
   const { projectId, bucketName } = useProjectConfigurationState();
   const [files, setFiles] = useState<Media[]>([]);
@@ -24,10 +26,23 @@ export default function useMediaExplorer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const { pages, setPages } = usePagesState();
 
   useEffect(() => {
     fetchFiles();
   }, []);
+
+  useEffect(() => {
+    if (open == true && files.length) {
+      setFiles(
+        files.map((file) => ({
+          ...file,
+          selected: chosenImage?.mediaHash == file.hashed_file_name,
+        })),
+      );
+      setSelectedFileAltText(chosenImage?.altText || '');
+    }
+  }, [open, setFiles, chosenImage, setSelectedFileAltText]);
 
   const fetchFiles = async () => {
     try {
@@ -116,7 +131,14 @@ export default function useMediaExplorer() {
             setFiles((prevFiles) =>
               prevFiles.map((file) =>
                 file.id === filedId
-                  ? { ...file, uploadProgress: Number(100), mediaUrl: data.publicUrl, width, height }
+                  ? {
+                      ...file,
+                      uploadProgress: Number(100),
+                      mediaUrl: data.publicUrl,
+                      width,
+                      height,
+                      hashed_file_name: fileName,
+                    }
                   : file,
               ),
             );
@@ -163,6 +185,20 @@ export default function useMediaExplorer() {
       }
       await db.from('uploaded_files').delete().eq('hashed_file_name', file.hashed_file_name);
       setFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
+      const newPages = pages.map((page) => ({
+        ...page,
+        seo:
+          page.seo && page?.seo.meta.featuredImage == file.hashed_file_name
+            ? {
+                meta: {
+                  ...page.seo.meta,
+                  featuredImage: undefined,
+                },
+              }
+            : page.seo,
+      }));
+
+      setPages(newPages);
       toast.success('File deleted successfully');
     } catch (e: any) {
       toast.error(e.message);

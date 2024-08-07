@@ -31,10 +31,12 @@ export default function MediaExplorer({
   open,
   onImageChosen,
   onCloseModal,
+  chosenImage,
 }: {
   open: boolean;
   onImageChosen: (chosenMediaFile: MediaFile) => void;
   onCloseModal: () => void;
+  chosenImage: MediaFile | undefined;
 }) {
   const {
     uploadFiles,
@@ -47,7 +49,7 @@ export default function MediaExplorer({
     fetchFiles,
     deleteFile,
     deleting,
-  } = useMediaExplorer();
+  } = useMediaExplorer({ chosenImage, open });
   const selectedFile = files.find((file) => file.selected);
   return (
     <Dialog open={open}>
@@ -181,6 +183,7 @@ export default function MediaExplorer({
                               <Label>Alt text</Label>
                               <Input
                                 className="visio-cms-my-2"
+                                value={selectedFileAltText}
                                 onChange={(e) => {
                                   setSelectedFileAltText(e.target.value);
                                 }}
