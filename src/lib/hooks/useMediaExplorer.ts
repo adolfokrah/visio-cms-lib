@@ -203,6 +203,7 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
     } catch (e: any) {
       toast.error(e.message);
     } finally {
+      toast.error('Failed to delete file');
       setDeleting(false);
     }
   };
