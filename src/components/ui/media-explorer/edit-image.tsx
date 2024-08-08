@@ -35,7 +35,7 @@ export default function EditImageView({ image, onImageSaved }: { image: Media; o
         // We use canvasPreview as it's much faster than imgPreview.
         canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
       }
-    }, 300);
+    }, 100);
 
     debouncedPreview();
 
@@ -94,26 +94,34 @@ export default function EditImageView({ image, onImageSaved }: { image: Media; o
       <DialogContent className="!visio-cms-max-w-4xl ">
         <DialogHeader>
           <DialogTitle>Edit image</DialogTitle>
-          <DialogDescription className="visio-cms-max-h-[700px] visio-cms-relative visio-cms-grid visio-cms-items-center visio-cms-h-[calc(100vh-200px)]  visio-cms-rounded-md ">
-            {completedCrop && (
-              <canvas
-                id="myCanvas"
-                ref={previewCanvasRef}
-                className="visio-cms-border visio-cms-invisible visio-cms-absolute visio-cms-top-0 visio-cms-right-0 visio-cms-border-black visio-cms-object-contain"
-                style={{
-                  width: `${completedCrop.width}px`,
-                  height: `${completedCrop.height}px`,
-                }}
-              />
-            )}
-            <ReactCrop crop={crop} onChange={(c) => setCrop(c)} onComplete={(c) => setCompletedCrop(c)}>
-              <img
-                crossOrigin="anonymous"
-                src={src}
-                ref={imgRef}
-                className="visio-cms-rounded-md visio-cms-m-auto visio-cms-h-[calc(100vh-200px)] visio-cms-object-contain"
-              />
-            </ReactCrop>
+          <DialogDescription className="visio-cms-max-h-[700px] visio-cms-w-full  visio-cms-relative visio-cms-grid visio-cms-items-center visio-cms-h-[calc(100vh-200px)]  visio-cms-rounded-md ">
+            <div
+              style={{
+                width: imgRef.current?.width,
+                height: imgRef.current?.height,
+                margin: 'auto',
+              }}
+            >
+              {completedCrop && (
+                <canvas
+                  id="myCanvas"
+                  ref={previewCanvasRef}
+                  className="visio-cms-border  visio-cms-invisible visio-cms-absolute visio-cms-top-0 visio-cms-left-0 visio-cms-border-black visio-cms-object-contain"
+                  style={{
+                    width: `${completedCrop.width}px`,
+                    height: `${completedCrop.height}px`,
+                  }}
+                />
+              )}
+              <ReactCrop crop={crop} onChange={(c) => setCrop(c)} onComplete={(c) => setCompletedCrop(c)}>
+                <img
+                  crossOrigin="anonymous"
+                  src={src}
+                  ref={imgRef}
+                  className="visio-cms-rounded-md visio-cms-m-auto visio-cms-h-[calc(100vh-200px)] visio-cms-object-contain"
+                />
+              </ReactCrop>
+            </div>
           </DialogDescription>
         </DialogHeader>
 
