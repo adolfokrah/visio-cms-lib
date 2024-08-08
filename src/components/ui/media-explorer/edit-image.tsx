@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from 'react';
 import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import lodash from 'lodash';
-import { canvasPreview } from './canvaspreview';
+import { canvasPreview } from './canvasPreview';
 import { Media } from '@/lib/hooks/useMediaExplorer';
 import { supabase } from '@/lib/utils';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
