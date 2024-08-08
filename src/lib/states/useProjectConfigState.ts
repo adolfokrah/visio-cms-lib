@@ -3,6 +3,7 @@ import { ProjectConfiguration } from '../types';
 
 type Actions = {
   setConfiguration: (props: Pick<ProjectConfiguration, 'supabaseAnonKey' | 'supabaseProjectUrl' | 'projectId'>) => void;
+  setTheme: (props: Pick<ProjectConfiguration, 'theme'>) => void;
 };
 
 export const useProjectConfigurationState = create<ProjectConfiguration & Actions>((set) => ({
@@ -37,4 +38,8 @@ export const useProjectConfigurationState = create<ProjectConfiguration & Action
       locale: 'fi',
     },
   ],
+  theme: {
+    colorScheme: [{ colorHex: '#fff', colorName: 'White' }],
+  },
+  setTheme: (data) => set(() => data),
 }));

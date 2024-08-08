@@ -12,6 +12,12 @@ export type ProjectConfiguration = {
   defaultLanguage: Language;
   projectId: string;
   bucketName: string;
+  theme: {
+    colorScheme: {
+      colorHex: string;
+      colorName: string;
+    }[];
+  };
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 

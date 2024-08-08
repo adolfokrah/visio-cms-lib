@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import PageSettingsTab from './page-settings-tab';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import ThemeTab from './theme-tab';
 
 export default function RightSideBar() {
   const { pages } = usePagesState();
@@ -26,7 +27,9 @@ export default function RightSideBar() {
             <PageSettingsTab />
           </TabsContent>
         )}
-        <TabsContent value="theme">Sections.</TabsContent>
+        <TabsContent value="theme">
+          <ThemeTab />
+        </TabsContent>
       </Tabs>
     </div>
   );
