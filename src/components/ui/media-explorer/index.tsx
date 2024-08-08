@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import EditImageView from './edit-image';
 
 export default function MediaExplorer({
   open,
@@ -49,11 +50,19 @@ export default function MediaExplorer({
     fetchFiles,
     deleteFile,
     deleting,
+    onImageSaved,
+    setFiles,
   } = useMediaExplorer({ chosenImage, open });
   const selectedFile = files.find((file) => file.selected);
   return (
     <Dialog open={open}>
-      <DialogContent className="!visio-cms-max-w-4xl " onCloseButtonClicked={onCloseModal}>
+      <DialogContent
+        className="!visio-cms-max-w-4xl "
+        onCloseButtonClicked={() => {
+          onCloseModal();
+          setFiles((prevFiles) => prevFiles.map((file) => ({ ...file, selected: false })));
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Media Explorer</DialogTitle>
 
@@ -146,9 +155,7 @@ export default function MediaExplorer({
                               </Label>
                               <br />
 
-                              <Button variant={'ghost'} className="visio-cms-text-primary visio-cms-mt-2">
-                                Edit Image
-                              </Button>
+                              <EditImageView image={selectedFile} onImageSaved={() => onImageSaved()} />
                               <br />
 
                               <AlertDialog>
@@ -171,6 +178,7 @@ export default function MediaExplorer({
                                       onClick={() => {
                                         deleteFile(selectedFile.id);
                                       }}
+                                      disabled={deleting}
                                     >
                                       {deleting ? <Loader size={16} className="visio-cms-animate-spin" /> : 'Continue'}
                                     </Button>
@@ -211,6 +219,7 @@ export default function MediaExplorer({
                   width: selectedFile.width || 0,
                   height: selectedFile.height || 0,
                 });
+                setFiles((prevFiles) => prevFiles.map((file) => ({ ...file, selected: false })));
               }}
             >
               Insert Media

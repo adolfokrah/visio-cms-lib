@@ -24,7 +24,7 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
       >
         {mediaHash && image?.mediaHash && (
           <img
-            src={imagePublicUrl}
+            src={`${imagePublicUrl}?t=${new Date().getTime()}`}
             className="visio-cms-w-full visio-cms-object-contain visio-cms-h-full visio-cms-rounded-md visio-cms-absolute visio-cms-left-0 visio-cms-top-0"
           />
         )}

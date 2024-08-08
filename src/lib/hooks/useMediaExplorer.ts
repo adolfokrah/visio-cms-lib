@@ -27,13 +27,12 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const { pages, setPages } = usePagesState();
-
   useEffect(() => {
     fetchFiles();
   }, []);
 
   useEffect(() => {
-    if (open == true) {
+    if (open == true && !files.find((file) => file.selected)) {
       setFiles((prevFiles) => {
         if (prevFiles.length)
           return prevFiles.map((file) => ({
@@ -60,7 +59,7 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
           id: file.id,
           uploadProgress: 100,
           file: new File([], file.file_name),
-          mediaUrl: db.storage.from('media').getPublicUrl(file.hashed_file_name).data.publicUrl,
+          mediaUrl: `${db.storage.from('media').getPublicUrl(file.hashed_file_name).data.publicUrl}?t=${new Date().getTime()}`,
           width: file.file_width,
           height: file.file_height,
           hashed_file_name: file.hashed_file_name,
@@ -212,6 +211,32 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
     }
   };
 
+  const onImageSaved = () => {
+    const selectedImage = files.find((file) => file.selected);
+    const url = `${selectedImage?.mediaUrl}?t=${new Date().getTime()}`;
+
+    setFiles((prevFiles) =>
+      prevFiles.map((file) => ({
+        ...file,
+        mediaUrl: file.selected ? url : file.mediaUrl,
+      })),
+    );
+    const newPages = pages.map((page) => ({
+      ...page,
+      seo:
+        page.seo && page?.seo.meta.featuredImage == selectedImage?.hashed_file_name
+          ? {
+              meta: {
+                ...page.seo.meta,
+                featuredImage: url,
+              },
+            }
+          : page.seo,
+    }));
+
+    setPages(newPages);
+  };
+
   return {
     uploadFiles,
     files,
@@ -223,5 +248,7 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
     fetchFiles,
     deleteFile,
     deleting,
+    onImageSaved,
+    setFiles,
   };
 }
