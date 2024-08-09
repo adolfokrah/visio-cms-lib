@@ -1,5 +1,5 @@
 import { TransformWrapper, TransformComponent, ReactZoomPanPinchContentRef } from 'react-zoom-pan-pinch';
-import ResponseBar from './components/response-bar';
+import ResponsiveBar from './components/responsive-bar';
 import { RESPONSIVE_VIEWS } from '@/lib/constants';
 import IframeView from './components/iframe-view';
 import useCanvas from '@/lib/hooks/useCanvas';
@@ -77,7 +77,7 @@ function Index({
       contentStyle={{ width: RESPONSIVE_VIEWS.find((view) => view.view === activePage?.selectedView)?.size }}
     >
       <div className="visio-cms-w-full visio-cms-pt-32">
-        <ResponseBar />
+        <ResponsiveBar />
         <IframeView />
       </div>
     </TransformComponent>

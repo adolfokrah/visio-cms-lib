@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { usePagesState } from '@/lib/states/usePagesState';
 import { RESPONSIVE_VIEWS } from '@/lib/constants';
 
-export default function ResponseBar() {
+export default function ResponsiveBar() {
   const { pages, setPageResponsiveView } = usePagesState();
   const activePage = pages.find((page) => page.active);
   if (!activePage) return null;
