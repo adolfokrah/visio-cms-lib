@@ -223,7 +223,7 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
           ? {
               meta: {
                 ...page.seo.meta,
-                featuredImage: url,
+                mediaUrl: url,
               },
             }
           : page.seo,
