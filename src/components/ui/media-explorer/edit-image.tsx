@@ -72,6 +72,10 @@ export default function EditImageView({ image, onImageSaved }: { image: Media; o
         const { error } = await db.storage.from(bucketName).upload(fileName, file, {
           upsert: true, // Set to true to overwrite existing files
         });
+        await db
+          .from('uploaded_files')
+          .update({ file_width: Math.round(completedCrop.width), file_height: Math.round(completedCrop.height) })
+          .eq('hashed_file_name', fileName);
         if (error) throw new Error(error.message);
         toast.success('Image saved successfully');
         onImageSaved();
@@ -85,7 +89,7 @@ export default function EditImageView({ image, onImageSaved }: { image: Media; o
   }
 
   return (
-    <Dialog onOpenChange={setOpen} open={open}>
+    <Dialog onOpenChange={setOpen} open={open} key={image?.hashed_file_name}>
       <DialogTrigger asChild>
         <Button variant={'ghost'} className="visio-cms-text-primary visio-cms-mt-2">
           Edit Image
@@ -94,31 +98,33 @@ export default function EditImageView({ image, onImageSaved }: { image: Media; o
       <DialogContent className="!visio-cms-max-w-4xl ">
         <DialogHeader>
           <DialogTitle>Edit image</DialogTitle>
-          <DialogDescription className="visio-cms-max-h-[700px] visio-cms-w-full  visio-cms-relative visio-cms-grid visio-cms-items-center visio-cms-h-[calc(100vh-200px)]  visio-cms-rounded-md ">
+          <DialogDescription className="visio-cms-max-h-[700px] visio-cms-overflow-auto scrollbar-custom visio-cms-w-full  visio-cms-relative visio-cms-grid visio-cms-items-center visio-cms-min-h-[400px]  visio-cms-rounded-md ">
             <div
               style={{
                 width: imgRef.current?.width,
-                height: imgRef.current?.height,
                 margin: 'auto',
               }}
+              className=" visio-cms-h-full"
             >
               {completedCrop && (
-                <canvas
-                  id="myCanvas"
-                  ref={previewCanvasRef}
-                  className="visio-cms-border  visio-cms-invisible visio-cms-absolute visio-cms-top-0 visio-cms-left-0 visio-cms-border-black visio-cms-object-contain"
-                  style={{
-                    width: `${completedCrop.width}px`,
-                    height: `${completedCrop.height}px`,
-                  }}
-                />
+                <>
+                  <canvas
+                    id="myCanvas"
+                    ref={previewCanvasRef}
+                    className="visio-cms-border  visio-cms-invisible visio-cms-absolute  visio-cms-top-0 visio-cms-left-0 visio-cms-border-black visio-cms-object-contain"
+                    style={{
+                      width: `${completedCrop.width}px`,
+                      height: `${completedCrop.height}px`,
+                    }}
+                  />
+                </>
               )}
               <ReactCrop crop={crop} onChange={(c) => setCrop(c)} onComplete={(c) => setCompletedCrop(c)}>
                 <img
                   crossOrigin="anonymous"
                   src={src}
                   ref={imgRef}
-                  className="visio-cms-rounded-md visio-cms-m-auto visio-cms-h-[calc(100vh-200px)] visio-cms-object-contain"
+                  className="visio-cms-rounded-md visio-cms-m-auto visio-cms-object-contain "
                 />
               </ReactCrop>
             </div>

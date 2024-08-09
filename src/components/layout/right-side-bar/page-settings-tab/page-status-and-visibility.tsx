@@ -49,6 +49,7 @@ export default function PageStatusAndVisibility() {
                   key={`${page?.publishDate}`}
                   selectedDate={page?.publishDate}
                   onSelect={handleUpdatePageDate}
+                  disabled={{ before: new Date() }}
                 />
               </div>
             </>

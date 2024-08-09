@@ -63,6 +63,7 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
           width: file.file_width,
           height: file.file_height,
           hashed_file_name: file.hashed_file_name,
+          selected: chosenImage?.mediaHash == file.hashed_file_name,
         })),
       );
     } catch (e: any) {
@@ -214,13 +215,7 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
   const onImageSaved = () => {
     const selectedImage = files.find((file) => file.selected);
     const url = `${selectedImage?.mediaUrl}?t=${new Date().getTime()}`;
-
-    setFiles((prevFiles) =>
-      prevFiles.map((file) => ({
-        ...file,
-        mediaUrl: file.selected ? url : file.mediaUrl,
-      })),
-    );
+    fetchFiles();
     const newPages = pages.map((page) => ({
       ...page,
       seo:

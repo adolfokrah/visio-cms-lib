@@ -12,10 +12,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 export function DatePicker({
   onSelect,
   selectedDate,
+  ...props
 }: {
   onSelect: (date: Date) => void;
   selectedDate: Date | undefined;
-}) {
+} & React.ComponentProps<typeof Calendar>) {
   const [date, setDate] = React.useState<Date | undefined>(selectedDate);
 
   return (
@@ -33,6 +34,7 @@ export function DatePicker({
       </PopoverTrigger>
       <PopoverContent className="visio-cms-w-auto visio-cms-p-0" side="left" align="start" sideOffset={20}>
         <Calendar
+          {...props}
           mode="single"
           selected={date}
           onSelect={(d) => {

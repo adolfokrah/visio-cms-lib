@@ -47,7 +47,7 @@ function ColorName({ colorName, colorHex, index }: { colorName: string; colorHex
           setIsEditing(true);
         }}
       >
-        <div className="visio-cms-flex visio-cms-gap-2 visio-cms-items-center">
+        <div className="visio-cms-flex visio-cms-gap-2 visio-cms-items-center visio-cms-flex-1">
           <Popover>
             <PopoverTrigger
               asChild
@@ -56,7 +56,7 @@ function ColorName({ colorName, colorHex, index }: { colorName: string; colorHex
               }}
             >
               <div
-                className="visio-cms-w-6 visio-cms-h-6 visio-cms-rounded-full"
+                className="visio-cms-w-6 visio-cms-h-6 visio-cms-rounded-full visio-cms-flex-shrink-0"
                 style={{ backgroundColor: colorHex }}
               />
             </PopoverTrigger>
@@ -74,18 +74,20 @@ function ColorName({ colorName, colorHex, index }: { colorName: string; colorHex
             </PopoverContent>
           </Popover>
 
-          {!isEditing ? (
-            <p className="visio-cms-ml-2 visio-cms-truncate visio-cms-whitespace-nowrap">
-              {colorName || colorHex.toUpperCase()}
-            </p>
-          ) : (
-            <input
-              defaultValue={colorName}
-              autoFocus
-              className="visio-cms-border-none visio-cms-outline-none visio-cms-bg-transparent"
-              onBlur={(e) => updateColor(colorHex, e.target.value || colorHex, index)}
-            />
-          )}
+          <div className="visio-cms-w-[calc(100%-50px)]">
+            {!isEditing ? (
+              <p className="visio-cms-ml-2 visio-cms-truncate visio-cms-whitespace-nowrap">
+                {colorName || colorHex.toUpperCase()}
+              </p>
+            ) : (
+              <input
+                defaultValue={colorName}
+                autoFocus
+                className="visio-cms-border-none visio-cms-outline-none visio-cms-bg-transparent"
+                onBlur={(e) => updateColor(colorHex, e.target.value || colorHex, index)}
+              />
+            )}
+          </div>
         </div>
 
         <AlertDialog>
@@ -95,7 +97,10 @@ function ColorName({ colorName, colorHex, index }: { colorName: string; colorHex
               e.stopPropagation();
             }}
           >
-            <Button variant={'ghost'} className="visio-cms-invisible group-hover:visio-cms-visible">
+            <Button
+              variant={'ghost'}
+              className="visio-cms-invisible group-hover:visio-cms-visible visio-cms-flex-shrink-0"
+            >
               <Trash size={15} />
             </Button>
           </AlertDialogTrigger>
