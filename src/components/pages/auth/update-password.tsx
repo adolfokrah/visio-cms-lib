@@ -10,7 +10,9 @@ import { PAGES } from '@/lib/constants';
 import { useEffect } from 'react';
 
 export default function UpdatePasswordPage() {
-  const { onUpdatePassword, updatePasswordForm, errorMessage, setErrorMessage, loading } = useAuth();
+  const { onUpdatePassword, updatePasswordForm, errorMessage, setErrorMessage, loading } = useAuth(
+    PAGES.UPDATE_PASSWORD,
+  );
   const path = getQueryParamsFromUrl(window.location.href.replace('/#/g', '&'));
   const navigate = useNavigate();
 

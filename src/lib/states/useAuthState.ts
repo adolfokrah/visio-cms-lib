@@ -9,21 +9,24 @@ type State = {
 
 type Actions = {
   fetchUser: () => void;
+  clearUser: () => void;
 };
 
 export const useAuthState = create<State & Actions>((set) => ({
   user: null,
   fetchingUser: true,
+  clearUser: () => {
+    set({ user: null });
+  },
   fetchUser: async () => {
     const db = supabase();
-    const { data, error } = await db.auth.getUser();
+    const { data, error } = await db.auth.getSession();
     set({ fetchingUser: false });
     if (error) {
       throw new Error(error.message);
-      return;
     }
     if (data) {
-      set({ user: data.user });
+      set({ user: data.session?.user });
     }
   },
 }));

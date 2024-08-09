@@ -10,6 +10,7 @@ export const registrationSchema = z.object({
   email: z.string().email({
     message: 'Enter a valid email address',
   }),
+  role: z.string(),
   password: z
     .string()
     .min(8, {
