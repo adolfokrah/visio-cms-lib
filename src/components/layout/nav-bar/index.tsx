@@ -2,6 +2,7 @@ import VisioLogo from '../../ui/visio-logo';
 import { Separator } from '../../ui/separator';
 import { Button } from '../../ui/button';
 import UserAvatar from './user-avatar';
+import Share from './share';
 
 export default function Navbar() {
   return (
@@ -11,9 +12,7 @@ export default function Navbar() {
       <div className="visio-cms-justify-between visio-cms-flex visio-cms-gap-2">
         <UserAvatar />
         <Separator orientation="vertical" className="visio-cms-bg-dark-900" />
-        <Button variant={'outline'} className="visio-cms-my-2">
-          Share
-        </Button>
+        <Share />
         <Button className="visio-cms-my-2">Preview</Button>
       </div>
     </div>

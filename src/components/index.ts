@@ -1,14 +1,1 @@
-export { Button } from './ui/button';
-export { Input } from './ui/input';
-export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-export { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-export { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
-export { Textarea } from './ui/textarea';
-export { RadioGroup, RadioGroupItem } from './ui/radio-group';
-export { Label } from './ui/label';
-export { TagInput } from './ui/tag-input';
-export { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-export { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-export { ImageBox } from './ui/image-box';
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 export { default as Cms } from './pages';
