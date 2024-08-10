@@ -118,6 +118,14 @@ export default function useInvitation() {
       if (error) {
         throw new Error(error.message);
       }
+
+      const { error: userDeletionError } = await db.functions.invoke('users-delete', {
+        body: { email },
+      });
+      if (userDeletionError) {
+        throw new Error(userDeletionError.message);
+      }
+
       toast.success('User removed');
       fetchUsers();
     } catch (e: any) {

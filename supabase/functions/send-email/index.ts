@@ -9,7 +9,6 @@ const handler = async (req: Request): Promise<Response> => {
 
   const { emails, from, invitationLInk, siteUrl } = await req.json();
 
-  console.log(emails);
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
