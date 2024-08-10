@@ -203,7 +203,7 @@ function GenerateUserAvatar({ user }: { user: InvitedUser }) {
     : user.email.slice(0, 1).toUpperCase();
 
   return (
-    <Avatar className="visio-cms-w-[35px] visio-cms-h-[35px] visio-cms-my-1 visio-cms-cursor-pointer">
+    <Avatar className="visio-cms-w-[25px] visio-cms-h-[25px] visio-cms-my-1 visio-cms-cursor-pointer">
       <AvatarImage src={user?.photo || ''} />
       <AvatarFallback
         className="visio-cms-text-white"
