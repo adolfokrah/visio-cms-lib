@@ -49,6 +49,8 @@ export default function Share() {
   } = useInvitation();
   const { user: authenticatedUser } = useAuthState();
 
+  if (authenticatedUser?.user_metadata?.role == 'Editor') return null;
+
   return (
     <>
       <Dialog>
@@ -109,7 +111,7 @@ export default function Share() {
               <div className="visio-cms-max-w-lg visio-cms-text-xs visio-cms-max-h-[500px] visio-cms-overflow-auto scrollbar-custom visio-cms-mt-2">
                 {users.map((user) => {
                   const roles = ['Admin', 'Editor'];
-                  if (user.first_name) {
+                  if (user.first_name && authenticatedUser?.user_metadata?.role === 'Owner') {
                     roles.push('Owner');
                   }
                   return (

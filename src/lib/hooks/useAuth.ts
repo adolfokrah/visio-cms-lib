@@ -92,22 +92,23 @@ export default function useAuth(page?: string) {
     }
   }
 
-  async function onRegister(data: z.infer<typeof registrationSchema>) {
+  async function onRegister(data: z.infer<typeof registrationSchema> & { token?: string; withEmail?: boolean }) {
     const email = data.email;
     const password = data.password;
     const firstName = data.firstName;
     const lastName = data.lastName;
     setLoading(true);
     try {
-      const { data: users } = await db.from('users').select('id').eq('email', email).limit(1);
-      if (users?.length) {
+      const { data: users } = await db.from('users').select('*').eq('email', email).limit(1);
+      if (users?.length && !data.withEmail) {
         setErrorMessage('User already exist');
         return;
       }
+
       const metaData = {
         first_name: firstName,
         last_name: lastName,
-        role: '',
+        role: users && users.length ? users[0].role : data?.token ? 'Editor' : 'Owner',
       };
       const { error, data: d } = await db.auth.signUp({
         email,
@@ -118,7 +119,13 @@ export default function useAuth(page?: string) {
         },
       });
 
-      const { error: insertError } = await db.from('users').insert({ id: d.user?.id, ...metaData, email });
+      const { error: insertError } =
+        data.token && users?.length
+          ? await db
+              .from('users')
+              .update({ id: d.user?.id, ...metaData, email, role: users[0].role })
+              .eq('email', email)
+          : await db.from('users').insert({ id: d.user?.id, ...metaData, email });
 
       if (error || insertError) {
         setErrorMessage(error?.message || insertError?.message || '');
@@ -126,6 +133,7 @@ export default function useAuth(page?: string) {
       }
       navigate(PAGES.BUILDER);
     } catch (e) {
+      console.log(e);
       setErrorMessage('Ops! an error occurred');
     } finally {
       setLoading(false);
@@ -288,19 +296,28 @@ export default function useAuth(page?: string) {
     }
   }
 
-  const checkInvitationToken = async (token: string, e: string) => {
+  const checkInvitationToken = async (token: string, e?: string) => {
     const projectIdFromUrl = atob(token);
-    const email = atob(e);
     if (projectIdFromUrl != projectId) {
       navigate(PAGES.PAGE_NOT_FOUND);
     }
 
-    if (email) {
+    if (e) {
+      const email = atob(e);
       const { data, error } = await db.from('users').select('id').eq('email', email).limit(1);
-      console.log(data);
+
       if (error || !data?.length) {
         navigate(PAGES.PAGE_NOT_FOUND);
       }
+
+      registrationForm.setValue('email', email);
+    }
+  };
+
+  const checkIfUserIsAuthorized = async () => {
+    const { data } = await db.from('users').select('id').eq('role', 'Owner').limit(1);
+    if (data && data.length) {
+      navigate(PAGES.PAGE_NOT_FOUND);
     }
   };
 
@@ -321,5 +338,6 @@ export default function useAuth(page?: string) {
     onLogout,
     updateProfilePhoto,
     checkInvitationToken,
+    checkIfUserIsAuthorized,
   };
 }

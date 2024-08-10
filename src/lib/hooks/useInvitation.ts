@@ -5,6 +5,7 @@ import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { InvitedUser } from '../types';
+import { useAuthState } from '../states/useAuthState';
 
 export default function useInvitation() {
   const { projectId } = useProjectConfigurationState();
@@ -13,6 +14,7 @@ export default function useInvitation() {
   const [users, setUsers] = useState<InvitedUser[]>([]);
   const [userToDelete, setUserToDelete] = useState<InvitedUser | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { fetchUser } = useAuthState();
   const db = supabase();
 
   useEffect(() => {
@@ -44,13 +46,14 @@ export default function useInvitation() {
       const invitationLInk = generateInvitationLink();
       const siteUrl = `${window.location.protocol}//${window.location.host}`;
 
-      const { data, error } = await db.functions.invoke('send-email', {
+      const { data, error } = await db.functions.invoke('send-invitation', {
         body: { emails, invitationLInk, siteUrl, from: 'Visio cms <noreply@visiocms.com>' },
       });
       if (error) {
         throw new Error(error.message);
       }
-      if (data.id) {
+
+      if (data?.data.length) {
         const { error } = await db
           .from('users')
           .insert(emails.map((email) => ({ id: uuidv4(), email, role: 'Editor' })))
@@ -103,6 +106,7 @@ export default function useInvitation() {
       }
       toast.success('Role updated');
       fetchUsers();
+      fetchUser();
     } catch (e: any) {
       toast.error(e.message);
     } finally {

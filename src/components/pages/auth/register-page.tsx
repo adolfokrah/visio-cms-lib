@@ -9,7 +9,15 @@ import { useEffect } from 'react';
 import { getQueryParamsFromUrl } from '@/lib/utils';
 
 export default function RegisterPage() {
-  const { onRegister, registrationForm, errorMessage, setErrorMessage, loading, checkInvitationToken } = useAuth();
+  const {
+    onRegister,
+    registrationForm,
+    errorMessage,
+    setErrorMessage,
+    loading,
+    checkInvitationToken,
+    checkIfUserIsAuthorized,
+  } = useAuth();
 
   const path = getQueryParamsFromUrl(window.location.href.replace('/#/g', '&'));
   const navigate = useNavigate();
@@ -17,8 +25,10 @@ export default function RegisterPage() {
   useEffect(() => {
     if (path['invite']) {
       checkInvitationToken(path['invite'], path['e']);
+    } else {
+      checkIfUserIsAuthorized();
     }
-  }, [path, navigate]);
+  }, [path, navigate, checkInvitationToken, checkIfUserIsAuthorized]);
 
   return (
     <div className="visio-cms-bg-dark-900 visio-cms-px-3 visio-cms-text-white visio-cms-text-xs visio-cms-h-screen visio-cms-flex visio-cms-items-center visio-cms-place-content-center">
@@ -33,7 +43,9 @@ export default function RegisterPage() {
         <Form {...registrationForm}>
           <form
             className="visio-cms-mt-[35px] visio-cms-space-y-[25px]"
-            onSubmit={registrationForm.handleSubmit(onRegister)}
+            onSubmit={registrationForm.handleSubmit((data) =>
+              onRegister({ ...data, token: path['invite'], withEmail: path['e'] ? true : false }),
+            )}
           >
             <FormField
               control={registrationForm.control}
@@ -74,6 +86,7 @@ export default function RegisterPage() {
                       className="!visio-cms-bg-dark-800"
                       type="email"
                       placeholder="Enter your email address"
+                      readOnly={path['e'] ? true : false}
                       {...field}
                     />
                   </FormControl>

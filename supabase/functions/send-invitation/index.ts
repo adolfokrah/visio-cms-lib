@@ -9,21 +9,23 @@ const handler = async (req: Request): Promise<Response> => {
 
   const { emails, from, invitationLInk, siteUrl } = await req.json();
 
-  const res = await fetch('https://api.resend.com/emails', {
+  const payload = emails.map((email: string) => ({
+    from,
+    to: [email],
+    subject: 'You have been invited',
+    html: `<h2>You have been invited</h2>
+
+<p>You have been invited to create a user on ${siteUrl}. Follow this link to accept the invite:</p>
+<p><a href="${invitationLInk}&e=${btoa(email)}">Accept the invite</a></p>`,
+  }));
+
+  const res = await fetch('https://api.resend.com/emails/batch', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${RESEND_API_KEY}`,
     },
-    body: JSON.stringify({
-      from,
-      to: [...emails],
-      subject: 'You have been invited',
-      html: `<h2>You have been invited</h2>
-
-<p>You have been invited to create a user on ${siteUrl}. Follow this link to accept the invite:</p>
-<p><a href="${invitationLInk}">Accept the invite</a></p>`,
-    }),
+    body: JSON.stringify(payload),
   });
 
   const data = await res.json();
