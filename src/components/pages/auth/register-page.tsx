@@ -4,9 +4,21 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import useAuth from '@/lib/hooks/useAuth';
 import ErrorAlert from '@/components/ui/error-alert';
 import { Loader } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { getQueryParamsFromUrl } from '@/lib/utils';
 
 export default function RegisterPage() {
-  const { onRegister, registrationForm, errorMessage, setErrorMessage, loading } = useAuth();
+  const { onRegister, registrationForm, errorMessage, setErrorMessage, loading, checkInvitationToken } = useAuth();
+
+  const path = getQueryParamsFromUrl(window.location.href.replace('/#/g', '&'));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (path['invite']) {
+      checkInvitationToken(path['invite'], path['e']);
+    }
+  }, [path, navigate]);
 
   return (
     <div className="visio-cms-bg-dark-900 visio-cms-px-3 visio-cms-text-white visio-cms-text-xs visio-cms-h-screen visio-cms-flex visio-cms-items-center visio-cms-place-content-center">

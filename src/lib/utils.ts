@@ -93,3 +93,26 @@ export function formatStringToSlug(str: string): string {
     .replace(/\/+$/g, '') // Remove trailing slashes after replacement
     .replace(/^\/+/g, ''); // Remove leading slashes after replacement
 }
+
+function isValidEmail(email: string) {
+  // Regular expression for basic email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+export function areAllEmailsValid(emails: string[]) {
+  // Check if every email in the array is valid
+  return emails.every((email) => isValidEmail(email));
+}
+
+export function stringToColor(string: string) {
+  // Hash the string to a number
+  let hash = 0;
+  for (let i = 0; i < string.length; i++) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  // Convert the hash to a color
+  const color = `#${(hash & 0x00ffffff).toString(16).padStart(6, '0')}`;
+  return color;
+}

@@ -6,6 +6,7 @@ export type Language = {
 };
 
 export type ProjectConfiguration = {
+  emailSender: string;
   supabaseProjectUrl: string;
   supabaseAnonKey: string;
   supportedLanguages: Language[];
@@ -41,3 +42,12 @@ export type MediaFile = {
   width: number;
   height: number;
 };
+
+export interface InvitedUser {
+  id: string; // UUID for the user
+  email: string; // User's email address
+  first_name: string; // User's first name
+  last_name: string; // User's last name
+  role: string; // User's role
+  photo: string | null; // URL to the user's photo, or null if not available
+}

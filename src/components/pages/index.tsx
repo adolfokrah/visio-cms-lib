@@ -44,7 +44,10 @@ const router = createBrowserRouter([
 ]);
 
 export default function Auth(
-  projectConfiguration: Pick<ProjectConfiguration, 'supabaseAnonKey' | 'supabaseProjectUrl' | 'projectId'>,
+  projectConfiguration: Pick<
+    ProjectConfiguration,
+    'supabaseAnonKey' | 'supabaseProjectUrl' | 'projectId' | 'emailSender'
+  >,
 ) {
   const { setConfiguration, supabaseProjectUrl, supabaseAnonKey, projectId } = useProjectConfigurationState();
   const { fetchUser, fetchingUser } = useAuthState();

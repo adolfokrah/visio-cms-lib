@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useState } from 'react';
 import ErrorAlert from '@/components/ui/error-alert';
+import { stringToColor } from '@/lib/utils';
 
 export default function UserAvatar() {
   const { user } = useAuthState();
@@ -29,15 +30,20 @@ export default function UserAvatar() {
     setErrorMessage,
     updateProfilePhoto,
   } = useAuth();
-  const userInitial = `${user?.user_metadata['first_name'].slice(0, 1)}${user?.user_metadata['last_name'].slice(0, 1)}`;
+
   const [open, setOpen] = useState(false);
+  if (!user) return null;
+
+  const userInitial = `${user?.user_metadata['first_name'].slice(0, 1)}${user?.user_metadata['last_name'].slice(0, 1)}`;
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="visio-cms-w-[35px] visio-cms-h-[35px] visio-cms-my-1 visio-cms-cursor-pointer">
             <AvatarImage src={user?.user_metadata['photo'] || ''} />
-            <AvatarFallback>{`${userInitial.toUpperCase()}`}</AvatarFallback>
+            <AvatarFallback
+              style={{ backgroundColor: stringToColor(user?.email || '') }}
+            >{`${userInitial.toUpperCase()}`}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -104,7 +110,9 @@ export default function UserAvatar() {
                 <div>
                   <Avatar className="visio-cms-w-[60px] visio-cms-h-[60px]">
                     <AvatarImage src={user?.user_metadata['photo'] || ''} />
-                    <AvatarFallback>{`${userInitial.toUpperCase()}`}</AvatarFallback>
+                    <AvatarFallback
+                      style={{ backgroundColor: stringToColor(user?.email || '') }}
+                    >{`${userInitial.toUpperCase()}`}</AvatarFallback>
                   </Avatar>
                 </div>
               </div>

@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default function useAuth(page?: string) {
   const [errorMessage, setErrorMessage] = useState('');
+  const { projectId } = useProjectConfigurationState();
   const [loading, setLoading] = useState(false);
   const { user, clearUser, fetchUser } = useAuthState();
   const { bucketName } = useProjectConfigurationState();
@@ -287,6 +288,22 @@ export default function useAuth(page?: string) {
     }
   }
 
+  const checkInvitationToken = async (token: string, e: string) => {
+    const projectIdFromUrl = atob(token);
+    const email = atob(e);
+    if (projectIdFromUrl != projectId) {
+      navigate(PAGES.PAGE_NOT_FOUND);
+    }
+
+    if (email) {
+      const { data, error } = await db.from('users').select('id').eq('email', email).limit(1);
+      console.log(data);
+      if (error || !data?.length) {
+        navigate(PAGES.PAGE_NOT_FOUND);
+      }
+    }
+  };
+
   return {
     onLogin,
     loginForm,
@@ -303,5 +320,6 @@ export default function useAuth(page?: string) {
     onUpdateProfileDetails,
     onLogout,
     updateProfilePhoto,
+    checkInvitationToken,
   };
 }
