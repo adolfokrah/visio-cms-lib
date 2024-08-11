@@ -47,6 +47,8 @@ export default function Share() {
     userToDelete,
     setUserToDelete,
     isDeleting,
+    resendInvite,
+    fetchUsers,
   } = useInvitation();
   const { user: authenticatedUser } = useAuthState();
 
@@ -56,7 +58,7 @@ export default function Share() {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant={'outline'} className="visio-cms-my-2">
+          <Button variant={'outline'} className="visio-cms-my-2" onClick={fetchUsers}>
             Share
           </Button>
         </DialogTrigger>
@@ -157,6 +159,16 @@ export default function Share() {
                                 )}
                               </DropdownMenuItem>
                             ))}
+
+                            {!user.first_name && (
+                              <DropdownMenuItem
+                                onClick={async () => {
+                                  if (user?.email) resendInvite(user?.email);
+                                }}
+                              >
+                                Resend invite
+                              </DropdownMenuItem>
+                            )}
 
                             <DropdownMenuItem
                               onClick={() => {

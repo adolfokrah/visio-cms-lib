@@ -8,13 +8,13 @@ import { InvitedUser } from '../types';
 import { useAuthState } from '../states/useAuthState';
 
 export default function useInvitation() {
-  const { projectId } = useProjectConfigurationState();
+  const { projectId, emailSender } = useProjectConfigurationState();
   const [emailList, setEmailList] = useState('');
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<InvitedUser[]>([]);
   const [userToDelete, setUserToDelete] = useState<InvitedUser | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { fetchUser } = useAuthState();
+  const { fetchUser, user: authenticatedUser } = useAuthState();
   const db = supabase();
 
   useEffect(() => {
@@ -43,15 +43,7 @@ export default function useInvitation() {
       }
       if (emails.length === 0) throw new Error('All emails are already registered');
 
-      const invitationLInk = await generateInvitationLink();
-      const siteUrl = `${window.location.protocol}//${window.location.host}`;
-
-      const { data, error } = await db.functions.invoke('send-invitation', {
-        body: { emails, invitationLInk, siteUrl, from: 'Visio cms <noreply@visiocms.com>' },
-      });
-      if (error) {
-        throw new Error(error.message);
-      }
+      const data = await sendInvitation(emails);
 
       if (data?.data.length) {
         const { error } = await db
@@ -132,11 +124,48 @@ export default function useInvitation() {
 
       toast.success('User removed');
       fetchUsers();
+      if (email === authenticatedUser?.email) {
+        window.open(PAGES.LOGIN);
+      }
     } catch (e: any) {
       toast.error(e.message);
     } finally {
       setIsDeleting(false);
       setUserToDelete(null);
+    }
+  };
+
+  const sendInvitation = async (emails: string[]) => {
+    try {
+      const invitationLInk = await generateInvitationLink();
+      const siteUrl = `${window.location.protocol}//${window.location.host}`;
+
+      const { data, error } = await db.functions.invoke('send-invitation', {
+        body: { emails, invitationLInk, siteUrl, from: emailSender },
+      });
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (!data?.data.length) {
+        throw new Error('Failed to send invitation');
+      }
+
+      return data;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  };
+
+  const resendInvite = async (email: string) => {
+    try {
+      setLoading(true);
+      await sendInvitation([email]);
+      toast.success('Invitation sent');
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -152,5 +181,7 @@ export default function useInvitation() {
     userToDelete,
     setUserToDelete,
     isDeleting,
+    resendInvite,
+    fetchUsers,
   };
 }

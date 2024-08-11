@@ -132,9 +132,9 @@ export default function useAuth(page?: string) {
         setErrorMessage(error?.message || insertError?.message || '');
         return;
       }
+      toast.success('Success', { description: 'User registered' });
       navigate(PAGES.BUILDER);
     } catch (e) {
-      console.log(e);
       setErrorMessage('Ops! an error occurred');
     } finally {
       setLoading(false);
