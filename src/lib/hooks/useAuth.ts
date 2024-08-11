@@ -4,13 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PAGES } from '../constants';
+import { PAGES, ROLES } from '../constants';
 import { toast } from 'sonner';
-import { supabase } from '../utils';
+import { supabase, verifyToken } from '../utils';
 import { useAuthState } from '../states/useAuthState';
 import { updateProfileDetailsSchema } from '../zod-schemas/update-profile-details-schema';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
+// import jwt from 'jsonwebtoken';
 
 export default function useAuth(page?: string) {
   const [errorMessage, setErrorMessage] = useState('');
@@ -39,7 +40,7 @@ export default function useAuth(page?: string) {
       lastName: '',
       email: '',
       password: '',
-      role: 'Owner',
+      role: ROLES.OWNER,
     },
   });
 
@@ -64,7 +65,7 @@ export default function useAuth(page?: string) {
       firstName: user?.user_metadata?.first_name || '',
       lastName: user?.user_metadata?.last_name || '',
       email: user?.email || '',
-      role: user?.user_metadata?.role || 'Owner',
+      role: user?.user_metadata?.role || ROLES.OWNER,
       oldPassword: '',
       password: '',
     },
@@ -108,7 +109,7 @@ export default function useAuth(page?: string) {
       const metaData = {
         first_name: firstName,
         last_name: lastName,
-        role: users && users.length ? users[0].role : data?.token ? 'Editor' : 'Owner',
+        role: users && users.length ? users[0].role : data?.token ? ROLES.EDITOR : ROLES.OWNER,
       };
       const { error, data: d } = await db.auth.signUp({
         email,
@@ -297,20 +298,25 @@ export default function useAuth(page?: string) {
   }
 
   const checkInvitationToken = async (token: string, e?: string) => {
-    const projectIdFromUrl = atob(token);
-    if (projectIdFromUrl != projectId) {
-      navigate(PAGES.PAGE_NOT_FOUND);
-    }
-
-    if (e) {
-      const email = atob(e);
-      const { data, error } = await db.from('users').select('id').eq('email', email).limit(1);
-
-      if (error || !data?.length) {
+    try {
+      const verifiedToken = await verifyToken({ token });
+      if (!verifiedToken?.payload?.token) {
+        throw new Error('Invalid token');
+      }
+      const projectIdFromUrl = verifiedToken?.payload?.token;
+      if (projectIdFromUrl != projectId) {
         navigate(PAGES.PAGE_NOT_FOUND);
       }
-
-      registrationForm.setValue('email', email);
+      if (e) {
+        const email = atob(e);
+        const { data, error } = await db.from('users').select('id').eq('email', email).limit(1);
+        if (error || !data?.length) {
+          navigate(PAGES.PAGE_NOT_FOUND);
+        }
+        registrationForm.setValue('email', email);
+      }
+    } catch (e) {
+      navigate(PAGES.PAGE_NOT_FOUND);
     }
   };
 

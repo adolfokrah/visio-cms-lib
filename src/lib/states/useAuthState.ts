@@ -29,7 +29,6 @@ export const useAuthState = create<State & Actions>((set) => ({
       const { data: userData, error } = await db.from('users').select('*').eq('id', data.session?.user?.id).single();
       if (userData && data.session?.user && !error) {
         const user = { ...data.session?.user, user_metadata: userData };
-        console.log(user);
         set(() => ({ user }));
       }
     }

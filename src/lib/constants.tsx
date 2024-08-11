@@ -32,3 +32,11 @@ export const RESPONSIVE_VIEWS: ResponsiveViews[] = [
 ];
 
 export const VISIO_DOCS_BASE_URL = 'https://www.visiocms.com/docs';
+
+export const JSON_WEB_SECRET = '304c0f795e0a4defcb822b5ea47d559b';
+
+export const ROLES = {
+  ADMIN: 'Admin',
+  EDITOR: 'Editor',
+  OWNER: 'Owner',
+};

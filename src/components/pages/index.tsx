@@ -56,7 +56,8 @@ export default function Auth(
     fetchUser();
   }, [projectConfiguration, setConfiguration, fetchUser]);
 
-  if ((!supabaseProjectUrl.length && !supabaseAnonKey.length && !projectId) || fetchingUser) return null;
+  if (!supabaseProjectUrl.length && !supabaseAnonKey.length && !projectId) return null;
+  if (fetchingUser) return null;
 
   return (
     <>

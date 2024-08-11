@@ -32,6 +32,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { ROLES } from '@/lib/constants';
 
 export default function Share() {
   const {
@@ -66,8 +67,8 @@ export default function Share() {
                 Share this project
                 <Button
                   variant={'link'}
-                  onClick={() => {
-                    const link = generateInvitationLink();
+                  onClick={async () => {
+                    const link = await generateInvitationLink();
                     if (link) {
                       navigator.clipboard
                         .writeText(link)
@@ -110,16 +111,13 @@ export default function Share() {
 
               <div className="visio-cms-max-w-lg visio-cms-text-xs visio-cms-max-h-[500px] visio-cms-overflow-auto scrollbar-custom visio-cms-mt-2">
                 {users.map((user) => {
-                  const roles = ['Admin', 'Editor'];
-                  if (user.first_name && authenticatedUser?.user_metadata?.role === 'Owner') {
-                    roles.push('Owner');
+                  const roles = [ROLES.ADMIN, ROLES.EDITOR];
+                  if (user.first_name && authenticatedUser?.user_metadata?.role === ROLES.OWNER) {
+                    roles.push(ROLES.OWNER);
                   }
                   return (
-                    <div className="visio-cms-flex visio-cms-justify-between items-center">
-                      <div
-                        key={user.email}
-                        className="visio-cms-flex visio-cms-items-center visio-cms-gap-2 visio-cms-mb-2"
-                      >
+                    <div className="visio-cms-flex visio-cms-justify-between items-center" key={user.email}>
+                      <div className="visio-cms-flex visio-cms-items-center visio-cms-gap-2 visio-cms-mb-2">
                         <GenerateUserAvatar user={user} />
                         <p
                           className={cn('visio-cms-text-xs', {
@@ -137,10 +135,10 @@ export default function Share() {
 
                       <div className="visio-cms-text-white">
                         <DropdownMenu>
-                          <DropdownMenuTrigger asChild disabled={user?.role === 'Owner'}>
+                          <DropdownMenuTrigger asChild disabled={user?.role === ROLES.OWNER}>
                             <Button variant={'ghost'}>
                               {user.role}
-                              {user?.role != 'Owner' && <ChevronDown size={16} className="visio-cms-ml-2" />}
+                              {user?.role != ROLES.OWNER && <ChevronDown size={16} className="visio-cms-ml-2" />}
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent className="!visio-cms-bg-dark-900">

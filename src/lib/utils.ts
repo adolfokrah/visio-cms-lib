@@ -4,6 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 import { useProjectConfigurationState } from './states/useProjectConfigState';
 import { Folder, OsTypes, PageTreeItem } from './types';
 import { Page } from './states/usePagesState';
+import * as jose from 'jose';
+import { JSON_WEB_SECRET } from './constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -115,4 +117,28 @@ export function stringToColor(string: string) {
   // Convert the hash to a color
   const color = `#${(hash & 0x00ffffff).toString(16).padStart(6, '0')}`;
   return color;
+}
+
+export async function signToken({ token }: { token: string }) {
+  const secret = new TextEncoder().encode(JSON_WEB_SECRET);
+  const alg = 'HS256';
+
+  const jwt = await new jose.SignJWT({ token })
+    .setProtectedHeader({ alg })
+    .setIssuedAt()
+    .setIssuer('urn:visio:issuer')
+    .setAudience('urn:visio:audience')
+    .setExpirationTime('1h')
+    .sign(secret);
+
+  return jwt;
+}
+
+export async function verifyToken({ token }: { token: string }) {
+  const secret = new TextEncoder().encode(JSON_WEB_SECRET);
+  const alg = 'HS256';
+
+  const jwt = await jose.jwtVerify(token, secret, { algorithms: [alg] });
+
+  return jwt;
 }

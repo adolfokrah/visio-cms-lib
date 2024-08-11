@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
-import { supabase } from '../utils';
-import { PAGES } from '../constants';
+import { signToken, supabase } from '../utils';
+import { PAGES, ROLES } from '../constants';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,10 +21,10 @@ export default function useInvitation() {
     fetchUsers();
   }, []);
 
-  const generateInvitationLink = () => {
-    const token = btoa(projectId);
-    const link = `${window.location.protocol}//${window.location.host}${PAGES.REGISTER}?invite=${token}`;
+  const generateInvitationLink = async () => {
+    const token = await signToken({ token: projectId });
 
+    const link = `${window.location.protocol}//${window.location.host}${PAGES.REGISTER}?invite=${token}`;
     return link;
   };
 
@@ -43,7 +43,7 @@ export default function useInvitation() {
       }
       if (emails.length === 0) throw new Error('All emails are already registered');
 
-      const invitationLInk = generateInvitationLink();
+      const invitationLInk = await generateInvitationLink();
       const siteUrl = `${window.location.protocol}//${window.location.host}`;
 
       const { data, error } = await db.functions.invoke('send-invitation', {
@@ -96,8 +96,8 @@ export default function useInvitation() {
     try {
       setLoading(true);
 
-      if (role === 'Owner') {
-        await db.from('users').update({ role: 'Editor' }).eq('role', 'Owner');
+      if (role === ROLES.OWNER) {
+        await db.from('users').update({ role: 'Editor' }).eq('role', ROLES.OWNER);
       }
       const { error } = await db.from('users').update({ role }).eq('email', email);
 
