@@ -10,6 +10,6 @@ type State = {
 export const useIframeState = create<State>((set) => ({
   iframe: undefined,
   setIframe: (iframe) => set(() => ({ iframe })),
-  iframeHeight: 2000,
+  iframeHeight: 0,
   setIframeHeight: (iframeHeight) => set(() => ({ iframeHeight })),
 }));

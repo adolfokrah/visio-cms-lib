@@ -10,24 +10,20 @@ export default function usePageContent() {
     const pages = JSON.parse(sessionStorage.getItem('pages-storage') || '{}');
     if (pages && pages.state.pages) {
       setPages(pages.state.pages);
-      getWindowHeight();
     }
     const handleStorageChange = (event: StorageEvent) => {
       // Check if the change is in sessionStorage
       if (event.storageArea === sessionStorage) {
-        const pages = JSON.parse(event.newValue || '{}');
-        if (pages.state.items) {
-          setPages(pages.state.items);
-          getWindowHeight();
+        const pages = JSON.parse(sessionStorage.getItem('pages-storage') || '{}');
+        if (pages.state.pages) {
+          setPages(pages.state.pages);
         }
       }
     };
 
-    window.addEventListener('resize', getWindowHeight);
     window.addEventListener('storage', handleStorageChange);
 
     return () => {
-      window.removeEventListener('resize', getWindowHeight);
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
@@ -36,12 +32,5 @@ export default function usePageContent() {
     window.parent.postMessage(messageToSend, '*'); // Replace '*' with the specific origin if needed
   };
 
-  const getWindowHeight = () => {
-    if (window) {
-      const scrollHeight = activePage?.blocks?.length ? window.document.body.scrollHeight : 2000;
-      sendMessageToParent({ type: 'setHeight', content: scrollHeight.toString() });
-    }
-  };
-
-  return { activePage };
+  return { activePage, sendMessageToParent };
 }

@@ -3,7 +3,9 @@ import { useControls } from 'react-zoom-pan-pinch';
 import { usePagesState } from '../states/usePagesState';
 import { useCanvasState } from '../states/useCanvasState';
 import { useIframeState } from '../states/useIframeState';
-import { Message } from '../types';
+import { Block, Message } from '../types';
+import { useProjectConfigurationState } from '../states/useProjectConfigState';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function useCanvas({
   canvasWrapperRef,
@@ -13,9 +15,10 @@ export default function useCanvas({
   const { zooming, zoomingOut, panning, isMouseOver, setZooming, setZoomingOut, setPanning, setIsMouseOver } =
     useCanvasState();
   const controls = useControls();
-  const { pages, pageSwitched, setPageSwitched } = usePagesState();
+  const { pages, pageSwitched, setPageSwitched, setPages } = usePagesState();
   const activePage = pages.find((page) => page.active);
-  const { setIframeHeight } = useIframeState();
+  const { setIframeHeight, iframe, iframeHeight } = useIframeState();
+  const { blocks } = useProjectConfigurationState();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -149,10 +152,63 @@ export default function useCanvas({
   }, [pages, controls, pageSwitched, setPageSwitched]);
 
   useEffect(() => {
+    const setPageBlocks = (block: Block, position: number) => {
+      const page = activePage;
+      if (page) {
+        const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
+        const newBlocks = [...blocks].map((block) => ({ ...block, isSelected: false }));
+        newBlocks.splice(position, 0, {
+          id: uuidv4(),
+          blockId: block.Schema.id,
+          isSelected: true,
+          inputs: block.Schema.defaultPropValues,
+        });
+        page.blocks = {
+          ...page.blocks,
+          [page.activeLanguageLocale]: newBlocks,
+        };
+        setPages(pages.map((p) => (p.active ? page : p)));
+      }
+    };
+
+    const removeBlock = (blockId: string) => {
+      const page = activePage;
+      if (page) {
+        const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
+        const newBlocks = blocks.filter((block) => block.id !== blockId);
+        page.blocks = {
+          ...page.blocks,
+          [page.activeLanguageLocale]: newBlocks,
+        };
+        setPages(pages.map((p) => (p.active ? page : p)));
+      }
+    };
     const handleMessage = (event: MessageEvent) => {
       const data: Message = event.data;
       if (data.type === 'setHeight') {
         setIframeHeight(parseInt(data.content));
+      } else if (data.type === 'addBlock') {
+        const { blockId, position } = JSON.parse(data.content);
+        const block = blocks.find((block) => block.Schema.id === blockId);
+        if (block) {
+          setPageBlocks(block, Number(position));
+          setTimeout(() => {
+            const scrollHeight = iframe?.contentWindow?.document?.body.scrollHeight ?? 1840;
+            setIframeHeight(scrollHeight);
+          }, 500);
+        }
+      } else if (data.type === 'removeBlock') {
+        const blockId = data.content;
+        removeBlock(blockId);
+
+        setTimeout(() => {
+          const page = iframe?.contentWindow?.document?.getElementById('page-content');
+          const height =
+            activePage?.blocks && activePage?.blocks?.[activePage.activeLanguageLocale]?.length
+              ? (page?.scrollHeight ?? iframeHeight)
+              : 2000;
+          setIframeHeight(height);
+        }, 500);
       }
     };
 
@@ -161,7 +217,27 @@ export default function useCanvas({
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [setIframeHeight]);
+  }, [setIframeHeight, pages, blocks, setPages, activePage, iframe, iframeHeight]);
+
+  useEffect(() => {
+    const setHeight = () => {
+      setTimeout(() => {
+        const page = iframe?.contentWindow?.document?.getElementById('page-content');
+        const height =
+          activePage?.blocks && activePage?.blocks?.[activePage.activeLanguageLocale]?.length
+            ? (page?.scrollHeight ?? iframeHeight)
+            : 2000;
+        console.log(height);
+        setIframeHeight(height);
+      }, 1000);
+    };
+    setHeight();
+
+    iframe?.addEventListener('load', setHeight);
+    return () => {
+      iframe?.removeEventListener('load', setHeight);
+    };
+  }, [iframe, setIframeHeight, activePage, iframeHeight]);
 
   return {};
 }

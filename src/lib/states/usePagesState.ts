@@ -76,6 +76,7 @@ export type Page = {
   };
   blocks?: {
     [key: string]: {
+      id: string;
       blockId: string;
       isSelected: boolean;
       inputs: { [key: string]: any };

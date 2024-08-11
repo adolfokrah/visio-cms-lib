@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePagesState } from '../states/usePagesState';
+import { useIframeState } from '../states/useIframeState';
 
 const usePageTabs = () => {
   const {
@@ -13,6 +14,7 @@ const usePageTabs = () => {
   const [hiddenTabs, setHiddenTabs] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const tabRefs = useRef<Map<string, HTMLDivElement>>(new Map()); // Store tab references
+  const { setIframeHeight, iframe, iframeHeight } = useIframeState();
 
   useEffect(() => {
     const updateTabVisibility = () => {
@@ -105,6 +107,15 @@ const usePageTabs = () => {
         await setPageSeoFeaturedImages(activePage);
       }, 100);
     }
+
+    setTimeout(() => {
+      const page = iframe?.contentWindow?.document?.getElementById('page-content');
+      const height =
+        activePage?.blocks && activePage?.blocks?.[activePage.activeLanguageLocale]?.length
+          ? (page?.scrollHeight ?? iframeHeight)
+          : 2000;
+      setIframeHeight(height);
+    }, 500);
   };
 
   const handleRemovePage = (name: string) => {

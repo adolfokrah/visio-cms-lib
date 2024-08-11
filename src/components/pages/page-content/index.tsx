@@ -1,17 +1,54 @@
 import usePageContent from '@/lib/hooks/usePageContent';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
+import { cn } from '@/lib/utils';
+import React, { useState } from 'react';
 
 export default function PageContent() {
-  const { activePage } = usePageContent();
+  const { activePage, sendMessageToParent } = usePageContent();
   const { blocks } = useProjectConfigurationState();
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   return (
-    <div className="visio-cms-bg-red-300 lg:visio-cms-flex">
-      <div className="visio-cms-h-44 visio-cms-flex-1 sm:visio-cms-bg-dark-800 md:visio-cms-bg-yellow-400 lg:visio-cms-bg-red-300 ">
-        {blocks.length}
+    <div
+      className={cn('visio-cms-h-screen visio-cms-bg-white visio-cms-rounded-md ', {
+        'visio-cms-bg-blue-100': isDraggingOver,
+      })}
+      onDragOver={(e) => {
+        if (e.dataTransfer.types.includes('text/plain')) {
+          return;
+        }
+        setIsDraggingOver(true);
+        e.preventDefault();
+      }}
+      onDragLeave={(e) => {
+        setIsDraggingOver(false);
+        e.preventDefault();
+      }}
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsDraggingOver(false);
+        const data = e.dataTransfer.getData('application/block');
+        if (data) {
+          sendMessageToParent({ type: 'addBlock', content: JSON.stringify({ blockId: data, position: 0 }) });
+        }
+      }}
+    >
+      <div id="page-content" className="visio-cms-h-auto">
+        {activePage?.blocks?.[activePage.activeLanguageLocale]?.map(({ blockId, id }) => {
+          const block = blocks.find((block) => block.Schema.id === blockId);
+          if (!block) return null;
+          return (
+            <div
+              key={id}
+              onClick={() => {
+                sendMessageToParent({ type: 'removeBlock', content: id });
+              }}
+            >
+              {React.createElement(block, { key: block.Schema.id, ...block.Schema.defaultPropValues })}
+            </div>
+          );
+        })}
       </div>
-      <div className="visio-cms-h-44 visio-cms-flex-1 visio-cms-bg-red-400">{activePage?.name}</div>
-      <div className="visio-cms-h-44 visio-cms-flex-1 visio-cms-bg-red-500">{activePage?.name} </div>
     </div>
   );
 }

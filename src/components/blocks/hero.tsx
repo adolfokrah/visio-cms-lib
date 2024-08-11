@@ -5,7 +5,7 @@ export type HeroProps = {
 };
 
 const Hero: Block<HeroProps> = ({ padding }) => {
-  return <div>Hello {padding}</div>;
+  return <div className="visio-cms-h-[200px] visio-cms-bg-red-100">Hello {padding}</div>;
 };
 
 Hero.Schema = {

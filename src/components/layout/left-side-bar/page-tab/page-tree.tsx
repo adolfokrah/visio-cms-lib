@@ -19,6 +19,7 @@ import {
 import usePage from '@/lib/hooks/usePage';
 import DeletePageAction from './delete-page-action';
 import AddNewPageForm from '../../add-new-page-form';
+import { useIframeState } from '@/lib/states/useIframeState';
 
 export default function PageTree({ items }: { items: PageTreeItem[] }) {
   return (
@@ -232,6 +233,7 @@ function FolderItem({ item }: { item: PageTreeItem }) {
 
 function PageItem({ item }: { item: PageTreeItem }) {
   const { pages, setPages, setPageSeoFeaturedImages } = usePagesState();
+  const { setIframeHeight, iframe, iframeHeight } = useIframeState();
   const { duplicatePage } = usePage({});
   const [openAlert, setOpenAlert] = useState<{ withPages: boolean } | null>(null);
   const updateSelectedPage = useCallback(() => {
@@ -245,7 +247,15 @@ function PageItem({ item }: { item: PageTreeItem }) {
     if (activePage) {
       setPageSeoFeaturedImages(activePage);
     }
-  }, [pages, setPages, item]);
+    setTimeout(() => {
+      const page = iframe?.contentWindow?.document?.getElementById('page-content');
+      const height =
+        activePage?.blocks && activePage?.blocks?.[activePage.activeLanguageLocale]?.length
+          ? (page?.scrollHeight ?? iframeHeight)
+          : 2000;
+      setIframeHeight(height);
+    }, 500);
+  }, [pages, setPages, item, setPageSeoFeaturedImages, setIframeHeight, iframe, iframeHeight]);
 
   if (item.type == 'Folder') return null;
 
