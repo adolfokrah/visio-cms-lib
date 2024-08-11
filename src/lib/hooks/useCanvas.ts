@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useControls } from 'react-zoom-pan-pinch';
 import { usePagesState } from '../states/usePagesState';
 import { useCanvasState } from '../states/useCanvasState';
+import { useIframeState } from '../states/useIframeState';
+import { Message } from '../types';
 
 export default function useCanvas({
   canvasWrapperRef,
@@ -13,6 +15,7 @@ export default function useCanvas({
   const controls = useControls();
   const { pages, pageSwitched, setPageSwitched } = usePagesState();
   const activePage = pages.find((page) => page.active);
+  const { setIframeHeight } = useIframeState();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -86,7 +89,7 @@ export default function useCanvas({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [zooming, isMouseOver]);
+  }, [zooming, isMouseOver, setZooming, setZoomingOut, setPanning, controls, activePage]);
 
   useEffect(() => {
     // Update cursor style based on zooming state
@@ -144,6 +147,21 @@ export default function useCanvas({
       } else controls.resetTransform();
     }
   }, [pages, controls, pageSwitched, setPageSwitched]);
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      const data: Message = event.data;
+      if (data.type === 'setHeight') {
+        setIframeHeight(parseInt(data.content));
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [setIframeHeight]);
 
   return {};
 }

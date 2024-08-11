@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { RESPONSIVE_VIEWS } from '../constants';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { supabase } from '../utils';
+
 const data = [
   { id: '1', name: 'Home page', slug: '/home-page', active: false },
   { id: '2', name: 'About page', slug: '/about-page', active: false },
