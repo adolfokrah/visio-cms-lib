@@ -19,7 +19,7 @@ export type ProjectConfiguration = {
       colorName: string;
     }[];
   };
-  blocks: Block[];
+  blocks: BlockList[];
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 
@@ -56,16 +56,23 @@ export interface InvitedUser {
 export type SideEditingPropsType = 'text' | 'select';
 
 export interface SideEditingProps {
-  name: string;
+  propName: string;
   label: string;
   type: SideEditingPropsType;
 }
 
-export type Block = {
+export type BlockSchema<T = Record<string, any>> = {
   name: string;
   id: string;
-  block: React.Component<any>;
   group?: string;
-  defaultPropValues: { [key: string]: any };
+  defaultPropValues: T;
   sideEditingProps: SideEditingProps[];
+};
+
+export type Block<T = Record<string, any>> = React.FC<T> & { Schema: BlockSchema<T> };
+
+export type BlockList = Block | Block<Record<string, any>>;
+
+export type GroupedBlock = {
+  [group: string]: BlockList[];
 };

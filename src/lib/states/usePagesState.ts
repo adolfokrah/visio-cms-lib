@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { RESPONSIVE_VIEWS } from '../constants';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { Block } from '../types';
 import { supabase } from '../utils';
 const data = [
   { id: '1', name: 'Home page', slug: '/home-page', active: false },
@@ -74,7 +73,13 @@ export type Page = {
       };
     };
   };
-  blocks?: { [key: string]: Block & { isSelected: boolean }[] };
+  blocks?: {
+    [key: string]: {
+      blockId: string;
+      isSelected: boolean;
+      inputs: { [key: string]: any };
+    }[];
+  };
 };
 
 type PagesStateType = {

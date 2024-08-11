@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { createClient } from '@supabase/supabase-js';
 import { useProjectConfigurationState } from './states/useProjectConfigState';
-import { Folder, OsTypes, PageTreeItem } from './types';
+import { BlockList, Folder, GroupedBlock, OsTypes, PageTreeItem } from './types';
 import { Page } from './states/usePagesState';
 import * as jose from 'jose';
 import { JSON_WEB_SECRET } from './constants';
@@ -141,4 +141,21 @@ export async function verifyToken({ token }: { token: string }) {
   const jwt = await jose.jwtVerify(token, secret, { algorithms: [alg] });
 
   return jwt;
+}
+
+export function groupBlocks(blocks: BlockList[]): { groupName: string; blocks: BlockList[] }[] {
+  const grouped: GroupedBlock = blocks.reduce((acc: GroupedBlock, block) => {
+    const group = block.Schema.group || 'Ungrouped'; // Default to 'Ungrouped' if no group is specified
+    if (!acc[group]) {
+      acc[group] = [];
+    }
+    acc[group].push(block);
+    return acc;
+  }, {});
+
+  // Convert grouped object to array of GroupedBlock
+  return Object.entries(grouped).map(([groupName, blocks]) => ({
+    groupName,
+    blocks,
+  }));
 }
