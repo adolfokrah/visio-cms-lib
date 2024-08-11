@@ -56,7 +56,20 @@ export default function BlocksTab() {
 
 function BlockItem({ BlockComponent }: { BlockComponent: Block<Record<string, any>> }) {
   return (
-    <div className="visio-cms-p-3 visio-cms-rounded-md visio-cms-cursor-pointer visio-cms-flex visio-cms-gap-2 hover:visio-cms-bg-dark-700">
+    <div
+      draggable={true} // Add draggable attribute
+      onDragStart={(e) => {
+        e.stopPropagation();
+        e.dataTransfer.setData(
+          'text/plain',
+          JSON.stringify({
+            type: 'block',
+            blockId: BlockComponent.Schema.id,
+          }),
+        ); // Set the data to be transferred during drag
+      }}
+      className="visio-cms-p-3 visio-cms-rounded-md visio-cms-cursor-pointer visio-cms-flex visio-cms-gap-2 hover:visio-cms-bg-dark-700"
+    >
       <Box size={14} />
       {BlockComponent.Schema.name}
     </div>

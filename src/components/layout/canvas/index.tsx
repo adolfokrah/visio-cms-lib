@@ -8,6 +8,7 @@ import { useCallback, useRef } from 'react';
 import lodash from 'lodash';
 import CanvasControls from './components/canvas-controls';
 import { useCanvasState } from '@/lib/states/useCanvasState';
+import { useIframeState } from '@/lib/states/useIframeState';
 
 export default function Canvas() {
   const { pages, setPages } = usePagesState();
@@ -70,11 +71,15 @@ function Index({
   canvasWrapperRef: React.MutableRefObject<HTMLDivElement | null>;
 }) {
   useCanvas({ canvasWrapperRef });
+  const { iframeHeight } = useIframeState();
   return (
     <TransformComponent
       wrapperClass="!visio-cms-w-[calc(100vw-600px)] !visio-cms-h-[calc(100vh-84px)]  !visio-cms-mx-auto"
-      contentClass="!visio-cms-h-[2000px] visio-cms-w-[1200px]"
-      contentStyle={{ width: RESPONSIVE_VIEWS.find((view) => view.view === activePage?.selectedView)?.size }}
+      contentClass="visio-cms-w-[1200px]"
+      contentStyle={{
+        width: RESPONSIVE_VIEWS.find((view) => view.view === activePage?.selectedView)?.size,
+        height: iframeHeight + 130,
+      }}
     >
       <div className="visio-cms-w-full visio-cms-pt-32">
         <ResponsiveBar />

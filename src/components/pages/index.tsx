@@ -11,6 +11,7 @@ import Builder from './builder';
 import { useEffect } from 'react';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import { useAuthState } from '@/lib/states/useAuthState';
+import PageContent from './page-content';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: PAGES.BUILDER,
     element: <Builder />,
+  },
+  {
+    path: PAGES.PAGE_CONTENT,
+    element: <PageContent />,
   },
 ]);
 

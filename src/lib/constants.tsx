@@ -11,6 +11,7 @@ export const PAGES = {
   BUILDER: `${CMS_BASE_PATH}/builder`,
   UPDATE_PASSWORD: `${CMS_BASE_PATH}/update-password`,
   PAGE_NOT_FOUND: `${CMS_BASE_PATH}/page-not-found`,
+  PAGE_CONTENT: `${CMS_BASE_PATH}/page-content`,
 };
 
 export const RESPONSIVE_VIEWS: ResponsiveViews[] = [
@@ -21,12 +22,12 @@ export const RESPONSIVE_VIEWS: ResponsiveViews[] = [
   },
   {
     view: 'Tablet',
-    size: '720px',
+    size: '768px',
     icon: <TabletIcon size={15} />,
   },
   {
     view: 'Mobile',
-    size: '430px',
+    size: '640px',
     icon: <MobileIcon />,
   },
 ];

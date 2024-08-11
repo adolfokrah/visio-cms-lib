@@ -11,7 +11,7 @@ const Hero: Block<HeroProps> = ({ padding }) => {
 Hero.Schema = {
   name: 'hero',
   id: 'Hero',
-  group: 'content',
+  group: 'Content',
   sideEditingProps: [],
   defaultPropValues: {
     padding: '10px',

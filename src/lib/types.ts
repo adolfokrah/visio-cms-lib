@@ -76,3 +76,8 @@ export type BlockList = Block | Block<Record<string, any>>;
 export type GroupedBlock = {
   [group: string]: BlockList[];
 };
+
+export interface Message {
+  type: string;
+  content: string;
+}
