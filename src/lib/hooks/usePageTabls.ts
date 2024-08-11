@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { usePagesState } from '../states/usePagesState';
 
 const usePageTabs = () => {
-  const { pages, setPages, selectedPage: selectedTab, setSelectedPage: setSelectedTab } = usePagesState();
+  const {
+    pages,
+    setPages,
+    selectedPage: selectedTab,
+    setSelectedPage: setSelectedTab,
+    setPageSeoFeaturedImages,
+  } = usePagesState();
   const [visibleTabs, setVisibleTabs] = useState<string[]>([]);
   const [hiddenTabs, setHiddenTabs] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -93,6 +99,12 @@ const usePageTabs = () => {
     setSelectedTab(name);
     const newPages = pages.map((page) => ({ ...page, active: page.name == name }));
     setPages(newPages);
+    const activePage = newPages.find((page) => page.active);
+    if (activePage) {
+      setTimeout(async () => {
+        await setPageSeoFeaturedImages(activePage);
+      }, 100);
+    }
   };
 
   const handleRemovePage = (name: string) => {

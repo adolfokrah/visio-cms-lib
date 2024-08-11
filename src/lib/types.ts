@@ -19,6 +19,7 @@ export type ProjectConfiguration = {
       colorName: string;
     }[];
   };
+  blocks: Block[];
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 
@@ -51,3 +52,20 @@ export interface InvitedUser {
   role: string; // User's role
   photo: string | null; // URL to the user's photo, or null if not available
 }
+
+export type SideEditingPropsType = 'text' | 'select';
+
+export interface SideEditingProps {
+  name: string;
+  label: string;
+  type: SideEditingPropsType;
+}
+
+export type Block = {
+  name: string;
+  id: string;
+  block: React.Component<any>;
+  group?: string;
+  defaultPropValues: { [key: string]: any };
+  sideEditingProps: SideEditingProps[];
+};

@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { RESPONSIVE_VIEWS } from '../constants';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { Block } from '../types';
+import { supabase } from '../utils';
 const data = [
   { id: '1', name: 'Home page', slug: '/home-page', active: false },
   { id: '2', name: 'About page', slug: '/about-page', active: false },
@@ -63,13 +65,16 @@ export type Page = {
   };
   tags?: string;
   seo?: {
-    meta: {
-      title: string;
-      description: string;
-      keywords: string;
-      featuredImage?: string;
+    [key: string]: {
+      meta: {
+        title: string;
+        description: string;
+        keywords: string;
+        featuredImage?: string;
+      };
     };
   };
+  blocks?: { [key: string]: Block & { isSelected: boolean }[] };
 };
 
 type PagesStateType = {
@@ -80,6 +85,7 @@ type PagesStateType = {
   setPages: (pages: Page[]) => void;
   pageSwitched?: boolean;
   setPageSwitched: (flag: boolean) => void;
+  setPageSeoFeaturedImages: (activePage: Page) => void;
 };
 
 export const usePagesState = create(
@@ -113,6 +119,27 @@ export const usePagesState = create(
           };
         }),
       setPages: (pages) => set(() => ({ pages, selectedPage: pages.find((page) => page.active)?.name || '' })),
+      setPageSeoFeaturedImages: async (activePage: Page) => {
+        const db = supabase();
+        const seo = activePage?.seo;
+
+        if (seo && Object.keys(seo).length) {
+          for (const key of Object.keys(seo)) {
+            const featuredImage = seo[key]?.meta.featuredImage;
+            const { data } = await db
+              .from('uploaded_files')
+              .select('hashed_file_name')
+              .eq('hashed_file_name', featuredImage)
+              .single();
+            seo[key].meta.featuredImage = data ? data?.hashed_file_name : undefined;
+          }
+        }
+        set((state) => {
+          return {
+            pages: state.pages.map((page) => (page.id == activePage.id ? { ...page, seo } : page)),
+          };
+        });
+      },
     }),
     {
       name: 'pages-storage',

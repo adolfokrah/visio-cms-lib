@@ -231,7 +231,7 @@ function FolderItem({ item }: { item: PageTreeItem }) {
 }
 
 function PageItem({ item }: { item: PageTreeItem }) {
-  const { pages, setPages } = usePagesState();
+  const { pages, setPages, setPageSeoFeaturedImages } = usePagesState();
   const { duplicatePage } = usePage({});
   const [openAlert, setOpenAlert] = useState<{ withPages: boolean } | null>(null);
   const updateSelectedPage = useCallback(() => {
@@ -241,6 +241,10 @@ function PageItem({ item }: { item: PageTreeItem }) {
       pinned: page.id == item.id ? true : page.pinned,
     }));
     setPages(newPages);
+    const activePage = newPages.find((page) => page.active);
+    if (activePage) {
+      setPageSeoFeaturedImages(activePage);
+    }
   }, [pages, setPages, item]);
 
   if (item.type == 'Folder') return null;

@@ -1,4 +1,4 @@
-/* @import 'react-image-crop/dist/ReactCrop.css'; */
+@import 'react-image-crop/dist/ReactCrop.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

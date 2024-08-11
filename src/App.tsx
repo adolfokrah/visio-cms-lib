@@ -1,9 +1,37 @@
 import { Cms } from './components';
+import blocks from './components/blocks';
 import './styles/tailwind.css';
 
 function App() {
   return (
     <Cms
+      blocks={blocks}
+      defaultLanguage={{
+        language: 'English',
+        locale: 'en-us',
+      }}
+      supportedLanguages={[
+        {
+          language: 'English',
+          locale: 'en-us',
+        },
+        {
+          language: 'Spanish',
+          locale: 'es',
+        },
+        {
+          language: 'French',
+          locale: 'fr',
+        },
+        {
+          language: 'German',
+          locale: 'de',
+        },
+        {
+          language: 'Finish',
+          locale: 'fi',
+        },
+      ]}
       emailSender="Visio cms <noreply@visiocms.com>"
       projectId="urhvrfatpmdbwttotlwc"
       supabaseProjectUrl="https://urhvrfatpmdbwttotlwc.supabase.co"

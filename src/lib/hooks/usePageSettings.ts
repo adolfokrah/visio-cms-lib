@@ -97,11 +97,14 @@ export default function usePageSettings() {
           ...page,
           seo: page.active
             ? {
-                meta: {
-                  title: value.title || page.seo?.meta.title || '',
-                  description: value.description || page.seo?.meta.description || '',
-                  keywords: value.keywords || page.seo?.meta.keywords || '',
-                  featuredImage: page.seo?.meta.featuredImage,
+                ...page.seo,
+                [page.activeLanguageLocale]: {
+                  meta: {
+                    title: value.title || page.seo?.[page.activeLanguageLocale]?.meta?.title || '',
+                    description: value.description || page.seo?.[page.activeLanguageLocale]?.meta?.description || '',
+                    keywords: value.keywords || page.seo?.[page.activeLanguageLocale]?.meta?.keywords || '',
+                    featuredImage: page.seo?.[page.activeLanguageLocale]?.meta?.featuredImage,
+                  },
                 },
               }
             : page.seo,
@@ -117,11 +120,14 @@ export default function usePageSettings() {
         ...page,
         seo: page.active
           ? {
-              meta: {
-                title: page.seo?.meta.title || '',
-                description: page.seo?.meta.description || '',
-                keywords: page.seo?.meta.keywords || '',
-                featuredImage: image,
+              ...page?.seo,
+              [page.activeLanguageLocale]: {
+                meta: {
+                  title: page.seo?.[page.activeLanguageLocale]?.meta?.title || '',
+                  description: page.seo?.[page.activeLanguageLocale]?.meta?.description || '',
+                  keywords: page.seo?.[page.activeLanguageLocale]?.meta?.keywords || '',
+                  featuredImage: image,
+                },
               },
             }
           : page.seo,

@@ -26,7 +26,7 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
-  const { pages, setPages } = usePagesState();
+  const { pages, setPageSeoFeaturedImages } = usePagesState();
   useEffect(() => {
     fetchFiles();
   }, []);
@@ -189,47 +189,25 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
       await db.from('uploaded_files').delete().eq('hashed_file_name', file.hashed_file_name);
       setFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
 
-      const newPages = pages.map((page) => ({
-        ...page,
-        seo:
-          page.seo && page?.seo.meta.featuredImage == file.hashed_file_name
-            ? {
-                meta: {
-                  ...page.seo.meta,
-                  featuredImage: undefined,
-                },
-              }
-            : page.seo,
-      }));
+      const activePage = pages.find((page) => page.active);
+      if (activePage) {
+        await setPageSeoFeaturedImages(activePage);
+      }
 
-      setPages(newPages);
       toast.success('File deleted successfully');
     } catch (e: any) {
       toast.error(e.message);
     } finally {
-      toast.error('Failed to delete file');
       setDeleting(false);
     }
   };
 
-  const onImageSaved = () => {
-    const selectedImage = files.find((file) => file.selected);
-    const url = `${selectedImage?.mediaUrl}?t=${new Date().getTime()}`;
+  const onImageSaved = async () => {
     fetchFiles();
-    const newPages = pages.map((page) => ({
-      ...page,
-      seo:
-        page.seo && page?.seo.meta.featuredImage == selectedImage?.hashed_file_name
-          ? {
-              meta: {
-                ...page.seo.meta,
-                mediaUrl: url,
-              },
-            }
-          : page.seo,
-    }));
-
-    setPages(newPages);
+    const activePage = pages.find((page) => page.active);
+    if (activePage) {
+      await setPageSeoFeaturedImages(activePage);
+    }
   };
 
   return {

@@ -12,6 +12,7 @@ export default function LanguageControls() {
   const { pages, setPages } = usePagesState();
   const { supportedLanguages } = useProjectConfigurationState();
   const activePage = pages.find((page) => page.active);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

@@ -4,7 +4,16 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 type Actions = {
   setConfiguration: (
-    props: Pick<ProjectConfiguration, 'supabaseAnonKey' | 'supabaseProjectUrl' | 'projectId' | 'emailSender'>,
+    props: Pick<
+      ProjectConfiguration,
+      | 'supabaseAnonKey'
+      | 'supabaseProjectUrl'
+      | 'projectId'
+      | 'emailSender'
+      | 'defaultLanguage'
+      | 'supportedLanguages'
+      | 'blocks'
+    >,
   ) => void;
   setTheme: (props: Pick<ProjectConfiguration, 'theme'>) => void;
 };
@@ -17,33 +26,13 @@ export const useProjectConfigurationState = create(
       projectId: '',
       bucketName: 'media',
       emailSender: '',
+      blocks: [],
       setConfiguration: (data) => set(() => data),
       defaultLanguage: {
         language: 'English',
         locale: 'en-us',
       },
-      supportedLanguages: [
-        {
-          language: 'English',
-          locale: 'en-us',
-        },
-        {
-          language: 'Spanish',
-          locale: 'es',
-        },
-        {
-          language: 'French',
-          locale: 'fr',
-        },
-        {
-          language: 'German',
-          locale: 'de',
-        },
-        {
-          language: 'Finish',
-          locale: 'fi',
-        },
-      ],
+      supportedLanguages: [],
       theme: {
         colorScheme: [],
       },
