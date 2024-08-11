@@ -18,7 +18,7 @@ export default function IframeView() {
         ref={ref}
         src={url}
         style={{ height: `${iframeHeight}px` }}
-        className="visio-cms-w-full visio-cms-h-full visio-cms-rounded-md visio-cms-m-0 visio-cms-p-0 rounded"
+        className="visio-cms-w-full visio-cms-h-full visio-cms-rounded-md visio-cms-m-0 visio-cms-p-0 !visio-cms-overflow-hidden"
       />
     </div>
   );
