@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import BlocksTab from './blocks-tab';
+import LayersTab from './layers-tab';
 import PagesTab from './page-tab';
 
 export default function LeftSideBar() {
@@ -14,7 +15,9 @@ export default function LeftSideBar() {
         <TabsContent value="pages">
           <PagesTab />
         </TabsContent>
-        <TabsContent value="layers">Change your password here.</TabsContent>
+        <TabsContent value="layers">
+          <LayersTab />
+        </TabsContent>
         <TabsContent value="blocks">
           <BlocksTab />
         </TabsContent>

@@ -66,7 +66,7 @@ const Droppable = ({ position, index }: { position: 'top' | 'bottom'; index: num
 
   return (
     <div
-      className={cn('visio-cms-h-[5%] visio-cms-min-h-[5px] visio-cms-w-full visio-cms-absolute', {
+      className={cn('visio-cms-h-[5px] visio-cms-w-full visio-cms-absolute', {
         'visio-cms-bg-blue-500': isDraggingOver,
         'visio-cms-top-0': position === 'top',
         'visio-cms-bottom-0': position === 'bottom',

@@ -234,6 +234,7 @@ export default function useCanvas({
     setHeight();
 
     iframe?.addEventListener('load', setHeight);
+
     return () => {
       iframe?.removeEventListener('load', setHeight);
     };
