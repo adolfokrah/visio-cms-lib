@@ -10,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useCallback } from 'react';
+import ResponsiveBar from '../canvas/components/responsive-bar';
+import LanguageControls from '../canvas/components/language-controls';
 
 export default function PageTabs() {
   const { hiddenTabs, containerRef, pages, handleTabClick, tabRefs, handleRemovePage } = usePageTabs();
@@ -96,6 +98,8 @@ export default function PageTabs() {
         </DropdownMenu>
       ) : null}
 
+      <LanguageControls />
+      <ResponsiveBar />
       <div className="visio-cms-flex">
         <TooltipProvider>
           <Tooltip>

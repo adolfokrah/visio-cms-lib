@@ -26,8 +26,8 @@ export default function Builder() {
           <div className="visio-cms-w-[300px] visio-cms-h-[500px] visio-cms-shrink-0 visio-cms-z-10">
             <LeftSideBar />
           </div>
-          <div className="visio-cms-w-[calc(100vw-600px)]  visio-cms-relative visio-cms-z-0">
-            <div className="visio-cms-pt-[42px] visio-cms-animate-fade-in">
+          <div className="visio-cms-w-[calc(100vw-600px)]  visio-cms-relative visio-cms-z-0 ">
+            <div className="visio-cms-pt-[42px] visio-cms-animate-fade-in visio-cms-w-full">
               <PageTabs />
               <Canvas />
             </div>

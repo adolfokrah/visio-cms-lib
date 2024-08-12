@@ -1,87 +1,19 @@
-import { TransformWrapper, TransformComponent, ReactZoomPanPinchContentRef } from 'react-zoom-pan-pinch';
-import ResponsiveBar from './components/responsive-bar';
 import { RESPONSIVE_VIEWS } from '@/lib/constants';
 import IframeView from './components/iframe-view';
+import { usePagesState } from '@/lib/states/usePagesState';
 import useCanvas from '@/lib/hooks/useCanvas';
-import { Page, usePagesState } from '@/lib/states/usePagesState';
-import { useCallback, useRef } from 'react';
-import lodash from 'lodash';
-import CanvasControls from './components/canvas-controls';
-import { useCanvasState } from '@/lib/states/useCanvasState';
 
 export default function Canvas() {
-  const { pages, setPages } = usePagesState();
+  const { pages } = usePagesState();
   const activePage = pages.find((page) => page.active);
-  const canvasWrapperRef = useRef<HTMLDivElement | null>(null);
-  const canvasRef = useRef<ReactZoomPanPinchContentRef | null>(null);
-  const { panning } = useCanvasState();
+  useCanvas();
 
-  const debouncedOnTransformed = useCallback(
-    lodash.debounce((_, state: { scale: number; positionX: number; positionY: number }) => {
-      const activePage = pages.find((page) => page.active);
-      if (lodash.isEqual(activePage?.canvasSettings, state)) {
-        return;
-      }
-      const newPages = pages.map((page) => ({
-        ...page,
-        canvasSettings: page.active ? state : page.canvasSettings,
-      }));
-      setPages(newPages);
-    }, 300),
-    [pages],
-  );
-  if (!activePage) return null;
-
+  const selectedView = RESPONSIVE_VIEWS.find((view) => view.view === activePage?.selectedView);
   return (
-    <div ref={canvasWrapperRef}>
-      <TransformWrapper
-        ref={canvasRef}
-        doubleClick={{
-          disabled: true,
-        }}
-        wheel={{
-          wheelDisabled: true,
-          smoothStep: 0.01,
-        }}
-        pinch={{
-          step: 9,
-        }}
-        panning={{
-          wheelPanning: true,
-          ...(!panning && { activationKeys: [' '] }),
-        }}
-        onTransformed={debouncedOnTransformed}
-        initialPositionX={activePage?.canvasSettings?.positionX}
-        initialPositionY={activePage?.canvasSettings?.positionY}
-        initialScale={activePage?.canvasSettings?.scale}
-      >
-        <CanvasControls />
-        <Index activePage={activePage} canvasWrapperRef={canvasWrapperRef} />
-      </TransformWrapper>
-    </div>
-  );
-}
-
-function Index({
-  activePage,
-  canvasWrapperRef,
-}: {
-  activePage: Page | undefined;
-  canvasWrapperRef: React.MutableRefObject<HTMLDivElement | null>;
-}) {
-  useCanvas({ canvasWrapperRef });
-  return (
-    <TransformComponent
-      wrapperClass="!visio-cms-w-[calc(100vw-600px)] !visio-cms-h-[calc(100vh-84px)]  !visio-cms-mx-auto"
-      contentClass="visio-cms-w-[1200px] visio-cms-h-auto"
-      contentStyle={{
-        width: RESPONSIVE_VIEWS.find((view) => view.view === activePage?.selectedView)?.size,
-      }}
-    >
-      <div className="visio-cms-w-full visio-cms-pt-32">
-        <ResponsiveBar />
+    <>
+      <div style={{ width: selectedView?.view == 'Desktop' ? '100%' : selectedView?.size, margin: 'auto' }}>
         <IframeView />
       </div>
-    </TransformComponent>
+    </>
   );
 }

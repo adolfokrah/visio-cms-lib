@@ -11,7 +11,7 @@ export default function PageContent() {
   return (
     <div
       className={cn('visio-cms-h-screen visio-cms-bg-white visio-cms-rounded-md ', {
-        'visio-cms-bg-blue-100': isDraggingOver,
+        'visio-cms-bg-blue-300': isDraggingOver,
       })}
       onDragOver={(e) => {
         if (e.dataTransfer.types.includes('text/plain')) {
@@ -43,9 +43,11 @@ export default function PageContent() {
           return (
             <div
               key={id}
-              // onClick={() => {
-              //   sendMessageToParent({ type: 'removeBlock', content: id });
-              // }}
+              onClick={(e) => {
+                e.stopPropagation();
+                alert('click');
+                // sendMessageToParent({ type: 'removeBlock', content: id });
+              }}
               className="visio-cms-relative"
             >
               <div>{React.createElement(block, { key: block.Schema.id, ...block.Schema.defaultPropValues })}</div>

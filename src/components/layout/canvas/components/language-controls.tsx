@@ -16,7 +16,7 @@ export default function LanguageControls() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="!visio-cms-bg-transparent hover:!visio-cms-bg-dark-700 visio-cms-w-[60px]">
+        <Button className="!visio-cms-bg-transparent hover:!visio-cms-bg-dark-700 visio-cms-w-[60px] visio-cms-shadow-none">
           {activePage?.activeLanguageLocale.toLocaleUpperCase()}
         </Button>
       </DropdownMenuTrigger>

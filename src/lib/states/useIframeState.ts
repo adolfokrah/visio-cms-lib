@@ -5,6 +5,8 @@ type State = {
   setIframe: (iframe: HTMLIFrameElement) => void;
   iframeHeight: number;
   setIframeHeight: (height: number) => void;
+  isMouseOver: boolean;
+  setIsMouseOver: (isMouseOver: boolean) => void;
 };
 
 export const useIframeState = create<State>((set) => ({
@@ -12,4 +14,6 @@ export const useIframeState = create<State>((set) => ({
   setIframe: (iframe) => set(() => ({ iframe })),
   iframeHeight: 0,
   setIframeHeight: (iframeHeight) => set(() => ({ iframeHeight })),
+  isMouseOver: false,
+  setIsMouseOver: (isMouseOver) => set(() => ({ isMouseOver })),
 }));
