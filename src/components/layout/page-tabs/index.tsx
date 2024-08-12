@@ -108,7 +108,7 @@ export default function PageTabs() {
                 <Undo size={18} />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent side="bottom">
               <p>Undo</p>
             </TooltipContent>
           </Tooltip>
@@ -119,7 +119,7 @@ export default function PageTabs() {
                 <Redo size={18} />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent side="left">
               <p>Redo</p>
             </TooltipContent>
           </Tooltip>
