@@ -11,7 +11,10 @@ export default function Canvas() {
   const selectedView = RESPONSIVE_VIEWS.find((view) => view.view === activePage?.selectedView);
   return (
     <>
-      <div style={{ width: selectedView?.view == 'Desktop' ? '100%' : selectedView?.size, margin: 'auto' }}>
+      <div
+        style={{ width: selectedView?.view == 'Desktop' ? '100%' : selectedView?.size, margin: 'auto' }}
+        className="visio-cms-transition-all visio-cms-ease-in-out visio-cms-duration-200"
+      >
         <IframeView />
       </div>
     </>
