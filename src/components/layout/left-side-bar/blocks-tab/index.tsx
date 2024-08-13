@@ -9,7 +9,7 @@ export default function BlocksTab() {
   const groupedBlocks = groupBlocks(blocks);
   const { expandedGroups, setExpandedGroups } = useBlocksTabState();
   return (
-    <>
+    <div className="visio-cms-overflow-auto visio-cms-h-[calc(100vh-100px)] scrollbar-custom  visio-cms-px-1">
       {groupedBlocks
         .filter((group) => group.groupName != 'Ungrouped')
         .map(({ groupName, blocks }) => (
@@ -50,7 +50,7 @@ export default function BlocksTab() {
             </div>
           ))}
       </>
-    </>
+    </div>
   );
 }
 

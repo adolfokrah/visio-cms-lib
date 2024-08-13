@@ -41,6 +41,20 @@ export default function useCanvas() {
         setPages(pages.map((p) => (p.active ? page : p)));
       }
     };
+
+    const selectBlock = (blockId: string) => {
+      const page = activePage;
+      if (page) {
+        const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
+        const newBlocks = blocks.map((block) => ({ ...block, isSelected: block.id === blockId }));
+        page.blocks = {
+          ...page.blocks,
+          [page.activeLanguageLocale]: newBlocks,
+        };
+        setPages(pages.map((p) => (p.active ? page : p)));
+      }
+    };
+
     const handleMessage = (event: MessageEvent) => {
       const data: Message = event.data;
       if (data.type === 'addBlock') {
@@ -52,6 +66,9 @@ export default function useCanvas() {
       } else if (data.type === 'removeBlock') {
         const blockId = data.content;
         removeBlock(blockId);
+      } else if (data.type === 'selectBlock') {
+        const blockId = data.content;
+        selectBlock(blockId);
       }
     };
 

@@ -40,6 +40,13 @@ export type ResponsiveViews = {
 };
 export type Status = 'Draft' | 'Publish';
 export type SchedulePublished = 'Now' | 'Later';
+export type PageBlock = {
+  id: string;
+  isGlobalBlock?: boolean;
+  blockId: string;
+  isSelected: boolean;
+  inputs: { [key: string]: any };
+};
 export type Page = {
   id: string;
   name: string;
@@ -75,12 +82,7 @@ export type Page = {
     };
   };
   blocks?: {
-    [key: string]: {
-      id: string;
-      blockId: string;
-      isSelected: boolean;
-      inputs: { [key: string]: any };
-    }[];
+    [key: string]: PageBlock[];
   };
 };
 

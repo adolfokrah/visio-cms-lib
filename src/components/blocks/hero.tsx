@@ -10,7 +10,7 @@ const Hero: Block<HeroProps> = ({ padding }) => {
       <div className=" visio-cms-h-[400px] visio-cms-bg-dark-green">{padding}</div>
       <div className=" visio-cms-h-[400px] visio-cms-bg-dark-700">2</div>
       <div className=" visio-cms-h-[400px] visio-cms-bg-dark-800">3</div>
-      <div className=" visio-cms-h-[400px] visio-cms-bg-dark-900">4</div>
+      <div className=" visio-cms-h-[400px] visio-cms-bg-dark7900">4</div>
     </div>
   );
 };

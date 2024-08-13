@@ -1,18 +1,14 @@
 import { PAGES } from '@/lib/constants';
-import { useIframeState } from '@/lib/states/useIframeState';
-import { useEffect, useRef } from 'react';
+import { usePagesState } from '@/lib/states/usePagesState';
+import { useRef } from 'react';
 
 export default function IframeView() {
   const url = `${window.location.protocol}//${window.location.host}${PAGES.PAGE_CONTENT}`;
-  const { setIframe } = useIframeState();
   const ref = useRef<HTMLIFrameElement | null>(null);
+  const { pages } = usePagesState();
+  const activePage = pages.find((page) => page.active);
 
-  useEffect(() => {
-    if (ref.current) {
-      setIframe(ref.current);
-    }
-  }, [ref, setIframe]);
-
+  if (!activePage) return null;
   return (
     <iframe
       ref={ref}

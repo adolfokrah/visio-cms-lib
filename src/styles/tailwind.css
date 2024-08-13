@@ -65,4 +65,9 @@
     scrollbar-width: thin;
     scrollbar-color: hsl(var(-visio-cms-brand-dark-900)) hsl(var(-visio-cms-brand-dark-800));
   }
+
+  .empty-drop-zone {
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='38' ry='38' stroke='%23d3d3d3' stroke-width='2' stroke-dasharray='8' stroke-dashoffset='13' stroke-linecap='square'/%3e%3c/svg%3e");
+    border-radius: 38px;
+  }
 }
