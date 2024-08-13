@@ -54,7 +54,7 @@ export default function BlockItem({
           },
         )}
       />
-      {pageBlock.isSelected && <BlockAction blockName={block.Schema.name} />}
+      {pageBlock.isSelected && <BlockAction blockName={block.Schema.name} index={index} pageBlockId={pageBlock.id} />}
     </div>
   );
 }

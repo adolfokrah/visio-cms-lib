@@ -69,6 +69,55 @@ export default function useCanvas() {
       } else if (data.type === 'selectBlock') {
         const blockId = data.content;
         selectBlock(blockId);
+      } else if (data.type === 'moveBlockUp') {
+        const blockId = data.content;
+        const page = activePage;
+        if (page) {
+          const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
+          const blockIndex = blocks.findIndex((block) => block.id === blockId);
+          if (blockIndex === 0) return;
+          const newBlocks = [...blocks];
+          [newBlocks[blockIndex - 1], newBlocks[blockIndex]] = [newBlocks[blockIndex], newBlocks[blockIndex - 1]];
+          page.blocks = {
+            ...page.blocks,
+            [page.activeLanguageLocale]: newBlocks,
+          };
+          setPages(pages.map((p) => (p.active ? page : p)));
+        }
+      } else if (data.type === 'moveBlockDown') {
+        const blockId = data.content;
+        const page = activePage;
+        if (page) {
+          const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
+          const blockIndex = blocks.findIndex((block) => block.id === blockId);
+          if (blockIndex === blocks.length - 1) return;
+          const newBlocks = [...blocks];
+          [newBlocks[blockIndex], newBlocks[blockIndex + 1]] = [newBlocks[blockIndex + 1], newBlocks[blockIndex]];
+          page.blocks = {
+            ...page.blocks,
+            [page.activeLanguageLocale]: newBlocks,
+          };
+          setPages(pages.map((p) => (p.active ? page : p)));
+        }
+      } else if (data.type === 'copyBlock') {
+        const blockId = data.content;
+        const page = activePage;
+        if (page) {
+          const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
+          const blockIndex = blocks.findIndex((block) => block.id === blockId);
+          const block = blocks[blockIndex];
+          const newBlock = {
+            ...block,
+            id: uuidv4(),
+          };
+          const newBlocks = [...blocks].map((block) => ({ ...block, isSelected: false }));
+          newBlocks.splice(blockIndex + 1, 0, newBlock);
+          page.blocks = {
+            ...page.blocks,
+            [page.activeLanguageLocale]: newBlocks,
+          };
+          setPages(pages.map((p) => (p.active ? page : p)));
+        }
       }
     };
 
