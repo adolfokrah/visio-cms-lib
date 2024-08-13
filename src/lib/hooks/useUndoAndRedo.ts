@@ -37,7 +37,6 @@ export default function useUndoAndRedo() {
             [page.activeLanguageLocale]: [],
           };
         }
-        console.log(page);
         setPages(pages.map((p) => (p.active ? page : p)));
       }
     }
