@@ -5,6 +5,7 @@ import usePageContent from '@/lib/hooks/usePageContent';
 import { cn } from '@/lib/utils';
 import { PageBlock } from '@/lib/states/usePagesState';
 import BlockAction from './block-action';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export default function BlockItem({
   block,
@@ -17,6 +18,7 @@ export default function BlockItem({
 }) {
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
   const { sendMessageToParent } = usePageContent();
+
   return (
     <div
       key={pageBlock.id}
@@ -41,22 +43,31 @@ export default function BlockItem({
         setIsDraggingOver(false);
       }}
     >
-      {React.createElement(block, { key: block.Schema.id, ...block.Schema.defaultPropValues })}
-
-      <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} />
-      <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} />
-      <div
-        className={cn(
-          'visio-cms-absolute visio-cms-top-0 visio-cms-left-0 visio-cms-h-full visio-cms-bg-transparent visio-cms-w-full visio-cms-pointer-events-none',
-          {
-            'visio-cms-outline-blue-400 visio-cms-outline visio-cms-outline-2 -visio-cms-outline-offset-2 ':
-              pageBlock.isSelected,
-          },
-        )}
-      />
-      {pageBlock.isSelected && (
-        <BlockAction blockName={pageBlock?.globalBlockName || block.Schema.name} index={index} pageBlock={pageBlock} />
-      )}
+      <Popover open={pageBlock?.isSelected}>
+        <PopoverTrigger asChild>
+          <div>
+            {React.createElement(block, { key: block.Schema.id, ...block.Schema.defaultPropValues })}
+            <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} />
+            <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} />
+            <div
+              className={cn(
+                'visio-cms-absolute visio-cms-top-0 visio-cms-left-0 visio-cms-h-full visio-cms-bg-transparent visio-cms-w-full visio-cms-pointer-events-none',
+                {
+                  'visio-cms-outline-blue-400 visio-cms-outline visio-cms-outline-2 -visio-cms-outline-offset-2 ':
+                    pageBlock.isSelected,
+                },
+              )}
+            />
+          </div>
+        </PopoverTrigger>
+        <PopoverContent className="!visio-cms-p-0 visio-cms-w-max" align="end" side="top" alignOffset={20}>
+          <BlockAction
+            blockName={pageBlock?.globalBlockName || block.Schema.name}
+            index={index}
+            pageBlock={pageBlock}
+          />
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
