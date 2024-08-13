@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { usePagesState } from '../states/usePagesState';
+import { PageBlock, usePagesState } from '../states/usePagesState';
 import { Block, Message } from '../types';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,6 +26,7 @@ export default function useCanvas() {
           [page.activeLanguageLocale]: newBlocks,
         };
         setPages(pages.map((p) => (p.active ? page : p)));
+        addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
       }
     };
 
@@ -39,6 +40,7 @@ export default function useCanvas() {
           [page.activeLanguageLocale]: newBlocks,
         };
         setPages(pages.map((p) => (p.active ? page : p)));
+        addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
       }
     };
 
@@ -50,6 +52,25 @@ export default function useCanvas() {
         page.blocks = {
           ...page.blocks,
           [page.activeLanguageLocale]: newBlocks,
+        };
+        setPages(pages.map((p) => (p.active ? page : p)));
+        addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
+      }
+    };
+
+    const addBlocksToPageHistory = (locale: string, blocks: PageBlock[]) => {
+      const page = activePage;
+      if (page) {
+        const history = page.history?.[locale]?.blocks ?? [];
+        const currentIndex = page.history?.[locale]?.currentIndex ?? -1;
+        const newHistory = history.slice(0, currentIndex + 1);
+        newHistory.push(blocks);
+        page.history = {
+          ...page.history,
+          [locale]: {
+            currentIndex: currentIndex + 1,
+            blocks: newHistory,
+          },
         };
         setPages(pages.map((p) => (p.active ? page : p)));
       }
@@ -83,6 +104,7 @@ export default function useCanvas() {
             [page.activeLanguageLocale]: newBlocks,
           };
           setPages(pages.map((p) => (p.active ? page : p)));
+          addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         }
       } else if (data.type === 'moveBlockDown') {
         const blockId = data.content;
@@ -98,6 +120,7 @@ export default function useCanvas() {
             [page.activeLanguageLocale]: newBlocks,
           };
           setPages(pages.map((p) => (p.active ? page : p)));
+          addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         }
       } else if (data.type === 'copyBlock') {
         const blockId = data.content;
@@ -117,6 +140,7 @@ export default function useCanvas() {
             [page.activeLanguageLocale]: newBlocks,
           };
           setPages(pages.map((p) => (p.active ? page : p)));
+          addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         }
       }
     };

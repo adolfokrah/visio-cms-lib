@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { FileIcon, MoreVerticalIcon, Redo, Undo, X } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { FileIcon, MoreVerticalIcon, X } from 'lucide-react';
 import usePageTabs from '@/lib/hooks/usePageTabls';
 import {
   DropdownMenu,
@@ -12,6 +11,7 @@ import {
 import { useCallback } from 'react';
 import ResponsiveBar from '../canvas/components/responsive-bar';
 import LanguageControls from '../canvas/components/language-controls';
+import UndoRedoControls from './undo-redo-controls';
 
 export default function PageTabs() {
   const { hiddenTabs, containerRef, pages, handleTabClick, tabRefs, handleRemovePage } = usePageTabs();
@@ -100,31 +100,7 @@ export default function PageTabs() {
 
       <LanguageControls />
       <ResponsiveBar />
-      <div className="visio-cms-flex">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button className="visio-cms-rounded-none !visio-cms-bg-dark-700 hover:!visio-cms-bg-dark-900">
-                <Undo size={18} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <p>Undo</p>
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button className="visio-cms-rounded-none !visio-cms-bg-dark-700 hover:!visio-cms-bg-dark-900">
-                <Redo size={18} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="left">
-              <p>Redo</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
+      <UndoRedoControls />
     </div>
   );
 }

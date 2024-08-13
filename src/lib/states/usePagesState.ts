@@ -85,6 +85,12 @@ export type Page = {
   blocks?: {
     [key: string]: PageBlock[];
   };
+  history?: {
+    [key: string]: {
+      currentIndex: number;
+      blocks: PageBlock[][];
+    };
+  };
 };
 
 type PagesStateType = {
