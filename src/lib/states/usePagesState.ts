@@ -43,6 +43,7 @@ export type SchedulePublished = 'Now' | 'Later';
 export type PageBlock = {
   id: string;
   isGlobalBlock?: boolean;
+  globalBlockName?: string;
   blockId: string;
   isSelected: boolean;
   inputs: { [key: string]: any };

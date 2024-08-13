@@ -1,23 +1,25 @@
 import { Button } from '@/components/ui/button';
 import usePageContent from '@/lib/hooks/usePageContent';
-import { ChevronDown, ChevronUp, Copy, LucideTrash2 } from 'lucide-react';
+import { PageBlock } from '@/lib/states/usePagesState';
+import { ChevronDown, ChevronUp, Copy, Edit, LucideTrash2 } from 'lucide-react';
 
 export default function BlockAction({
   blockName,
-  pageBlockId,
+  pageBlock,
   index,
 }: {
   blockName: string;
-  pageBlockId: string;
+  pageBlock: PageBlock;
   index: number;
 }) {
   const { sendMessageToParent } = usePageContent();
   const { activePage } = usePageContent();
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
+  const pageBlockId = pageBlock.id;
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="visio-cms-w-max visio-cms-z-30 visio-cms-px-2 visio-cms-py-1 visio-cms-text-white  visio-cms-flex visio-cms-gap-1 visio-cms-absolute visio-cms-right-[10px] visio-cms-top-[10px] visio-cms-bg-dark-900 visio-cms-rounded-md"
+      className="visio-cms-w-max visio-cms-z-50 visio-cms-px-2 visio-cms-py-1 visio-cms-text-white  visio-cms-flex visio-cms-gap-1 visio-cms-absolute visio-cms-right-[10px] visio-cms-top-[10px] visio-cms-bg-dark-900 visio-cms-rounded-md"
     >
       <span>{blockName}</span>
       <Button
@@ -62,6 +64,19 @@ export default function BlockAction({
       >
         <Copy size={16} />
       </Button>
+
+      {pageBlock.isGlobalBlock && (
+        <Button
+          variant={'ghost'}
+          className="hover:!visio-cms-bg-dark-700"
+          onClick={(e) => {
+            e.stopPropagation();
+            sendMessageToParent({ type: 'editGlobalBlock', content: pageBlockId });
+          }}
+        >
+          <Edit size={16} />
+        </Button>
+      )}
     </div>
   );
 }
