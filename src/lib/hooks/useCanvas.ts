@@ -148,6 +148,25 @@ export default function useCanvas() {
         undo();
       } else if (data.type === 'Redo') {
         redo();
+      } else if (data.type === 'moveBlockToPosition') {
+        console.log(data.content);
+        const { blockId, position } = JSON.parse(data.content);
+        const newIndex = Number(position);
+        const page = activePage;
+        if (page) {
+          const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
+          const blockIndex = blocks.findIndex((block) => block?.id === blockId);
+          const newBlocks = [...blocks];
+          newBlocks.splice(blockIndex, 1);
+          newBlocks.splice(newIndex, 0, blocks[blockIndex]);
+          page.blocks = {
+            ...page.blocks,
+            [page.activeLanguageLocale]: newBlocks,
+          };
+
+          setPages(pages.map((p) => (p.active ? page : p)));
+          addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
+        }
       }
     };
 
