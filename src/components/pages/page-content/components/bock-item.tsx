@@ -1,8 +1,7 @@
 import React from 'react';
 import DroppableItem from './droppableItem';
 import { Block } from '@/lib/types';
-import usePageContent from '@/lib/hooks/usePageContent';
-import { cn } from '@/lib/utils';
+import { cn, sendMessageToParent } from '@/lib/utils';
 import { PageBlock } from '@/lib/states/usePagesState';
 import BlockAction from './block-action';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -11,17 +10,17 @@ export default function BlockItem({
   block,
   index,
   pageBlock,
+  pageBlocks,
 }: {
   block: Block<Record<string, any>>;
   index: number;
   pageBlock: PageBlock;
+  pageBlocks: PageBlock[];
 }) {
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
-  const { sendMessageToParent } = usePageContent();
 
   return (
     <div
-      key={pageBlock.id}
       onClick={(e) => {
         e.stopPropagation();
         sendMessageToParent({ type: 'selectBlock', content: pageBlock.id });
@@ -65,6 +64,7 @@ export default function BlockItem({
             blockName={pageBlock?.globalBlockName || block.Schema.name}
             index={index}
             pageBlock={pageBlock}
+            pageBlocks={pageBlocks}
           />
         </PopoverContent>
       </Popover>

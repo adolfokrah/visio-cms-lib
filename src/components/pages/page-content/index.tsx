@@ -1,6 +1,5 @@
 import usePageContent from '@/lib/hooks/usePageContent';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import React from 'react';
 import EmptyPageDroppable from './components/emptyPageDroppable';
 import BlockItem from './components/bock-item';
 
@@ -10,8 +9,8 @@ export default function PageContent() {
 
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
 
-  if (pageBlocks.length === 0) {
-    return <EmptyPageDroppable />;
+  if (pageBlocks.length === 0 && activePage) {
+    return <EmptyPageDroppable activePage={activePage} />;
   }
 
   return (
@@ -21,7 +20,9 @@ export default function PageContent() {
         const block = blocks.find((block) => block.Schema.id === blockId);
         if (!block) return null;
 
-        return <BlockItem block={block} index={index} pageBlock={pageBlock} />;
+        return (
+          <BlockItem key={pageBlock.id} block={block} index={index} pageBlock={pageBlock} pageBlocks={pageBlocks} />
+        );
       })}
     </div>
   );

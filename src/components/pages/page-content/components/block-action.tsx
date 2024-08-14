@@ -1,20 +1,19 @@
 import { Button } from '@/components/ui/button';
-import usePageContent from '@/lib/hooks/usePageContent';
 import { PageBlock } from '@/lib/states/usePagesState';
+import { sendMessageToParent } from '@/lib/utils';
 import { ChevronDown, ChevronUp, Copy, Edit, LucideTrash2 } from 'lucide-react';
 
 export default function BlockAction({
   blockName,
   pageBlock,
   index,
+  pageBlocks,
 }: {
   blockName: string;
   pageBlock: PageBlock;
   index: number;
+  pageBlocks: PageBlock[];
 }) {
-  const { sendMessageToParent } = usePageContent();
-  const { activePage } = usePageContent();
-  const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
   const pageBlockId = pageBlock.id;
   return (
     <div

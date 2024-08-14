@@ -3,11 +3,13 @@ import { PageBlock, usePagesState } from '../states/usePagesState';
 import { Block, Message } from '../types';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
+import useUndoAndRedo from './useUndoAndRedo';
 
 export default function useCanvas() {
   const { pages, setPages } = usePagesState();
   const activePage = pages.find((page) => page.active);
   const { blocks } = useProjectConfigurationState();
+  const { undo, redo } = useUndoAndRedo();
 
   useEffect(() => {
     const setPageBlocks = (block: Block, position: number) => {
@@ -142,6 +144,10 @@ export default function useCanvas() {
           setPages(pages.map((p) => (p.active ? page : p)));
           addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         }
+      } else if (data.type === 'Undo') {
+        undo();
+      } else if (data.type === 'Redo') {
+        redo();
       }
     };
 
@@ -150,7 +156,7 @@ export default function useCanvas() {
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [pages, blocks, setPages, activePage]);
+  }, [pages, blocks, setPages, activePage, undo, redo]);
 
   return {};
 }

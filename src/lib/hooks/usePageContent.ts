@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Message } from '../types';
 import { Page } from '../states/usePagesState';
+import { sendMessageToParent } from '../utils';
 
 export default function usePageContent() {
   const [pages, setPages] = useState<Page[]>([]);
@@ -21,16 +22,34 @@ export default function usePageContent() {
       }
     };
 
+    const handlekeyUp = (event: KeyboardEvent) => {
+      event.preventDefault();
+      if (event.ctrlKey || event.metaKey) {
+        if (event.key === 'z') {
+          const message: Message = {
+            type: 'Undo',
+            content: 'Undo',
+          };
+          sendMessageToParent(message);
+        }
+        if (event.key === 'y') {
+          const message: Message = {
+            type: 'Redo',
+            content: 'Redo',
+          };
+          sendMessageToParent(message);
+        }
+      }
+    };
+
+    window.addEventListener('keyup', handlekeyUp);
     window.addEventListener('storage', handleStorageChange);
 
     return () => {
+      window.removeEventListener('keyup', handlekeyUp);
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
-
-  const sendMessageToParent = (messageToSend: Message) => {
-    window.parent.postMessage(messageToSend, '*'); // Replace '*' with the specific origin if needed
-  };
 
   return { activePage, sendMessageToParent };
 }

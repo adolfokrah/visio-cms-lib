@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { createClient } from '@supabase/supabase-js';
 import { useProjectConfigurationState } from './states/useProjectConfigState';
-import { BlockList, Folder, GroupedBlock, OsTypes, PageTreeItem } from './types';
+import { BlockList, Folder, GroupedBlock, Message, OsTypes, PageTreeItem } from './types';
 import { Page } from './states/usePagesState';
 import * as jose from 'jose';
 import { JSON_WEB_SECRET } from './constants';
@@ -159,3 +159,7 @@ export function groupBlocks(blocks: BlockList[]): { groupName: string; blocks: B
     blocks,
   }));
 }
+
+export const sendMessageToParent = (messageToSend: Message) => {
+  window.parent.postMessage(messageToSend, '*'); // Replace '*' with the specific origin if needed
+};

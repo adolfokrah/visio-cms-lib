@@ -1,5 +1,4 @@
-import usePageContent from '@/lib/hooks/usePageContent';
-import { cn } from '@/lib/utils';
+import { cn, sendMessageToParent } from '@/lib/utils';
 import { useState } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -13,7 +12,6 @@ export default function DroppableItem({
   showPlaceHolder: boolean;
 }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
-  const { sendMessageToParent } = usePageContent();
 
   return (
     <TooltipProvider>

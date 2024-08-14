@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { usePagesState } from '../states/usePagesState';
 
 export default function useUndoAndRedo() {
@@ -6,7 +7,7 @@ export default function useUndoAndRedo() {
 
   const history = activePage?.history?.[activePage.activeLanguageLocale];
 
-  const undo = () => {
+  const undo = useCallback(() => {
     const page = activePage;
     if (page) {
       if (history) {
@@ -40,9 +41,9 @@ export default function useUndoAndRedo() {
         setPages(pages.map((p) => (p.active ? page : p)));
       }
     }
-  };
+  }, [activePage, history, pages, setPages]);
 
-  const redo = () => {
+  const redo = useCallback(() => {
     const page = activePage;
     if (page) {
       if (history) {
@@ -64,7 +65,7 @@ export default function useUndoAndRedo() {
         }
       }
     }
-  };
+  }, [activePage, history, pages, setPages]);
 
   return { undo, redo, history };
 }

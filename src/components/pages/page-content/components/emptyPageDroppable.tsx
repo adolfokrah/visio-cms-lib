@@ -1,10 +1,9 @@
-import usePageContent from '@/lib/hooks/usePageContent';
-import { cn } from '@/lib/utils';
+import { Page } from '@/lib/states/usePagesState';
+import { cn, sendMessageToParent } from '@/lib/utils';
 import { Box } from 'lucide-react';
 import { useState } from 'react';
 
-export default function EmptyPageDroppable() {
-  const { activePage, sendMessageToParent } = usePageContent();
+export default function EmptyPageDroppable({ activePage }: { activePage: Page }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   return (
