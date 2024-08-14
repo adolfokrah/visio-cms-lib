@@ -1,6 +1,30 @@
 import { DesktopIcon, MobileIcon } from '@radix-ui/react-icons';
-import { TabletIcon } from 'lucide-react';
+import {
+  Bold,
+  Code2,
+  Heading1,
+  Heading2,
+  Heading3,
+  Heading4,
+  Heading5,
+  Heading6,
+  Highlighter,
+  Image,
+  Italic,
+  Link,
+  List,
+  ListOrdered,
+  PaintBucket,
+  Quote,
+  Redo,
+  Strikethrough,
+  TabletIcon,
+  Type,
+  Underline,
+  Undo,
+} from 'lucide-react';
 import { ResponsiveViews } from './states/usePagesState';
+import { MenuControlsType } from './types';
 
 export const CMS_BASE_PATH = '/cms';
 
@@ -41,3 +65,111 @@ export const ROLES = {
   EDITOR: 'Editor',
   OWNER: 'Owner',
 };
+
+export const EDITOR_MENU_CONTROLS: MenuControlsType[] = [
+  {
+    name: 'bold',
+    icon: <Bold size={16} />,
+    title: 'Bold',
+  },
+  {
+    name: 'italic',
+    icon: <Italic size={16} />,
+    title: 'Italic',
+  },
+  {
+    name: 'strike',
+    icon: <Strikethrough size={16} />,
+    title: 'Strike',
+  },
+  {
+    name: 'underline',
+    icon: <Underline size={16} />,
+    title: 'Underline',
+  },
+  {
+    name: 'code',
+    icon: <Code2 size={16} />,
+    title: 'Code Block',
+  },
+  {
+    name: 'paragraph',
+    icon: <Type size={16} />,
+    title: 'Paragraph',
+  },
+  {
+    name: 'h1',
+    icon: <Heading1 size={16} />,
+    title: 'Heading 1',
+  },
+  {
+    name: 'h2',
+    icon: <Heading2 size={16} />,
+    title: 'Heading 2',
+  },
+  {
+    name: 'h3',
+    icon: <Heading3 size={16} />,
+    title: 'Heading 3',
+  },
+  {
+    name: 'h4',
+    icon: <Heading4 size={16} />,
+    title: 'Heading 4',
+  },
+  {
+    name: 'h5',
+    icon: <Heading5 size={16} />,
+    title: 'Heading 5',
+  },
+  {
+    name: 'h6',
+    icon: <Heading6 size={16} />,
+    title: 'Heading 6',
+  },
+  {
+    name: 'bullet-list',
+    icon: <List size={16} />,
+    title: 'Bullet List',
+  },
+  {
+    name: 'ordered-list',
+    icon: <ListOrdered size={16} />,
+    title: 'Ordered List',
+  },
+  {
+    name: 'blockquote',
+    icon: <Quote size={16} />,
+    title: 'Blockquote',
+  },
+  {
+    name: 'link',
+    icon: <Link size={16} />,
+    title: 'Link',
+  },
+  {
+    name: 'image',
+    icon: <Image size={16} />,
+    title: 'Image',
+  },
+  {
+    name: 'undo',
+    icon: <Undo size={16} />,
+    title: 'Undo',
+  },
+  {
+    name: 'redo',
+    icon: <Redo size={16} />,
+    title: 'Redo',
+  },
+  {
+    name: 'text-color',
+    icon: <PaintBucket size={16} />,
+    title: 'Text Color',
+  },
+  {
+    name: 'background-color',
+    icon: <Highlighter size={16} />,
+    title: 'Text Background Color',
+  },
+];

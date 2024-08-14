@@ -37,7 +37,7 @@ export default function MediaExplorer({
   open: boolean;
   onImageChosen: (chosenMediaFile: MediaFile) => void;
   onCloseModal: () => void;
-  chosenImage: MediaFile | undefined;
+  chosenImage?: MediaFile;
 }) {
   const {
     uploadFiles,
@@ -57,7 +57,7 @@ export default function MediaExplorer({
   return (
     <Dialog open={open}>
       <DialogContent
-        className="!visio-cms-max-w-4xl "
+        className="!visio-cms-max-w-4xl visio-cms-z-[99999] "
         onCloseButtonClicked={() => {
           onCloseModal();
           setFiles((prevFiles) => prevFiles.map((file) => ({ ...file, selected: false })));

@@ -163,3 +163,20 @@ export function groupBlocks(blocks: BlockList[]): { groupName: string; blocks: B
 export const sendMessageToParent = (messageToSend: Message) => {
   window.parent.postMessage(messageToSend, '*'); // Replace '*' with the specific origin if needed
 };
+
+export function isValidURL(url: string): boolean {
+  try {
+    // Create a new URL object to check the validity
+    const parsedURL = new URL(url);
+
+    // Optional: You can add more specific validations here
+    const validProtocols = ['http:', 'https:', 'ftp:', 'tel:', 'mailto:']; // Adjust as needed
+    if (!validProtocols.includes(parsedURL.protocol)) {
+      return false;
+    }
+
+    return true;
+  } catch (_) {
+    return false;
+  }
+}

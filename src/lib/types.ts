@@ -1,3 +1,4 @@
+import React from 'react';
 import { Page } from './states/usePagesState';
 
 export type Language = {
@@ -87,3 +88,33 @@ export interface Message {
   type: string;
   content: string;
 }
+
+export type EditorControlTypes =
+  | 'bold'
+  | 'italic'
+  | 'strike'
+  | 'underline'
+  | 'paragraph'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'bullet-list'
+  | 'ordered-list'
+  | 'blockquote'
+  | 'code'
+  | 'link'
+  | 'image'
+  | 'undo'
+  | 'redo'
+  | 'image'
+  | 'text-color'
+  | 'background-color';
+
+export type MenuControlsType = {
+  name: EditorControlTypes;
+  icon: React.ReactNode;
+  title: string;
+};
