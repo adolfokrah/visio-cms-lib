@@ -33,7 +33,7 @@ export default function EmptyPageDroppable({ activePage }: { activePage: Page })
         setIsDraggingOver(false);
         const data = e.dataTransfer.getData('application/block');
         if (data) {
-          sendMessageToParent({ type: 'addBlock', content: JSON.stringify({ blockId: data, position: 0 }) });
+          sendMessageToParent({ type: 'addBlock', content: JSON.stringify({ ...JSON.parse(data), position: 0 }) });
         }
       }}
     >

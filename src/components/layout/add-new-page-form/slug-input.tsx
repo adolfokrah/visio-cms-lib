@@ -1,11 +1,11 @@
 import { Input } from '@/components/ui/input';
 import { ComponentProps } from 'react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent,  TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function SlugInput(props: ComponentProps<typeof Input> & { parentSlug: string }) {
   return (
     <div className="visio-cms-flex">
-      <TooltipProvider>
+      
         <Tooltip>
           <TooltipTrigger asChild>
             <div
@@ -22,7 +22,7 @@ export default function SlugInput(props: ComponentProps<typeof Input> & { parent
             </p>
           </TooltipContent>
         </Tooltip>
-      </TooltipProvider>
+     
 
       <Input
         className="!visio-cms-border-dark-700 visio-cms-rounded-l-none visio-cms-border-l-0"

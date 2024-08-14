@@ -20,6 +20,12 @@ export type ProjectConfiguration = {
     }[];
   };
   blocks: BlockList[];
+  globalBlocks: {
+    name: string;
+    id: string;
+    blockId: string;
+    inputs: { [key: string]: any };
+  }[];
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 

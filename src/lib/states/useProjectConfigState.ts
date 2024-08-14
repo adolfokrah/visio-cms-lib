@@ -16,6 +16,7 @@ type Actions = {
     >,
   ) => void;
   setTheme: (props: Pick<ProjectConfiguration, 'theme'>) => void;
+  setGlobalBlocks: (blocks: ProjectConfiguration['globalBlocks']) => void;
 };
 
 export const useProjectConfigurationState = create(
@@ -23,6 +24,7 @@ export const useProjectConfigurationState = create(
     (set) => ({
       supabaseAnonKey: '',
       supabaseProjectUrl: '',
+      globalBlocks: [],
       projectId: '',
       bucketName: 'media',
       emailSender: '',
@@ -37,6 +39,7 @@ export const useProjectConfigurationState = create(
         colorScheme: [],
       },
       setTheme: (data) => set(() => data),
+      setGlobalBlocks: (globalBlocks) => set(() => ({ globalBlocks })),
     }),
     {
       name: 'project-configuration-storage',

@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { PageBlock } from '@/lib/states/usePagesState';
 import { sendMessageToParent } from '@/lib/utils';
-import { ChevronDown, ChevronUp, Copy, Edit, LucideTrash2 } from 'lucide-react';
+import { BoxSelect, ChevronDown, ChevronUp, Copy, Edit, LucideTrash2 } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function BlockAction({
   blockName,
@@ -64,7 +65,7 @@ export default function BlockAction({
         <Copy size={16} />
       </Button>
 
-      {pageBlock.isGlobalBlock && (
+      {pageBlock.isGlobalBlock ? (
         <Button
           variant={'ghost'}
           className="hover:!visio-cms-bg-dark-700"
@@ -75,6 +76,24 @@ export default function BlockAction({
         >
           <Edit size={16} />
         </Button>
+      ) : (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={'ghost'}
+              className="hover:!visio-cms-bg-dark-700"
+              onClick={(e) => {
+                e.stopPropagation();
+                sendMessageToParent({ type: 'convertBlockToGlobal', content: pageBlockId });
+              }}
+            >
+              <BoxSelect size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Convert to global block</p>
+          </TooltipContent>
+        </Tooltip>
       )}
     </div>
   );

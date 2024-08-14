@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import { useAuthState } from '@/lib/states/useAuthState';
 import PageContent from './page-content';
+import { TooltipProvider } from '../ui/tooltip';
 
 const router = createBrowserRouter([
   {
@@ -71,9 +72,9 @@ export default function Auth(
   if (fetchingUser) return null;
 
   return (
-    <>
+    <TooltipProvider>
       <RouterProvider router={router} />
       <Toaster />
-    </>
+    </TooltipProvider>
   );
 }

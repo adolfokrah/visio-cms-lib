@@ -5,6 +5,7 @@ import { cn, sendMessageToParent } from '@/lib/utils';
 import { PageBlock } from '@/lib/states/usePagesState';
 import BlockAction from './block-action';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { usePageContentState } from '@/lib/states/usePageContentState';
 
 export default function BlockItem({
   block,
@@ -18,7 +19,8 @@ export default function BlockItem({
   pageBlocks: PageBlock[];
 }) {
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
-
+  const { globalBlocks } = usePageContentState();
+  const globalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
   return (
     <div
       onClick={(e) => {
@@ -61,9 +63,9 @@ export default function BlockItem({
         </PopoverTrigger>
         <PopoverContent className="!visio-cms-p-0 visio-cms-w-max" align="end" side="top" alignOffset={20}>
           <BlockAction
-            blockName={pageBlock?.globalBlockName || block.Schema.name}
+            blockName={globalBlock?.name || block.Schema.name}
             index={index}
-            pageBlock={pageBlock}
+            pageBlock={{ ...pageBlock, isGlobalBlock: globalBlock != null }}
             pageBlocks={pageBlocks}
           />
         </PopoverContent>

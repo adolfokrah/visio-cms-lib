@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { PageBlock, usePagesState } from '../states/usePagesState';
 import { Block, Message } from '../types';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
@@ -10,18 +10,22 @@ export default function useCanvas() {
   const activePage = pages.find((page) => page.active);
   const { blocks } = useProjectConfigurationState();
   const { undo, redo } = useUndoAndRedo();
+  const [blockToAddAsGlobalId, setBlockToAddAsGlobalId] = useState<string | null>(null);
 
   useEffect(() => {
-    const setPageBlocks = (block: Block, position: number) => {
+    const setPageBlocks = (block: Block, position: number, isGlobalBlock: boolean, globalBlockId: string) => {
       const page = activePage;
       if (page) {
         const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
         const newBlocks = [...blocks].map((block) => ({ ...block, isSelected: false }));
+        const globalBlock = blocks.find((block) => block.id === globalBlockId);
         newBlocks.splice(position, 0, {
           id: uuidv4(),
           blockId: block.Schema.id,
           isSelected: true,
-          inputs: block.Schema.defaultPropValues,
+          inputs: globalBlock?.inputs || block.Schema.defaultPropValues,
+          isGlobalBlock,
+          globalBlockId,
         });
         page.blocks = {
           ...page.blocks,
@@ -81,10 +85,11 @@ export default function useCanvas() {
     const handleMessage = (event: MessageEvent) => {
       const data: Message = event.data;
       if (data.type === 'addBlock') {
-        const { blockId, position } = JSON.parse(data.content);
+        const { blockId, position, isGlobal, globalBlockId } = JSON.parse(data.content);
+
         const block = blocks.find((block) => block.Schema.id === blockId);
         if (block) {
-          setPageBlocks(block, Number(position));
+          setPageBlocks(block, Number(position), isGlobal, globalBlockId);
         }
       } else if (data.type === 'removeBlock') {
         const blockId = data.content;
@@ -149,7 +154,6 @@ export default function useCanvas() {
       } else if (data.type === 'Redo') {
         redo();
       } else if (data.type === 'moveBlockToPosition') {
-        console.log(data.content);
         const { blockId, position } = JSON.parse(data.content);
         const newIndex = Number(position);
         const page = activePage;
@@ -167,6 +171,9 @@ export default function useCanvas() {
           setPages(pages.map((p) => (p.active ? page : p)));
           addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         }
+      } else if (data.type === 'convertBlockToGlobal') {
+        const blockId = data.content;
+        setBlockToAddAsGlobalId(blockId);
       }
     };
 
@@ -177,5 +184,5 @@ export default function useCanvas() {
     };
   }, [pages, blocks, setPages, activePage, undo, redo]);
 
-  return {};
+  return { blockToAddAsGlobalId, setBlockToAddAsGlobalId };
 }

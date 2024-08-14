@@ -1,6 +1,6 @@
 import { Button } from './button';
 import { RefreshCcw, Trash, UploadCloudIcon } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip';
 import { cn, supabase } from '@/lib/utils';
 import MediaExplorer from './media-explorer';
 import { useMemo, useState } from 'react';
@@ -39,56 +39,54 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
           )}
         >
           <div className="visio-cms-flex visio-cms-gap-2 visio-cms-justify-center">
-            <TooltipProvider>
-              {!mediaHash || !image?.mediaHash ? (
+            {!mediaHash || !image?.mediaHash ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    className="!visio-cms-rounded-full !visio-cms-bg-dark-800 hover:!visio-cms-bg-dark-800 !visio-cms-h-11 !visio-cms-w-11"
+                    onClick={() => setOpen(true)}
+                  >
+                    <UploadCloudIcon size={16} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Upload Image</p>
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      className="!visio-cms-rounded-full !visio-cms-bg-dark-800 hover:!visio-cms-bg-dark-800 !visio-cms-h-11 !visio-cms-w-11"
-                      onClick={() => setOpen(true)}
+                      className="!visio-cms-rounded-full !visio-cms-bg-dark-900 hover:!visio-cms-bg-dark-800 !visio-cms-h-11 !visio-cms-w-11"
+                      onClick={() => {
+                        setMediaHash(undefined);
+                        props.onImageChosen?.(null);
+                      }}
                     >
-                      <UploadCloudIcon size={16} />
+                      <Trash size={16} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Upload Image</p>
+                    <p>Remove Image</p>
                   </TooltipContent>
                 </Tooltip>
-              ) : (
-                <>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        className="!visio-cms-rounded-full !visio-cms-bg-dark-900 hover:!visio-cms-bg-dark-800 !visio-cms-h-11 !visio-cms-w-11"
-                        onClick={() => {
-                          setMediaHash(undefined);
-                          props.onImageChosen?.(null);
-                        }}
-                      >
-                        <Trash size={16} />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Remove Image</p>
-                    </TooltipContent>
-                  </Tooltip>
 
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        className="!visio-cms-rounded-full !visio-cms-bg-dark-900 hover:!visio-cms-bg-dark-800 !visio-cms-h-11 !visio-cms-w-11"
-                        onClick={() => setOpen(true)}
-                      >
-                        <RefreshCcw size={16} />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Replace Image</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </>
-              )}
-            </TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className="!visio-cms-rounded-full !visio-cms-bg-dark-900 hover:!visio-cms-bg-dark-800 !visio-cms-h-11 !visio-cms-w-11"
+                      onClick={() => setOpen(true)}
+                    >
+                      <RefreshCcw size={16} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Replace Image</p>
+                  </TooltipContent>
+                </Tooltip>
+              </>
+            )}
           </div>
         </div>
       </div>
