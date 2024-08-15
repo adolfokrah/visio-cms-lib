@@ -32,7 +32,7 @@ const Hero: Block<HeroProps> = ({ mainHeader, announcement, subHeading, getStart
               defaultValue={announcement}
               propName="announcement"
             />
-            <a href="#" className="visio-cms-font-semibold visio-cms-text-indigo-600 ">
+            <a href="https://facebook.com" className="visio-cms-font-semibold visio-cms-text-indigo-600 ">
               Read more <span aria-hidden="true">&rarr;</span>
             </a>
           </div>
@@ -41,9 +41,9 @@ const Hero: Block<HeroProps> = ({ mainHeader, announcement, subHeading, getStart
           <h1 className="visio-cms-text-4xl visio-cms-font-bold visio-cms-tracking-tight visio-cms-text-gray-900 sm:visio-cms-text-6xl">
             <Text allowedControls={['bold', 'italic', 'text-color']} defaultValue={mainHeader} propName="mainHeader" />
           </h1>
-          <p className="visio-cms-mt-6 visio-cms-text-lg visio-cms-leading-8 visio-cms-text-gray-600">
+          <div className="visio-cms-mt-6 visio-cms-text-lg visio-cms-leading-8 visio-cms-text-gray-600">
             <Text allowedControls={['italic', 'text-color']} defaultValue={subHeading} propName="subHeading" />
-          </p>
+          </div>
           <div className="visio-cms-mt-10 visio-cms-flex visio-cms-items-center visio-cms-justify-center visio-cms-gap-x-6">
             <a
               href="#"
@@ -86,7 +86,7 @@ Hero.Schema = {
     mainHeader: 'Data to enrich your online business',
     announcement: 'Announcing our next round of funding.',
     subHeading: 'Tons of data is waiting for you in our platform. Join Today!',
-    getStarted: 'Get started',
+    getStarted: '<span>Get started</span>',
     learnMore: 'Learn more',
   },
 };

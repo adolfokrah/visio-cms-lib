@@ -47,10 +47,6 @@ export default function usePageContent() {
       }
     };
 
-    window.addEventListener('beforeunload', function (event) {
-      event.preventDefault();
-    });
-
     window.addEventListener('keyup', handlekeyUp);
     window.addEventListener('storage', handleStorageChange);
 
@@ -59,6 +55,14 @@ export default function usePageContent() {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
+
+  useEffect(() => {
+    document.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent the default navigation behavior
+      });
+    });
+  }, [pages]);
 
   return { activePage, sendMessageToParent };
 }
