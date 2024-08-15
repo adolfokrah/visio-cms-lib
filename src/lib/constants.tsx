@@ -170,6 +170,6 @@ export const EDITOR_MENU_CONTROLS: MenuControlsType[] = [
   {
     name: 'background-color',
     icon: <Highlighter size={16} />,
-    title: 'Text Background Color',
+    title: 'Text Highlight Color',
   },
 ];

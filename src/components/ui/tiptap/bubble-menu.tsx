@@ -1,6 +1,5 @@
 import { Editor } from '@tiptap/react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { BubbleMenu } from '@tiptap/react';
 import { EDITOR_MENU_CONTROLS } from '@/lib/constants';
 import { EditorControlTypes, MenuControlsType } from '@/lib/types';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -8,7 +7,8 @@ import { cn, supabase } from '@/lib/utils';
 import MediaExplorer from '../media-explorer';
 import { useMemo, useState } from 'react';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import LinkPopOver from '../media-explorer/link-popover';
+import LinkPopOver from './link-popover';
+import TextColorPopOver from './text-color-popover';
 
 export default function CustomBubbleMenu({
   editor,
@@ -78,36 +78,30 @@ export default function CustomBubbleMenu({
   };
   return (
     <>
-      <BubbleMenu editor={editor} className="visio-cms-z-0">
-        <div className="visio-cms-w-max visio-cms-bg-dark-900 visio-cms-rounded-md visio-cms-border visio-cms-border-dark-800 visio-cms-text-white visio-cms-p-1">
-          <ToggleGroup type="single">
-            {EDITOR_MENU_CONTROLS.filter((control) =>
-              allowedControls.some((allowedControl) => allowedControl === control.name),
-            ).map((control) => (
-              <Tooltip key={control.name}>
-                <TooltipTrigger asChild>
-                  <RenderControl
-                    editor={editor}
-                    control={control}
-                    onMenuClick={onMenuClick}
-                    isControlActive={isControlActive}
-                  />
-                </TooltipTrigger>
-                <TooltipContent>{control.title}</TooltipContent>
-              </Tooltip>
-            ))}
-          </ToggleGroup>
-        </div>
-      </BubbleMenu>
-      {/* <MediaExplorer
+      <div className="visio-cms-w-max visio-cms-bg-dark-900 visio-cms-rounded-md visio-cms-border visio-cms-border-dark-800 visio-cms-text-white visio-cms-p-1">
+        <ToggleGroup type="single">
+          {EDITOR_MENU_CONTROLS.filter((control) =>
+            allowedControls.some((allowedControl) => allowedControl === control.name),
+          ).map((control) => (
+            <RenderControl
+              key={control.name}
+              editor={editor}
+              control={control}
+              onMenuClick={onMenuClick}
+              isControlActive={isControlActive}
+            />
+          ))}
+        </ToggleGroup>
+      </div>
+      <MediaExplorer
         open={openMediaExplorer}
         onCloseModal={() => setOpenMediaExplorer(false)}
         onImageChosen={(image) => {
           setOpenMediaExplorer(false);
           const imagePublicUrl = db.storage.from(bucketName).getPublicUrl(image.mediaHash || '').data.publicUrl;
-          editor.chain().focus().setImage({ src: imagePublicUrl });
+          editor.commands.setImage({ src: imagePublicUrl, alt: image.altText, title: image.altText });
         }}
-      /> */}
+      />
     </>
   );
 }
@@ -124,24 +118,42 @@ const RenderControl = ({
   editor: Editor;
 }) => {
   const Item = (
-    <ToggleGroupItem
-      className={cn('hover:!visio-cms-bg-dark-700', {
-        '!visio-cms-bg-dark-800': isControlActive(control.name),
-      })}
-      value={control.name}
-      onClick={() => onMenuClick(control.name)}
-    >
-      {control.icon}
-    </ToggleGroupItem>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <ToggleGroupItem
+          className={cn('hover:!visio-cms-bg-dark-700', {
+            '!visio-cms-bg-dark-800': isControlActive(control.name),
+          })}
+          value={control.name}
+          onClick={() => onMenuClick(control.name)}
+        >
+          {control.icon}
+        </ToggleGroupItem>
+      </TooltipTrigger>
+      <TooltipContent>{control.title}</TooltipContent>
+    </Tooltip>
   );
 
-  if (control.name === 'link') {
-    return (
-      <LinkPopOver key={editor.getAttributes('link').href} editor={editor}>
-        {Item}
-      </LinkPopOver>
-    );
+  switch (control.name) {
+    case 'text-color':
+      return (
+        <TextColorPopOver key={editor.getAttributes('textStyle').color} editor={editor}>
+          {Item}
+        </TextColorPopOver>
+      );
+    case 'background-color':
+      return (
+        <TextColorPopOver key={editor.getAttributes('highlight').color} type="background" editor={editor}>
+          {Item}
+        </TextColorPopOver>
+      );
+    case 'link':
+      return (
+        <LinkPopOver key={editor.getAttributes('link').href} editor={editor}>
+          {Item}
+        </LinkPopOver>
+      );
+    default:
+      return Item;
   }
-
-  return Item;
 };

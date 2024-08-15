@@ -94,7 +94,7 @@ export default function EditImageView({ image, onImageSaved }: { image: Media; o
           Edit Image
         </Button>
       </DialogTrigger>
-      <DialogContent className="!visio-cms-max-w-4xl ">
+      <DialogContent className="!visio-cms-max-w-4xl visio-cms-z-[999999] ">
         <DialogHeader>
           <DialogTitle>Edit image</DialogTitle>
           <DialogDescription className="visio-cms-max-h-[700px] visio-cms-overflow-auto scrollbar-custom visio-cms-w-full  visio-cms-relative visio-cms-grid visio-cms-items-center visio-cms-min-h-[400px]  visio-cms-rounded-md ">

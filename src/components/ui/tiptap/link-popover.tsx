@@ -38,6 +38,7 @@ export default function LinkPopOver({ editor, children }: { editor: Editor; chil
           {editor.isActive('link') && (
             <Button
               variant={'ghost'}
+              className="visio-cms-h-9"
               onClick={() => {
                 editor.commands.unsetLink();
                 setOpen(false);
