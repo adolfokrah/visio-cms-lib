@@ -1,5 +1,5 @@
 // src/Tiptap.tsx
-import { useEditor, EditorContent, BubbleMenu, FloatingMenu, Editor } from '@tiptap/react';
+import { useEditor, EditorContent, BubbleMenu, FloatingMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import CustomBubbleMenu from './bubble-menu';
 import Underline from '@tiptap/extension-underline';
@@ -12,7 +12,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import Highlight from '@tiptap/extension-highlight';
 import { PreventNewLine } from './custom-extensions/prevent-new-line';
 import { EditorControlTypes } from '@/lib/types';
-import { debounce } from 'lodash';
+import { useEffect } from 'react';
 
 type Levels = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -96,17 +96,19 @@ const Tiptap = ({
   defaultValue?: string;
   onChange: (value: string) => void;
 }) => {
-  const debouncedOnUpdate = debounce(({ editor }: { editor: Editor }) => {
-    onChange(editor?.getHTML());
-  }, 2000);
-
   const editor = useEditor({
     extensions: [...extensions, PreventNewLine.configure({ allowNewLines })],
     content: defaultValue,
     onUpdate: ({ editor }) => {
-      debouncedOnUpdate({ editor });
+      onChange(editor?.getHTML());
     },
   });
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.setContent(defaultValue || '');
+    }
+  }, [defaultValue, editor]);
 
   if (!editor) return null;
 

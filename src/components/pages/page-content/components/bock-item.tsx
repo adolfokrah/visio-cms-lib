@@ -47,7 +47,10 @@ export default function BlockItem({
       <Popover open={pageBlock?.isSelected}>
         <PopoverTrigger asChild>
           <div>
-            {React.createElement(block, { key: block.Schema.id, ...block.Schema.defaultPropValues })}
+            {React.createElement(block, {
+              key: block.Schema.id,
+              ...(pageBlock.inputs || block.Schema.defaultPropValues),
+            })}
             <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} />
             <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} />
             <div

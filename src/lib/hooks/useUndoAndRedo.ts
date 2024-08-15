@@ -9,6 +9,7 @@ export default function useUndoAndRedo() {
 
   const undo = useCallback(() => {
     const page = activePage;
+    console.log('history', history);
     if (page) {
       if (history) {
         const currentIndex = history?.currentIndex;

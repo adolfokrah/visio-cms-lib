@@ -181,7 +181,7 @@ export function isValidURL(url: string): boolean {
 
 export type NestedObject = { [key: string]: any };
 
-export function updateBlockInputs(obj: NestedObject, path: string, newValue: any): void {
+export function updateBlockInputs(obj: NestedObject, path: string, newValue: any): NestedObject {
   const pathParts = path
     .replace(/(\?\.)|(\?\[)/g, '.?') // Replace optional chaining with a more standard notation
     .replace(/\]\./g, '].') // Adjust bracket notation
@@ -189,35 +189,34 @@ export function updateBlockInputs(obj: NestedObject, path: string, newValue: any
 
   const lastKey = pathParts.pop(); // Extract the last key to update
 
-  if (!lastKey) return;
+  if (!lastKey) return { ...obj };
 
-  const lastPart = pathParts.reduce<NestedObject>((acc, part, index) => {
+  // Recursively copy the object structure and update the desired value
+  const deepCopy = (input: NestedObject, parts: string[]): NestedObject => {
+    if (parts.length === 0) {
+      // If there are no more parts to traverse, return the modified object
+      return typeof input === 'object' && input !== null ? { ...input, [lastKey]: newValue } : { [lastKey]: newValue };
+    }
+
+    const [currentPart, ...remainingParts] = parts;
+
     // Handle array indexing
-    const arrayMatch = part.match(/(\w+)\[(\d+)\]/);
+    const arrayMatch = currentPart.match(/(\w+)\[(\d+)\]/);
     if (arrayMatch) {
       const [, key, index] = arrayMatch;
-      acc = acc[key] ? acc[key][parseInt(index, 10)] : undefined;
+      return {
+        ...input,
+        [key]: input[key].map((item: any, i: number) =>
+          i === parseInt(index, 10) ? deepCopy(item, remainingParts) : item,
+        ),
+      };
     } else {
-      acc = acc[part];
+      return {
+        ...input,
+        [currentPart]: deepCopy(input[currentPart] ?? {}, remainingParts),
+      };
     }
-    // Create nested objects if they do not exist
-    if (index === pathParts.length - 1 && !acc[lastKey]) {
-      acc[lastKey] = newValue; // Ensure the final key exists
-    }
-    return acc;
-  }, obj);
+  };
 
-  // Set the new value
-  if (typeof lastPart === 'object' && lastPart !== null) {
-    // Handle array indexing for last part
-    const arrayMatch = lastKey.match(/(\w+)\[(\d+)\]/);
-    if (arrayMatch) {
-      const [, key, index] = arrayMatch;
-      lastPart[key][parseInt(index, 10)] = newValue;
-    } else {
-      lastPart[lastKey] = newValue;
-    }
-  } else {
-    obj[lastKey] = newValue;
-  }
+  return deepCopy(obj, pathParts);
 }

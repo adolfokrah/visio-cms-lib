@@ -37,8 +37,6 @@ export default function CustomBubbleMenu({
     'ordered-list': () => editor.chain().focus().toggleOrderedList().run(),
     blockquote: () => editor.chain().focus().toggleBlockquote().run(),
     link: () => {},
-    undo: () => editor.chain().focus().undo().run(),
-    redo: () => editor.chain().focus().redo().run(),
     'text-color': () => {},
     'background-color': () => {},
     image: () => {
@@ -66,8 +64,6 @@ export default function CustomBubbleMenu({
     'text-color': () => false,
     'background-color': () => false,
     image: () => false,
-    undo: () => false,
-    redo: () => false,
   };
   const onMenuClick = (control: EditorControlTypes) => {
     mappedControlActions[control]();

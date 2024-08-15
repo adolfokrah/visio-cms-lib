@@ -107,8 +107,6 @@ export type EditorControlTypes =
   | 'code'
   | 'link'
   | 'image'
-  | 'undo'
-  | 'redo'
   | 'image'
   | 'text-color'
   | 'background-color';

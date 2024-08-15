@@ -93,9 +93,10 @@ const navigation = {
 
 interface NavigationItem {
   solutionsHeader: string;
+  supportHeader: string;
 }
 
-const Footer: Block<NavigationItem> = ({ solutionsHeader }) => {
+const Footer: Block<NavigationItem> = ({ solutionsHeader, supportHeader }) => {
   return (
     <footer aria-labelledby="footer-heading" className="visio-cms-bg-gray-900">
       <h2 id="footer-heading" className="visio-cms-sr-only">
@@ -128,7 +129,11 @@ const Footer: Block<NavigationItem> = ({ solutionsHeader }) => {
               </div>
               <div className="visio-cms-mt-10 md:visio-cms-mt-0">
                 <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
-                  Support
+                  <Text
+                    allowedControls={['bold', 'italic', 'text-color']}
+                    defaultValue={supportHeader}
+                    propName="supportHeader"
+                  />
                 </h3>
                 <ul role="list" className="visio-cms-mt-6 visio-cms-space-y-4">
                   {navigation.support.map((item) => (
@@ -236,6 +241,7 @@ Footer.Schema = {
   sideEditingProps: [],
   defaultPropValues: {
     solutionsHeader: 'Solutions',
+    supportHeader: 'Support',
   },
   group: 'Navigation',
 };

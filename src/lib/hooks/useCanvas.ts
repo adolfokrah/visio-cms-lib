@@ -4,6 +4,7 @@ import { Block, Message } from '../types';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
 import useUndoAndRedo from './useUndoAndRedo';
+import { updateBlockInputs } from '../utils';
 
 export default function useCanvas() {
   const { pages, setPages } = usePagesState();
@@ -60,7 +61,6 @@ export default function useCanvas() {
           [page.activeLanguageLocale]: newBlocks,
         };
         setPages(pages.map((p) => (p.active ? page : p)));
-        addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
       }
     };
 
@@ -69,8 +69,8 @@ export default function useCanvas() {
       if (page) {
         const history = page.history?.[locale]?.blocks ?? [];
         const currentIndex = page.history?.[locale]?.currentIndex ?? -1;
-        const newHistory = history.slice(0, currentIndex + 1);
-        newHistory.push(blocks);
+        let newHistory = history.slice(0, currentIndex + 1);
+        newHistory = [...newHistory, blocks];
         page.history = {
           ...page.history,
           [locale]: {
@@ -174,6 +174,24 @@ export default function useCanvas() {
       } else if (data.type === 'convertBlockToGlobal') {
         const blockId = data.content;
         setBlockToAddAsGlobalId(blockId);
+      } else if (data.type === 'updateBlockInput') {
+        const { path, value } = JSON.parse(data.content);
+        const page = activePage;
+        if (page) {
+          const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
+          const activeBlock = blocks.find((block) => block.isSelected);
+          if (activeBlock) {
+            const blockInputs = activeBlock?.inputs || {};
+            const newInputs = updateBlockInputs(blockInputs || {}, path, value);
+            activeBlock.inputs = { ...newInputs };
+            page.blocks = {
+              ...page.blocks,
+              [page.activeLanguageLocale]: blocks,
+            };
+            setPages(pages.map((p) => (p.active ? page : p)));
+            addBlocksToPageHistory(page.activeLanguageLocale, [...JSON.parse(JSON.stringify(blocks))]);
+          }
+        }
       }
     };
 

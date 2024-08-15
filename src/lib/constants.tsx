@@ -16,12 +16,10 @@ import {
   ListOrdered,
   PaintBucket,
   Quote,
-  Redo,
   Strikethrough,
   TabletIcon,
   Type,
   Underline,
-  Undo,
 } from 'lucide-react';
 import { ResponsiveViews } from './states/usePagesState';
 import { MenuControlsType } from './types';
@@ -151,16 +149,6 @@ export const EDITOR_MENU_CONTROLS: MenuControlsType[] = [
     name: 'image',
     icon: <Image size={16} />,
     title: 'Image',
-  },
-  {
-    name: 'undo',
-    icon: <Undo size={16} />,
-    title: 'Undo',
-  },
-  {
-    name: 'redo',
-    icon: <Redo size={16} />,
-    title: 'Redo',
   },
   {
     name: 'text-color',
