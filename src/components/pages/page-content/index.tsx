@@ -14,7 +14,7 @@ export default function PageContent() {
   }
 
   return (
-    <div id="page-content" className="visio-cms-h-auto">
+    <div id="visio-cms-page-content" className="visio-cms-h-auto">
       {activePage?.blocks?.[activePage.activeLanguageLocale]?.map((pageBlock, index) => {
         const { blockId } = pageBlock;
         const block = blocks.find((block) => block.Schema.id === blockId);

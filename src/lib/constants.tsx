@@ -1,5 +1,9 @@
 import { DesktopIcon, MobileIcon } from '@radix-ui/react-icons';
 import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
   Bold,
   Code2,
   Heading1,
@@ -124,6 +128,26 @@ export const EDITOR_MENU_CONTROLS: MenuControlsType[] = [
     name: 'h6',
     icon: <Heading6 size={16} />,
     title: 'Heading 6',
+  },
+  {
+    name: 'align-left',
+    icon: <AlignLeft size={16} />,
+    title: 'Align left',
+  },
+  {
+    name: 'align-right',
+    icon: <AlignRight size={16} />,
+    title: 'Align right',
+  },
+  {
+    name: 'align-center',
+    icon: <AlignCenter size={16} />,
+    title: 'Align center',
+  },
+  {
+    name: 'align-justify',
+    icon: <AlignJustify size={16} />,
+    title: 'Align justify',
   },
   {
     name: 'bullet-list',

@@ -13,6 +13,8 @@ import Highlight from '@tiptap/extension-highlight';
 import { PreventNewLine } from './custom-extensions/prevent-new-line';
 import { EditorControlTypes } from '@/lib/types';
 import { useEffect } from 'react';
+import TextAlign from '@tiptap/extension-text-align';
+import { usePageContentState } from '@/lib/states/usePageContentState';
 
 type Levels = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -82,6 +84,9 @@ const extensions = [
       class: 'visio-cms-editor-highlight',
     },
   }),
+  TextAlign.configure({
+    types: ['heading', 'paragraph'],
+  }),
   TextStyle,
 ];
 
@@ -96,6 +101,8 @@ const Tiptap = ({
   defaultValue?: string;
   onChange: (value: string) => void;
 }) => {
+  const { pages } = usePageContentState();
+  const activePage = pages.find((page) => page.active)?.id;
   const editor = useEditor({
     extensions: [...extensions, PreventNewLine.configure({ allowNewLines })],
     content: defaultValue,
@@ -108,7 +115,7 @@ const Tiptap = ({
     if (editor) {
       editor.commands.setContent(defaultValue || '');
     }
-  }, [defaultValue, editor]);
+  }, [activePage, editor]);
 
   if (!editor) return null;
 
@@ -116,7 +123,10 @@ const Tiptap = ({
     <>
       <EditorContent editor={editor} />
       {allowedControls && (
-        <BubbleMenu editor={editor}>
+        <BubbleMenu
+          editor={editor}
+          className="visio-cms-max-w-[330px] !visio-cms-text-xs visio-cms-w-max visio-cms-flex visio-cms-gap-1 visio-cms-flex-wrap visio-cms-bg-dark-900 visio-cms-rounded-md visio-cms-border visio-cms-border-dark-800 visio-cms-text-white visio-cms-p-1"
+        >
           <CustomBubbleMenu
             editor={editor}
             allowedControls={[...allowedControls.filter((control) => control != 'image')]}

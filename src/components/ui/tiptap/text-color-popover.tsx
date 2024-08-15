@@ -28,8 +28,15 @@ export default function TextColorPopOver({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <div onClick={() => setOpen(true)} style={{ backgroundColor: color }} className="visio-cms-rounded-md">
-          {cloneElement(children as React.ReactElement, {})}
+        <div
+          onClick={() => setOpen(true)}
+          style={{ backgroundColor: color }}
+          className="visio-cms-rounded-md visio-cms-w-max visio-cms-h-auto"
+        >
+          {cloneElement(children as React.ReactElement, {
+            style: { backgroundColor: color },
+            onClick: () => setOpen(true),
+          })}
         </div>
       </PopoverTrigger>
       <PopoverContent className="visio-cms-space-y-2 visio-cms-w-max">

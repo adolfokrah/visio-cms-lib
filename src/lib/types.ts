@@ -109,8 +109,11 @@ export type EditorControlTypes =
   | 'image'
   | 'image'
   | 'text-color'
-  | 'background-color';
-
+  | 'background-color'
+  | 'align-center'
+  | 'align-right'
+  | 'align-left'
+  | 'align-justify';
 export type MenuControlsType = {
   name: EditorControlTypes;
   icon: React.ReactNode;

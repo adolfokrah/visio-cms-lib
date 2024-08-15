@@ -17,8 +17,10 @@ export default function LinkPopOver({ editor, children }: { editor: Editor; chil
   };
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild onClick={() => setOpen(true)}>
-        {children}
+      <PopoverTrigger asChild>
+        <div onClick={() => setOpen(true)} className="visio-cms-w-max">
+          {children}
+        </div>
       </PopoverTrigger>
       <PopoverContent className="visio-cms-space-y-2">
         <Label>URL</Label>

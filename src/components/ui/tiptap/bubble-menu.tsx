@@ -1,5 +1,4 @@
 import { Editor } from '@tiptap/react';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { EDITOR_MENU_CONTROLS } from '@/lib/constants';
 import { EditorControlTypes, MenuControlsType } from '@/lib/types';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -9,6 +8,7 @@ import { useMemo, useState } from 'react';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import LinkPopOver from './link-popover';
 import TextColorPopOver from './text-color-popover';
+import { Button } from '../button';
 
 export default function CustomBubbleMenu({
   editor,
@@ -42,6 +42,10 @@ export default function CustomBubbleMenu({
     image: () => {
       setOpenMediaExplorer(true);
     },
+    'align-center': () => editor.chain().focus().setTextAlign('center').run(),
+    'align-right': () => editor.chain().focus().setTextAlign('right').run(),
+    'align-left': () => editor.chain().focus().setTextAlign('left').run(),
+    'align-justify': () => editor.chain().focus().setTextAlign('justify').run(),
   };
 
   const mappedControlActiveness = {
@@ -64,6 +68,10 @@ export default function CustomBubbleMenu({
     'text-color': () => false,
     'background-color': () => false,
     image: () => false,
+    'align-center': () => editor.getAttributes('textStyle').textAlign === 'center',
+    'align-right': () => editor.getAttributes('textStyle').textAlign === 'right',
+    'align-left': () => editor.getAttributes('textStyle').textAlign === 'left',
+    'align-justify': () => editor.getAttributes('textStyle').textAlign === 'justify',
   };
   const onMenuClick = (control: EditorControlTypes) => {
     mappedControlActions[control]();
@@ -72,23 +80,20 @@ export default function CustomBubbleMenu({
   const isControlActive = (control: EditorControlTypes): boolean => {
     return mappedControlActiveness[control]();
   };
+
   return (
     <>
-      <div className="visio-cms-w-max visio-cms-bg-dark-900 visio-cms-rounded-md visio-cms-border visio-cms-border-dark-800 visio-cms-text-white visio-cms-p-1">
-        <ToggleGroup type="single">
-          {EDITOR_MENU_CONTROLS.filter((control) =>
-            allowedControls.some((allowedControl) => allowedControl === control.name),
-          ).map((control) => (
-            <RenderControl
-              key={control.name}
-              editor={editor}
-              control={control}
-              onMenuClick={onMenuClick}
-              isControlActive={isControlActive}
-            />
-          ))}
-        </ToggleGroup>
-      </div>
+      {EDITOR_MENU_CONTROLS.filter((control) =>
+        allowedControls.some((allowedControl) => allowedControl === control.name),
+      ).map((control) => (
+        <RenderControl
+          key={control.name}
+          editor={editor}
+          control={control}
+          onMenuClick={onMenuClick}
+          isControlActive={isControlActive}
+        />
+      ))}
       <MediaExplorer
         open={openMediaExplorer}
         onCloseModal={() => setOpenMediaExplorer(false)}
@@ -116,7 +121,8 @@ const RenderControl = ({
   const Item = (
     <Tooltip>
       <TooltipTrigger asChild>
-        <ToggleGroupItem
+        <Button
+          variant="ghost"
           className={cn('hover:!visio-cms-bg-dark-700', {
             '!visio-cms-bg-dark-800': isControlActive(control.name),
           })}
@@ -124,7 +130,7 @@ const RenderControl = ({
           onClick={() => onMenuClick(control.name)}
         >
           {control.icon}
-        </ToggleGroupItem>
+        </Button>
       </TooltipTrigger>
       <TooltipContent>{control.title}</TooltipContent>
     </Tooltip>

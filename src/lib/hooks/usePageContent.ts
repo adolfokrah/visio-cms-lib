@@ -47,6 +47,10 @@ export default function usePageContent() {
       }
     };
 
+    window.addEventListener('beforeunload', function (event) {
+      event.preventDefault();
+    });
+
     window.addEventListener('keyup', handlekeyUp);
     window.addEventListener('storage', handleStorageChange);
 
