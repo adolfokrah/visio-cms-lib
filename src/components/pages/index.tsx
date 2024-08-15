@@ -64,7 +64,7 @@ export default function Auth(
   const { setConfiguration, supabaseProjectUrl, supabaseAnonKey, projectId } = useProjectConfigurationState();
   const { fetchUser, fetchingUser } = useAuthState();
   useEffect(() => {
-    setConfiguration(projectConfiguration);
+    if (projectConfiguration) setConfiguration(projectConfiguration);
     fetchUser();
   }, [projectConfiguration, setConfiguration, fetchUser]);
 

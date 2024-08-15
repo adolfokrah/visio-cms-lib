@@ -1,4 +1,5 @@
 import { Block } from '@/lib/exposed-types';
+import Text from '../exposed-components/text';
 
 const navigation = {
   solutions: [
@@ -90,7 +91,11 @@ const navigation = {
   ],
 };
 
-const Footer: Block = () => {
+interface NavigationItem {
+  solutionsHeader: string;
+}
+
+const Footer: Block<NavigationItem> = ({ solutionsHeader }) => {
   return (
     <footer aria-labelledby="footer-heading" className="visio-cms-bg-gray-900">
       <h2 id="footer-heading" className="visio-cms-sr-only">
@@ -102,7 +107,11 @@ const Footer: Block = () => {
             <div className="md:visio-cms-grid md:visio-cms-grid-cols-2 md:visio-cms-gap-8">
               <div>
                 <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
-                  Solutions
+                  <Text
+                    allowedControls={['bold', 'italic', 'text-color']}
+                    defaultValue={solutionsHeader}
+                    propName="solutionsHeader"
+                  />
                 </h3>
                 <ul role="list" className="visio-cms-mt-6 visio-cms-space-y-4">
                   {navigation.solutions.map((item) => (
@@ -225,7 +234,9 @@ Footer.Schema = {
   name: 'Footer',
   id: 'footer',
   sideEditingProps: [],
-  defaultPropValues: {},
+  defaultPropValues: {
+    solutionsHeader: 'Solutions',
+  },
   group: 'Navigation',
 };
 

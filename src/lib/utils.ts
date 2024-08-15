@@ -1,11 +1,10 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { createClient } from '@supabase/supabase-js';
-import { useProjectConfigurationState } from './states/useProjectConfigState';
 import { BlockList, Folder, GroupedBlock, Message, OsTypes, PageTreeItem } from './types';
 import { Page } from './states/usePagesState';
 import * as jose from 'jose';
 import { JSON_WEB_SECRET } from './constants';
+import { useDbState } from './states/usedbState';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,8 +30,7 @@ export function getQueryParamsFromUrl(url: string): Record<string, string> {
 }
 
 export const supabase = () => {
-  const projectConfiguration = useProjectConfigurationState.getState();
-  const db = createClient(projectConfiguration.supabaseProjectUrl, projectConfiguration.supabaseAnonKey);
+  const { supabase: db } = useDbState.getState();
   return db;
 };
 
@@ -178,5 +176,48 @@ export function isValidURL(url: string): boolean {
     return true;
   } catch (_) {
     return false;
+  }
+}
+
+export type NestedObject = { [key: string]: any };
+
+export function updateBlockInputs(obj: NestedObject, path: string, newValue: any): void {
+  const pathParts = path
+    .replace(/(\?\.)|(\?\[)/g, '.?') // Replace optional chaining with a more standard notation
+    .replace(/\]\./g, '].') // Adjust bracket notation
+    .split('.'); // Split path into parts
+
+  const lastKey = pathParts.pop(); // Extract the last key to update
+
+  if (!lastKey) return;
+
+  const lastPart = pathParts.reduce<NestedObject>((acc, part, index) => {
+    // Handle array indexing
+    const arrayMatch = part.match(/(\w+)\[(\d+)\]/);
+    if (arrayMatch) {
+      const [, key, index] = arrayMatch;
+      acc = acc[key] ? acc[key][parseInt(index, 10)] : undefined;
+    } else {
+      acc = acc[part];
+    }
+    // Create nested objects if they do not exist
+    if (index === pathParts.length - 1 && !acc[lastKey]) {
+      acc[lastKey] = newValue; // Ensure the final key exists
+    }
+    return acc;
+  }, obj);
+
+  // Set the new value
+  if (typeof lastPart === 'object' && lastPart !== null) {
+    // Handle array indexing for last part
+    const arrayMatch = lastKey.match(/(\w+)\[(\d+)\]/);
+    if (arrayMatch) {
+      const [, key, index] = arrayMatch;
+      lastPart[key][parseInt(index, 10)] = newValue;
+    } else {
+      lastPart[lastKey] = newValue;
+    }
+  } else {
+    obj[lastKey] = newValue;
   }
 }

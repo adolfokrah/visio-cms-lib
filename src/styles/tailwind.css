@@ -71,3 +71,6 @@
     border-radius: 38px;
   }
 }
+.ProseMirror {
+  outline: none;
+}

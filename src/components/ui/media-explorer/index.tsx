@@ -66,7 +66,7 @@ export default function MediaExplorer({
         <DialogHeader>
           <DialogTitle>Media Explorer</DialogTitle>
 
-          <DialogDescription>
+          <DialogDescription asChild>
             <div className="visio-cms-grid visio-cms-grid-cols-7 visio-cms-max-h-[700px] visio-cms-h-[calc(100vh-200px)]">
               {loading ? (
                 <div className="visio-cms-col-span-7  visio-cms-h-full visio-cms-grid visio-cms-place-items-center">

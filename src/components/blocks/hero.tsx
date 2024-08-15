@@ -1,16 +1,11 @@
 import { Block } from '@/lib/exposed-types';
-import Tiptap from '../ui/tiptap/tiptap';
 
 export type HeroProps = {
   padding: string;
 };
 
 const Hero: Block<HeroProps> = ({ padding }) => {
-  return (
-    <div className=" visio-cms-h-auto">
-      <Tiptap />
-    </div>
-  );
+  return <div className=" visio-cms-h-auto">{padding}</div>;
 };
 
 Hero.Schema = {

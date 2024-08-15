@@ -1,11 +1,8 @@
 // src/Tiptap.tsx
-import { useEditor, EditorContent, BubbleMenu, FloatingMenu } from '@tiptap/react';
+import { useEditor, EditorContent, BubbleMenu, FloatingMenu, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import CustomBubbleMenu from './bubble-menu';
 import Underline from '@tiptap/extension-underline';
-import Blockquote from '@tiptap/extension-blockquote';
-import BulletList from '@tiptap/extension-bullet-list';
-import OrderedList from '@tiptap/extension-ordered-list';
 import Heading from '@tiptap/extension-heading';
 import Image from '@tiptap/extension-image';
 import { mergeAttributes } from '@tiptap/core';
@@ -13,7 +10,9 @@ import Link from '@tiptap/extension-link';
 import { Color } from '@tiptap/extension-color';
 import TextStyle from '@tiptap/extension-text-style';
 import Highlight from '@tiptap/extension-highlight';
-import { EDITOR_MENU_CONTROLS } from '@/lib/constants';
+import { PreventNewLine } from './custom-extensions/prevent-new-line';
+import { EditorControlTypes } from '@/lib/types';
+import { debounce } from 'lodash';
 
 type Levels = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -27,23 +26,25 @@ const classes: Record<Levels, string> = {
 };
 // define your extension array
 const extensions = [
-  StarterKit,
   Underline.configure(),
-  Blockquote.configure({
-    HTMLAttributes: {
-      class: 'visio-cms-border-l visio-cms-ml-2 visio-cms-pl-4 viso-cms-text-gray-500 visio-cms-editor-blockquote',
+  StarterKit.configure({
+    blockquote: {
+      HTMLAttributes: {
+        class: 'visio-cms-border-l visio-cms-ml-2 visio-cms-pl-4 viso-cms-text-gray-500 visio-cms-editor-blockquote',
+      },
     },
-  }),
-  BulletList.configure({
-    HTMLAttributes: {
-      class: 'visio-cms-list-outside visio-cms-ml-2 visio-cms-list-disc visio-cms-pl-4 visio-cms-editor-bullet-list',
+    bulletList: {
+      HTMLAttributes: {
+        class: 'visio-cms-list-outside visio-cms-ml-2 visio-cms-list-disc visio-cms-pl-4 visio-cms-editor-bullet-list',
+      },
     },
-  }),
-  OrderedList.configure({
-    HTMLAttributes: {
-      class:
-        'visio-cms-list-outside visio-cms-ml-2 visio-cms-list-decimal visio-cms-pl-4 visio-cms-editor-ordered-list',
+    orderedList: {
+      HTMLAttributes: {
+        class:
+          'visio-cms-list-outside visio-cms-ml-2 visio-cms-list-decimal visio-cms-pl-4 visio-cms-editor-ordered-list',
+      },
     },
+    heading: false,
   }),
   Heading.configure({
     levels: [1, 2, 3, 4, 5, 6],
@@ -84,12 +85,27 @@ const extensions = [
   TextStyle,
 ];
 
-const content = '<p>Hello World!</p>';
+const Tiptap = ({
+  allowNewLines = true,
+  allowedControls,
+  defaultValue,
+  onChange,
+}: {
+  allowNewLines?: boolean;
+  allowedControls?: EditorControlTypes[];
+  defaultValue?: string;
+  onChange: (value: string) => void;
+}) => {
+  const debouncedOnUpdate = debounce(({ editor }: { editor: Editor }) => {
+    onChange(editor?.getHTML());
+  }, 2000);
 
-const Tiptap = () => {
   const editor = useEditor({
-    extensions,
-    content,
+    extensions: [...extensions, PreventNewLine.configure({ allowNewLines })],
+    content: defaultValue,
+    onUpdate: ({ editor }) => {
+      debouncedOnUpdate({ editor });
+    },
   });
 
   if (!editor) return null;
@@ -97,22 +113,22 @@ const Tiptap = () => {
   return (
     <>
       <EditorContent editor={editor} />
-      <BubbleMenu editor={editor}>
-        <CustomBubbleMenu
-          editor={editor}
-          allowedControls={[
-            ...EDITOR_MENU_CONTROLS.map((control) => control.name).filter((control) => control != 'image'),
-          ]}
-        />
-      </BubbleMenu>
-      <FloatingMenu editor={editor}>
-        <CustomBubbleMenu
-          editor={editor}
-          allowedControls={[
-            ...EDITOR_MENU_CONTROLS.map((control) => control.name).filter((control) => control === 'image'),
-          ]}
-        />
-      </FloatingMenu>
+      {allowedControls && (
+        <BubbleMenu editor={editor}>
+          <CustomBubbleMenu
+            editor={editor}
+            allowedControls={[...allowedControls.filter((control) => control != 'image')]}
+          />
+        </BubbleMenu>
+      )}
+      {allowedControls && (
+        <FloatingMenu editor={editor}>
+          <CustomBubbleMenu
+            editor={editor}
+            allowedControls={[...allowedControls.filter((control) => control === 'image')]}
+          />
+        </FloatingMenu>
+      )}
     </>
   );
 };

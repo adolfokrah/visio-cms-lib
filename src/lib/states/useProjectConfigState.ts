@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { ProjectConfiguration } from '../types';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { useDbState } from './usedbState';
+import { createClient } from '@supabase/supabase-js';
 
 type Actions = {
   setConfiguration: (
@@ -29,7 +31,12 @@ export const useProjectConfigurationState = create(
       bucketName: 'media',
       emailSender: '',
       blocks: [],
-      setConfiguration: (data) => set(() => data),
+      setConfiguration: (data) =>
+        set(() => {
+          const dbState = useDbState.getState();
+          dbState.setsupabaseDb(createClient(data.supabaseProjectUrl, data.supabaseAnonKey));
+          return data;
+        }),
       defaultLanguage: {
         language: 'English',
         locale: 'en-us',
