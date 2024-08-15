@@ -123,12 +123,9 @@ const Tiptap = ({
           />
         </BubbleMenu>
       )}
-      {allowedControls && (
+      {allowedControls && allowedControls.includes('image') && (
         <FloatingMenu editor={editor}>
-          <CustomBubbleMenu
-            editor={editor}
-            allowedControls={[...allowedControls.filter((control) => control === 'image')]}
-          />
+          <CustomBubbleMenu editor={editor} allowedControls={['image']} />
         </FloatingMenu>
       )}
     </>

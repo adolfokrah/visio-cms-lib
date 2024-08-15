@@ -94,9 +94,11 @@ const navigation = {
 interface NavigationItem {
   solutionsHeader: string;
   supportHeader: string;
+  companyHeader: string;
+  subscriptionHeader: string;
 }
 
-const Footer: Block<NavigationItem> = ({ solutionsHeader, supportHeader }) => {
+const Footer: Block<NavigationItem> = ({ solutionsHeader, supportHeader, companyHeader, subscriptionHeader }) => {
   return (
     <footer aria-labelledby="footer-heading" className="visio-cms-bg-gray-900">
       <h2 id="footer-heading" className="visio-cms-sr-only">
@@ -152,7 +154,11 @@ const Footer: Block<NavigationItem> = ({ solutionsHeader, supportHeader }) => {
             <div className="md:visio-cms-grid md:visio-cms-grid-cols-2 md:visio-cms-gap-8">
               <div>
                 <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
-                  Company
+                  <Text
+                    allowedControls={['bold', 'italic', 'text-color']}
+                    defaultValue={companyHeader}
+                    propName="companyHeader"
+                  />
                 </h3>
                 <ul role="list" className="visio-cms-mt-6 visio-cms-space-y-4">
                   {navigation.company.map((item) => (
@@ -188,7 +194,11 @@ const Footer: Block<NavigationItem> = ({ solutionsHeader, supportHeader }) => {
           </div>
           <div className="visio-cms-mt-10 xl:visio-cms-mt-0">
             <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
-              Subscribe to our newsletter
+              <Text
+                allowedControls={['bold', 'text-color', 'underline']}
+                defaultValue={subscriptionHeader}
+                propName="subscriptionHeader"
+              />
             </h3>
             <p className="visio-cms-mt-2 visio-cms-text-sm visio-cms-leading-6 visio-cms-text-gray-300">
               The latest news, articles, and resources, sent to your inbox weekly.
@@ -242,6 +252,8 @@ Footer.Schema = {
   defaultPropValues: {
     solutionsHeader: 'Solutions',
     supportHeader: 'Support',
+    companyHeader: 'Company',
+    subscriptionHeader: 'Subscribe to our newsletter',
   },
   group: 'Navigation',
 };

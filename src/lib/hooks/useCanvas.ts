@@ -9,7 +9,7 @@ import { updateBlockInputs } from '../utils';
 export default function useCanvas() {
   const { pages, setPages } = usePagesState();
   const activePage = pages.find((page) => page.active);
-  const { blocks } = useProjectConfigurationState();
+  const { blocks, globalBlocks } = useProjectConfigurationState();
   const { undo, redo } = useUndoAndRedo();
   const [blockToAddAsGlobalId, setBlockToAddAsGlobalId] = useState<string | null>(null);
 
@@ -19,7 +19,7 @@ export default function useCanvas() {
       if (page) {
         const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
         const newBlocks = [...blocks].map((block) => ({ ...block, isSelected: false }));
-        const globalBlock = blocks.find((block) => block.id === globalBlockId);
+        const globalBlock = globalBlocks.find((block) => block.id === globalBlockId);
         newBlocks.splice(position, 0, {
           id: uuidv4(),
           blockId: block.Schema.id,

@@ -68,7 +68,7 @@ export default function AddGlobalBlockForm({
             </div>
             <DialogFooter>
               <Button disabled={loading} className="visio-cms-w-full" type="submit">
-                {loading ? <Loader size={16} className="visio-cms-animate-spin" /> : 'Login'}
+                {loading ? <Loader size={16} className="visio-cms-animate-spin" /> : 'Save block'}
               </Button>
             </DialogFooter>
           </form>
