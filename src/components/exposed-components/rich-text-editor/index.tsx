@@ -2,17 +2,12 @@ import Tiptap from '@/components/ui/tiptap/tiptap';
 import useTextEditor from '@/lib/hooks/useTextEditor';
 import { EditorControlTypes } from '@/lib/types';
 
-export type TextEditorControls = Exclude<
-  EditorControlTypes,
-  'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'bullet-list' | 'ordered-list' | 'blockquote' | 'image'
->;
-
-export default function Text({
+export default function RichTextEditor({
   allowedControls = [],
   defaultValue,
   propName,
 }: {
-  allowedControls?: TextEditorControls[];
+  allowedControls?: EditorControlTypes[];
   defaultValue?: string;
   propName: string;
 }) {
