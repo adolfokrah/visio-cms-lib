@@ -1,5 +1,6 @@
-import { Block } from '@/lib/exposed-types';
+import { Block, MediaFile } from '@/lib/exposed-types';
 import Text from '../exposed-components/text';
+import Image from '../exposed-components/image';
 
 export type HeroProps = {
   mainHeader: string;
@@ -7,9 +8,10 @@ export type HeroProps = {
   subHeading: string;
   getStarted: string;
   learnMore: string;
+  image: MediaFile;
 };
 
-const Hero: Block<HeroProps> = ({ mainHeader, announcement, subHeading, getStarted, learnMore }) => {
+const Hero: Block<HeroProps> = ({ mainHeader, announcement, subHeading, getStarted, learnMore, image }) => {
   return (
     <div className="visio-cms-relative isolate visio-cms-px-6 visio-cms-pt-14 lg:visio-cms-px-8">
       <div
@@ -60,6 +62,12 @@ const Hero: Block<HeroProps> = ({ mainHeader, announcement, subHeading, getStart
             </a>
           </div>
         </div>
+
+        <Image
+          defaultValue={image}
+          propName="image"
+          className="visio-cms-mt-12 visio-cms-rounded-lg visio-cms-mx-auto"
+        />
       </div>
       <div
         aria-hidden="true"
@@ -88,6 +96,12 @@ Hero.Schema = {
     subHeading: 'Tons of data is waiting for you in our platform. Join Today!',
     getStarted: '<span>Get started</span>',
     learnMore: 'Learn more',
+    image: {
+      mediaHash: undefined,
+      altText: 'Hero Image',
+      width: 400,
+      height: 678,
+    },
   },
 };
 

@@ -1,1 +1,1 @@
-export type { BlockSchema, Block, BlockList } from './types';
+export type { BlockSchema, Block, BlockList, MediaFile } from './types';
