@@ -65,7 +65,13 @@ export default function BlockItem({
             />
           </div>
         </PopoverTrigger>
-        <PopoverContent className="!visio-cms-p-0 visio-cms-w-max" align="end" side="top" alignOffset={20}>
+        <PopoverContent
+          className="!visio-cms-p-0 visio-cms-w-max"
+          align="end"
+          side="top"
+          alignOffset={20}
+          sideOffset={pageBlocks.length < 2 ? -40 : 0}
+        >
           <BlockAction
             blockName={globalBlock?.name || block.Schema.name}
             index={index}
