@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { usePagesState } from '../states/usePagesState';
 import { toast } from 'sonner';
 
-export default function useGlobalBlock(onClose: () => void) {
+export default function useGlobalBlock(onClose?: () => void) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { globalBlocks, setGlobalBlocks, blocks } = useProjectConfigurationState();
@@ -70,7 +70,7 @@ export default function useGlobalBlock(onClose: () => void) {
       );
 
       toast.success('Block added successfully');
-      onClose();
+      if (onClose) onClose();
     } catch (e: any) {
       setErrorMessage(e?.message || 'An error occurred');
     } finally {

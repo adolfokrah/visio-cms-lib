@@ -50,6 +50,7 @@ export default function BlockItem({
             {React.createElement(block, {
               key: block.Schema.id,
               ...(pageBlock.inputs || block.Schema.defaultPropValues),
+              pageBlockId: pageBlock.id,
             })}
             <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} />
             <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} />

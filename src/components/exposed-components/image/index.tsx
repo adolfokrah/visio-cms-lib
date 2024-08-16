@@ -7,12 +7,17 @@ export default function Image({
   defaultValue,
   propName,
   className,
+  pageBlockId,
 }: {
   defaultValue: MediaFile;
   propName: string;
   className?: string;
+  pageBlockId: string;
 }) {
-  const { openMediaExplorer, setOpenMediaExplorer, imagePublicUrl, globalBlock } = useImage({ defaultValue });
+  const { openMediaExplorer, setOpenMediaExplorer, imagePublicUrl, isBlockGlobal } = useImage({
+    defaultValue,
+    pageBlockId,
+  });
 
   return (
     <div>
@@ -20,11 +25,11 @@ export default function Image({
         src={`${imagePublicUrl}?t=${new Date().getTime()}`}
         alt={defaultValue?.altText || ''}
         className={cn(className, {
-          'visio-cms-cursor-pointer': !globalBlock,
+          'visio-cms-cursor-pointer': !isBlockGlobal,
         })}
         onClick={() => setOpenMediaExplorer(true)}
       />
-      {!globalBlock && (
+      {!isBlockGlobal && (
         <MediaExplorer
           open={openMediaExplorer}
           onCloseModal={() => setOpenMediaExplorer(false)}

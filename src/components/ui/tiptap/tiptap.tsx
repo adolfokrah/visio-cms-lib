@@ -95,16 +95,19 @@ const Tiptap = ({
   allowedControls,
   defaultValue,
   onChange,
+  isEditable,
 }: {
   allowNewLines?: boolean;
   allowedControls?: EditorControlTypes[];
   defaultValue?: string;
+  isEditable: boolean;
   onChange: (value: string) => void;
 }) => {
   const { pages } = usePageContentState();
   const activePage = pages.find((page) => page.active)?.id;
   const editor = useEditor({
     extensions: [...extensions, PreventNewLine.configure({ allowNewLines })],
+    editable: isEditable,
     content: defaultValue,
     onUpdate: ({ editor }) => {
       onChange(editor?.getHTML());

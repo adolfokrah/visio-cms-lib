@@ -7,19 +7,18 @@ export default function RichTextEditor({
   allowedControls = [...EDITOR_MENU_CONTROLS.map((control) => control.name)],
   defaultValue,
   propName,
+  pageBlockId,
 }: {
   allowedControls?: EditorControlTypes[];
   defaultValue?: string;
   propName: string;
+  pageBlockId: string;
 }) {
-  const { html, debouncedOnUpdate, globalBlock } = useTextEditor({ propName, defaultValue });
-
-  if (globalBlock) {
-    return <div dangerouslySetInnerHTML={{ __html: html }} />;
-  }
+  const { debouncedOnUpdate, isBlockGlobal } = useTextEditor({ propName, defaultValue, pageBlockId });
 
   return (
     <Tiptap
+      isEditable={!isBlockGlobal}
       allowedControls={allowedControls}
       defaultValue={defaultValue}
       allowNewLines={true}

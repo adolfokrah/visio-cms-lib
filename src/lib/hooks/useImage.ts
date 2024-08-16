@@ -1,9 +1,9 @@
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import { supabase } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MediaFile } from '../types';
 import { usePageContentState } from '../states/usePageContentState';
-export default function useImage({ defaultValue }: { defaultValue: MediaFile }) {
+export default function useImage({ defaultValue, pageBlockId }: { defaultValue: MediaFile; pageBlockId: string }) {
   const db = supabase();
   const { bucketName } = useProjectConfigurationState();
   const [openMediaExplorer, setOpenMediaExplorer] = useState(false);
@@ -11,8 +11,12 @@ export default function useImage({ defaultValue }: { defaultValue: MediaFile }) 
   const { pages, globalBlocks } = usePageContentState();
   const activePage = pages.find((page) => page.active);
 
-  const selectedBlock = activePage?.blocks?.[activePage.activeLanguageLocale].find((block) => block.isSelected);
-  const globalBlock = globalBlocks?.find((block) => block.id === selectedBlock?.globalBlockId);
+  const isBlockGlobal = useMemo(() => {
+    const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
+    const foundBlock = pageBlocks.find((block) => block.id === pageBlockId);
+
+    return globalBlocks.some((block) => block.id === foundBlock?.globalBlockId);
+  }, [activePage, globalBlocks, pageBlockId]);
 
   useEffect(() => {
     const getImagePublicUrl = async (mediaHash: string, width: number, height: number) => {
@@ -38,5 +42,5 @@ export default function useImage({ defaultValue }: { defaultValue: MediaFile }) 
     }
   }, [bucketName, defaultValue?.mediaHash, defaultValue?.height, defaultValue?.width, db.storage]);
 
-  return { openMediaExplorer, setOpenMediaExplorer, imagePublicUrl, globalBlock };
+  return { openMediaExplorer, setOpenMediaExplorer, imagePublicUrl, isBlockGlobal };
 }
