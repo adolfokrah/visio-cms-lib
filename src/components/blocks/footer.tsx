@@ -182,9 +182,8 @@ const Footer: Block<NavigationItem> = ({
                           propName={`${pathName}.subSolutions`}
                           className="visio-cms-mt-6 visio-cms-space-y-4"
                           renderBlock={(subIndex, { name, itemKey }, pathName) => (
-                            <RepeaterItem propName={pathName} key={`${itemKey}`} component="li">
-                              {/* <Text pageBlockId={pageBlockId} defaultValue={name} propName={`${pathName}.name`} /> */}
-                              <p>{name}</p>
+                            <RepeaterItem propName={pathName} key={`${itemKey}-${name}-${subIndex}`} component="li">
+                              <Text pageBlockId={pageBlockId} defaultValue={name} propName={`${pathName}.name`} />
                             </RepeaterItem>
                           )}
                         />
@@ -323,6 +322,15 @@ Footer.Schema = {
     subscriptionHeader: 'Subscribe to our newsletter',
     solutions: navigation.solutions,
   },
+  repeaters: [
+    {
+      name: 'solutions',
+      schema: {
+        name: 'Solutions',
+        href: '/solutions',
+      },
+    },
+  ],
   group: 'Navigation',
 };
 

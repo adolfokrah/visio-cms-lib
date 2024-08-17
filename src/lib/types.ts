@@ -1,5 +1,6 @@
 import React from 'react';
 import { Page } from './states/usePagesState';
+import { RepeaterSchema } from './states/useRepeaterState';
 
 export type Language = {
   language: string;
@@ -74,6 +75,7 @@ export type BlockSchema<T = Record<string, any>> = {
   group?: string;
   defaultPropValues: T;
   sideEditingProps: SideEditingProps[];
+  repeaters?: Omit<RepeaterSchema, 'propName'>[];
 };
 
 export type Block<T = Record<string, any>> = React.FC<T> & { Schema: BlockSchema<T> };
