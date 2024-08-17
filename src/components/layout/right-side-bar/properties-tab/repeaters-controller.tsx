@@ -5,6 +5,7 @@ import { convertToTitleCase, getValueByPath, Path, sendMessageToParent, updateVa
 import { usePagesState } from '@/lib/states/usePagesState';
 import useBlockHistory from '@/lib/hooks/useBlockHistory';
 import { ArrowDown, ArrowUp } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function RepeatersController() {
   const { selectedRepeaterItem } = useRepeaterState();
@@ -116,7 +117,12 @@ export default function RepeatersController() {
 
                           const value = getValueByPath(foundBlock.inputs, path);
 
-                          updateBlockValue(path, value ? [...value, schema.schema] : [schema.schema]);
+                          updateBlockValue(
+                            path,
+                            value
+                              ? [...value, { ...schema.schema, itemKey: uuidv4() }]
+                              : [{ ...schema.schema, itemKey: uuidv4() }],
+                          );
                         }
                       }
                     }}

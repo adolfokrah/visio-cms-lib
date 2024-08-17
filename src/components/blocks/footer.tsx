@@ -5,10 +5,10 @@ import RepeaterItem from '../exposed-components/repeater/repeater-item';
 
 const navigation = {
   solutions: [
-    { name: 'Marketing', href: '#' },
-    { name: 'Analytics', href: '#' },
-    { name: 'Commerce', href: '#' },
-    { name: 'Insights', href: '#' },
+    { name: 'Marketing', href: '#', itemKey: '2423423423' },
+    { name: 'Analytics', href: '#', itemKey: 'sdsgadgfasfsd' },
+    { name: 'Commerce', href: '#', itemKey: 'sdfasgsf' },
+    { name: 'Insights', href: '#', itemKey: 'sgsdkklagslksfd' },
   ],
   support: [
     { name: 'Pricing', href: '#' },
@@ -99,7 +99,12 @@ interface NavigationItem {
   companyHeader: string;
   subscriptionHeader: string;
   pageBlockId?: string;
-  solutions: { name: string; href: string; subSolutions?: { name: string; href: string }[] }[];
+  solutions: {
+    name: string;
+    href: string;
+    itemKey: string;
+    subSolutions?: { name: string; href: string; itemKey: string }[];
+  }[];
 }
 
 const Footer: Block<NavigationItem> = ({
@@ -134,11 +139,11 @@ const Footer: Block<NavigationItem> = ({
                   pageBlockId={pageBlockId}
                   propName="solutions"
                   className="visio-cms-mt-6 visio-cms-space-y-4"
-                  renderBlock={(index, { name, href, subSolutions }, pathName) => (
+                  renderBlock={(index, { name, href, subSolutions, itemKey }, pathName) => (
                     <RepeaterItem
                       propName={`${pathName}`}
                       component="li"
-                      key={`${pathName}-${index}`}
+                      key={`${itemKey}`}
                       subRepeatersSchema={[
                         {
                           name: 'subSolutions',
@@ -177,14 +182,9 @@ const Footer: Block<NavigationItem> = ({
                           pageBlockId={pageBlockId}
                           propName={`${pathName}.subSolutions`}
                           className="visio-cms-mt-6 visio-cms-space-y-4"
-                          renderBlock={(subIndex, { name, href }, pathName) => (
-                            <RepeaterItem propName={pathName} key={`${href}-${subIndex}`} component="li">
-                              <Text
-                                pageBlockId={pageBlockId}
-                                key={`${name}`}
-                                defaultValue={name}
-                                propName={`${pathName}.name`}
-                              />
+                          renderBlock={(subIndex, { name, itemKey }, pathName) => (
+                            <RepeaterItem propName={pathName} key={`${itemKey}`} component="li">
+                              <Text pageBlockId={pageBlockId} defaultValue={name} propName={`${pathName}.name`} />
                             </RepeaterItem>
                           )}
                         />
