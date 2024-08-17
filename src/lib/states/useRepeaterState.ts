@@ -3,6 +3,7 @@ import { create } from 'zustand';
 export type RepeaterSchema = {
   propName: string;
   name: string;
+  itemCount?: number;
   schema: Record<string, any>;
 };
 

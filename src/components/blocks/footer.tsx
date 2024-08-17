@@ -325,6 +325,7 @@ Footer.Schema = {
   repeaters: [
     {
       name: 'solutions',
+      itemCount: 4,
       schema: {
         name: 'Solutions',
         href: '/solutions',

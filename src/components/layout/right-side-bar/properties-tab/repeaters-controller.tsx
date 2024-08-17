@@ -63,11 +63,16 @@ export default function RepeatersController() {
           <AccordionContent>
             <div>
               {repeaterItems.map((schema, index) => {
+                const path = schema.propName.split('.');
+                const value = getValueByPath(foundBlock.inputs, path);
+                const itemCount = schema?.itemCount || 400;
+
                 return (
                   <Button
                     key={`${schema.propName}-${index}`}
                     variant={'outline'}
                     className="visio-cms-mt-2 visio-cms-w-full"
+                    disabled={value && value.length >= itemCount}
                     onClick={() => {
                       if (page) {
                         if (foundBlock) {

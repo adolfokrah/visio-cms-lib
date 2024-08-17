@@ -1,5 +1,4 @@
 import { PageBlock, usePagesState } from '../states/usePagesState';
-import lodash from 'lodash';
 export default function useBlockHistory() {
   const { pages, setPages } = usePagesState();
   const activePage = pages.find((page) => page.active);
@@ -10,12 +9,6 @@ export default function useBlockHistory() {
       const history = page.history?.[locale]?.blocks ?? [];
       const currentIndex = page.history?.[locale]?.currentIndex ?? -1;
       let newHistory = history.slice(0, currentIndex + 1);
-      if (history.length > 0) {
-        if (lodash.isEqual(newHistory, history[history.length - 1])) {
-          console.log('hell world');
-          return;
-        }
-      }
 
       newHistory = [...newHistory, blocks];
       page.history = {
