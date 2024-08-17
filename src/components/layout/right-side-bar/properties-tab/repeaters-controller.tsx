@@ -59,7 +59,7 @@ export default function RepeatersController() {
         )}
       </>
 
-      {repeaterItems.length > 0 && (
+      {repeaterItems && repeaterItems.length > 0 && (
         <AccordionItem value={'repeater-add-items'}>
           <AccordionTrigger>Add items</AccordionTrigger>
           <AccordionContent>
