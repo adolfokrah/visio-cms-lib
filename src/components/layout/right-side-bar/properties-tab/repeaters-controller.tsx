@@ -23,9 +23,11 @@ export default function RepeatersController() {
 
   const repeaterItems = selectedRepeaterItem?.subRepeatersSchemas.length
     ? selectedRepeaterItem?.subRepeatersSchemas
-    : blocks
-        .find((block) => block.Schema.id === foundBlock.blockId)
-        ?.Schema.repeaters?.map((schema) => ({ ...schema, propName: schema.name })) || [];
+    : !selectedRepeaterItem
+      ? blocks
+          .find((block) => block.Schema.id === foundBlock.blockId)
+          ?.Schema.repeaters?.map((schema) => ({ ...schema, propName: schema.name }))
+      : [] || [];
 
   return (
     <>

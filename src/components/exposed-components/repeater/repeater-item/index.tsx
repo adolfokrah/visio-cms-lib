@@ -1,36 +1,41 @@
 import { RepeaterSchema } from '@/lib/states/useRepeaterState';
 import { sendMessageToParent } from '@/lib/utils';
+import React from 'react';
 
-export default function RepeaterItem({
+export default function RepeaterItem<T extends React.ElementType>({
   children,
   component,
   propName,
   subRepeatersSchema,
+  ...props
 }: {
   children: React.ReactNode;
-  component: 'div' | 'section' | 'article' | 'aside' | 'header' | 'footer' | 'main' | 'nav' | 'ul' | 'ol' | 'li';
+  component: React.ElementType;
   propName: string;
   subRepeatersSchema?: Omit<RepeaterSchema, 'propName'>[];
-}) {
-  const Tag = component;
+} & React.ComponentPropsWithoutRef<T>) {
+  const Tag = component || 'div';
 
   return (
-    <Tag
-      onClick={() => {
-        sendMessageToParent({
-          type: 'setSelectedRepeaterItemSchema',
-          content: JSON.stringify({
-            repeaterItemId: propName,
-            subRepeatersSchemas:
-              subRepeatersSchema?.map((schema) => ({
-                ...schema,
-                propName: `${propName}.${schema.name}`,
-              })) || [],
-          }),
-        });
-      }}
-    >
-      {children}
-    </Tag>
+    <>
+      <Tag
+        {...props}
+        onClick={() => {
+          sendMessageToParent({
+            type: 'setSelectedRepeaterItemSchema',
+            content: JSON.stringify({
+              repeaterItemId: propName,
+              subRepeatersSchemas:
+                subRepeatersSchema?.map((schema) => ({
+                  ...schema,
+                  propName: `${propName}.${schema.name}`,
+                })) || [],
+            }),
+          });
+        }}
+      >
+        {children}
+      </Tag>
+    </>
   );
 }

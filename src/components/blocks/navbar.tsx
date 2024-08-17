@@ -27,7 +27,7 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '' }) => {
           pageBlockId={pageBlockId}
           defaultValue={links}
           propName="links"
-          renderBlock={(index, { title, subLinks }, pathName) => (
+          render={(index, { title, subLinks }, pathName) => (
             <li key={title}>
               <Text propName={`${pathName}.title`} pageBlockId={pageBlockId} defaultValue={title} />
 
@@ -35,7 +35,7 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '' }) => {
                 pageBlockId={pageBlockId}
                 defaultValue={subLinks || []}
                 propName={`${pathName}.subLinks`}
-                renderBlock={(subIndex, { title, subsubLinks }, pathName) => (
+                render={(subIndex, { title, subsubLinks }, pathName) => (
                   <li key={title} className="visio-cms-pl-2">
                     <Text propName={`${pathName}.title`} pageBlockId={pageBlockId} defaultValue={title} />
 
@@ -43,7 +43,7 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '' }) => {
                       pageBlockId={pageBlockId}
                       defaultValue={subsubLinks || []}
                       propName={`${pathName}.subsubLinks`}
-                      renderBlock={(subsubIndex, { title, lastSubLInk }, pathName) => (
+                      render={(subsubIndex, { title, lastSubLInk }, pathName) => (
                         <li key={title} className="visio-cms-pl-2">
                           <Text propName={`${pathName}.title`} pageBlockId={pageBlockId} defaultValue={title} />
 
@@ -51,7 +51,7 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '' }) => {
                             pageBlockId={pageBlockId}
                             defaultValue={lastSubLInk || []}
                             propName={`${pathName}.lastSubLInk`}
-                            renderBlock={(lastSubLInkIndex, { title }, pathName) => (
+                            render={(lastSubLInkIndex, { title }, pathName) => (
                               <li key={title} className="visio-cms-pl-2">
                                 <Text propName={`${pathName}.title`} pageBlockId={pageBlockId} defaultValue={title} />
                               </li>

@@ -1,6 +1,7 @@
 import { Block, MediaFile } from '@/lib/exposed-types';
 import Text from '../exposed-components/text';
 import Image from '../exposed-components/image';
+import { Repeater, RepeaterItem } from '../exposed-components/repeater';
 
 export type HeroProps = {
   mainHeader: string;
@@ -10,16 +11,21 @@ export type HeroProps = {
   learnMore: string;
   image: MediaFile;
   pageBlockId?: string;
+  getStartedButton: {
+    name: string;
+    url: string;
+    itemKey: string;
+  }[];
 };
 
 const Hero: Block<HeroProps> = ({
   mainHeader,
   announcement,
   subHeading,
-  getStarted,
   learnMore,
   image,
   pageBlockId = '',
+  getStartedButton,
 }) => {
   return (
     <div className="visio-cms-relative isolate visio-cms-px-6 visio-cms-pt-14 lg:visio-cms-px-8">
@@ -67,17 +73,28 @@ const Hero: Block<HeroProps> = ({
             />
           </div>
           <div className="visio-cms-mt-10 visio-cms-flex visio-cms-items-center visio-cms-justify-center visio-cms-gap-x-6">
-            <a
-              href="#"
-              className="visio-cms-rounded-md visio-cms-bg-indigo-600 visio-cms-px-3.5 visio-cms-py-2.5 visio-cms-text-sm visio-cms-font-semibold visio-cms-text-white visio-cms-shadow-sm hover:visio-cms-bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <Text
-                allowedControls={['italic', 'text-color']}
-                defaultValue={getStarted}
-                propName="getStarted"
-                pageBlockId={pageBlockId}
-              />
-            </a>
+            <Repeater
+              propName="getStartedButton"
+              pageBlockId={pageBlockId}
+              defaultValue={getStartedButton}
+              render={(index, { name, url, itemKey }, propPath) => (
+                <RepeaterItem
+                  href={url}
+                  component="a"
+                  propName={propPath}
+                  key={itemKey}
+                  className="visio-cms-rounded-md visio-cms-bg-indigo-600 visio-cms-px-3.5 visio-cms-py-2.5 visio-cms-text-sm visio-cms-font-semibold visio-cms-text-white visio-cms-shadow-sm hover:visio-cms-bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 visio-cms-inline-block"
+                >
+                  <Text
+                    allowedControls={['italic', 'text-color']}
+                    defaultValue={name}
+                    propName={`${propPath}.name`}
+                    pageBlockId={pageBlockId}
+                  />
+                </RepeaterItem>
+              )}
+            />
+
             <a
               href="#"
               className="visio-cms-text-sm visio-cms-font-semibold visio-cms-flex visio-cms-gap-2 visio-cms-leading-6 visio-cms-text-gray-900"
@@ -133,7 +150,18 @@ Hero.Schema = {
       width: 400,
       height: 678,
     },
+    getStartedButton: [],
   },
+  repeaters: [
+    {
+      name: 'getStartedButton',
+      itemCount: 1,
+      schema: {
+        name: 'Get started button',
+        url: '/get-started',
+      },
+    },
+  ],
 };
 
 export default Hero;

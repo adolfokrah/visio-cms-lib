@@ -2,9 +2,10 @@ import { usePageContentState } from '@/lib/states/usePageContentState';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import { useRepeaterState } from '@/lib/states/useRepeaterState';
 import { cn } from '@/lib/utils';
+import React from 'react';
 
 type RepeaterProps<T> = {
-  renderBlock: (index: number, value: T, propPath: string) => JSX.Element;
+  render: (index: number, value: T, propPath: string) => React.ReactNode;
   pageBlockId: string;
   defaultValue: T[];
   propName: string;
@@ -12,14 +13,15 @@ type RepeaterProps<T> = {
   component?: 'div' | 'section' | 'article' | 'aside' | 'header' | 'footer' | 'main' | 'nav' | 'ul' | 'ol' | 'li';
 };
 
-export default function Repeater<T>({
-  renderBlock,
+export default function Repeater<T, D extends React.ElementType>({
+  render,
   pageBlockId,
   defaultValue,
   propName,
   className,
   component = 'div',
-}: RepeaterProps<T>) {
+  ...props
+}: RepeaterProps<T> & React.ComponentPropsWithoutRef<D>) {
   const { repeaterId, setRepeaterId } = useRepeaterState();
   const { pages } = usePageContentState();
   const { globalBlocks } = useProjectConfigurationState();
@@ -31,6 +33,7 @@ export default function Repeater<T>({
   const Tag = component;
   return (
     <Tag
+      {...props}
       id={propName}
       key={`${defaultValue}`}
       onClick={(e) => {
@@ -43,7 +46,7 @@ export default function Repeater<T>({
           repeaterId === propName,
       })}
     >
-      {defaultValue.map((value, index) => renderBlock(index, value, `${propName}.${index}`))}
+      {defaultValue?.map((value, index) => render(index, value, `${propName}.${index}`))}
     </Tag>
   );
 }

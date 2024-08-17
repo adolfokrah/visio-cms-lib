@@ -138,7 +138,7 @@ const Footer: Block<NavigationItem> = ({
                   pageBlockId={pageBlockId}
                   propName="solutions"
                   className="visio-cms-mt-6 visio-cms-space-y-4"
-                  renderBlock={(index, { name, href, subSolutions, itemKey }, pathName) => (
+                  render={(index, { name, href, subSolutions, itemKey }, pathName) => (
                     <RepeaterItem
                       propName={`${pathName}`}
                       component="li"
@@ -181,7 +181,7 @@ const Footer: Block<NavigationItem> = ({
                           pageBlockId={pageBlockId}
                           propName={`${pathName}.subSolutions`}
                           className="visio-cms-mt-6 visio-cms-space-y-4"
-                          renderBlock={(subIndex, { name, itemKey }, pathName) => (
+                          render={(subIndex, { name, itemKey }, pathName) => (
                             <RepeaterItem propName={pathName} key={`${itemKey}-${name}-${subIndex}`} component="li">
                               <Text pageBlockId={pageBlockId} defaultValue={name} propName={`${pathName}.name`} />
                             </RepeaterItem>
