@@ -19,21 +19,23 @@ export default function Text({
   propName: string;
   pageBlockId: string;
 }) {
-  const { debouncedOnUpdate, isBlockGlobal } = useTextEditor({ propName, defaultValue, pageBlockId });
+  const { debouncedOnUpdate, isBlockGlobal } = useTextEditor({
+    propName,
+    defaultValue,
+    pageBlockId,
+  });
 
   return (
-    <div>
-      <React.Suspense fallback={<></>}>
-        <Tiptap
-          isEditable={!isBlockGlobal}
-          allowedControls={allowedControls}
-          defaultValue={defaultValue}
-          allowNewLines={false}
-          onChange={(value) => {
-            debouncedOnUpdate({ value });
-          }}
-        />
-      </React.Suspense>
-    </div>
+    <React.Suspense fallback={<></>}>
+      <Tiptap
+        isEditable={!isBlockGlobal}
+        allowedControls={allowedControls}
+        defaultValue={defaultValue}
+        allowNewLines={false}
+        onChange={(value) => {
+          debouncedOnUpdate({ value });
+        }}
+      />
+    </React.Suspense>
   );
 }

@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import ThemeTab from './theme-tab';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
+import PropertiesTab from './properties-tab';
 
 export default function RightSideBar() {
   const { pages } = usePagesState();
@@ -26,7 +27,9 @@ export default function RightSideBar() {
           {activePage && <TabsTrigger value="page">Page</TabsTrigger>}
           <TabsTrigger value="theme">Theme</TabsTrigger>
         </TabsList>
-        <TabsContent value="properties">d</TabsContent>
+        <TabsContent value="properties">
+          <PropertiesTab />
+        </TabsContent>
         {activePage && (
           <TabsContent value="page">
             <PageSettingsTab />

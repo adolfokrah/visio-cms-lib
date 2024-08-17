@@ -179,44 +179,65 @@ export function isValidURL(url: string): boolean {
   }
 }
 
-export type NestedObject = { [key: string]: any };
+export type Path = (string | number)[];
+type NestedObject = { [key: string]: any } | any[];
 
-export function updateBlockInputs(obj: NestedObject, path: string, newValue: any): NestedObject {
-  const pathParts = path
-    .replace(/(\?\.)|(\?\[)/g, '.?') // Replace optional chaining with a more standard notation
-    .replace(/\]\./g, '].') // Adjust bracket notation
-    .split('.'); // Split path into parts
+export function updateValueByPath<T extends NestedObject>(obj: T, path: Path, newValue: any): T {
+  if (path.length === 0) return obj;
 
-  const lastKey = pathParts.pop(); // Extract the last key to update
+  const key = path[0];
 
-  if (!lastKey) return { ...obj };
-
-  // Recursively copy the object structure and update the desired value
-  const deepCopy = (input: NestedObject, parts: string[]): NestedObject => {
-    if (parts.length === 0) {
-      // If there are no more parts to traverse, return the modified object
-      return typeof input === 'object' && input !== null ? { ...input, [lastKey]: newValue } : { [lastKey]: newValue };
-    }
-
-    const [currentPart, ...remainingParts] = parts;
-
-    // Handle array indexing
-    const arrayMatch = currentPart.match(/(\w+)\[(\d+)\]/);
-    if (arrayMatch) {
-      const [, key, index] = arrayMatch;
-      return {
-        ...input,
-        [key]: input[key].map((item: any, i: number) =>
-          i === parseInt(index, 10) ? deepCopy(item, remainingParts) : item,
-        ),
-      };
+  if (path.length === 1) {
+    if (Array.isArray(obj)) {
+      const newArray = [...obj];
+      newArray[key as number] = newValue;
+      return newArray as T;
     } else {
       return {
-        ...input,
-        [currentPart]: deepCopy(input[currentPart] ?? {}, remainingParts),
+        ...obj,
+        [key]: newValue,
       };
     }
-  };
+  }
 
-  return deepCopy(obj, pathParts);
+  const nextObj = obj[key as keyof T];
+
+  if (typeof nextObj !== 'object' || nextObj === null) {
+    throw new Error(`Path "${key}" does not lead to a nested object or array.`);
+  }
+
+  const updatedNextObj = updateValueByPath(nextObj as NestedObject, path.slice(1), newValue);
+
+  if (Array.isArray(obj)) {
+    const newArray = [...obj];
+    newArray[key as number] = updatedNextObj;
+    return newArray as T;
+  } else {
+    return {
+      ...obj,
+      [key]: updatedNextObj,
+    };
+  }
+}
+
+export function convertToTitleCase(input: string): string {
+  // Convert camelCase to snake_case by inserting an underscore before each uppercase letter and lowercasing everything
+  const snakeCase = input.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
+
+  // Split the snake_case string by underscores
+  const words = snakeCase.split('_');
+
+  // Capitalize the first letter of each word and join them with spaces
+  const titleCase = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
+  return titleCase;
+}
+
+export function getValueByPath(obj: any, path: Path): any {
+  return path.reduce((acc, key) => {
+    if (acc && Object.prototype.hasOwnProperty.call(acc, key)) {
+      return acc[key];
+    }
+    return undefined;
+  }, obj);
 }

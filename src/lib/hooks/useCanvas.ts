@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { PageBlock, usePagesState } from '../states/usePagesState';
+import { usePagesState } from '../states/usePagesState';
 import { Block, Message } from '../types';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
 import useUndoAndRedo from './useUndoAndRedo';
-import { updateBlockInputs } from '../utils';
+import { updateValueByPath } from '../utils';
+import { useRepeaterState } from '../states/useRepeaterState';
+import useBlockHistory from './useBlockHistory';
 
 export default function useCanvas() {
   const { pages, setPages } = usePagesState();
@@ -12,6 +14,8 @@ export default function useCanvas() {
   const { blocks, globalBlocks } = useProjectConfigurationState();
   const { undo, redo } = useUndoAndRedo();
   const [blockToAddAsGlobalId, setBlockToAddAsGlobalId] = useState<string | null>(null);
+  const { setSelectedRepeaterItem } = useRepeaterState();
+  const { addBlocksToPageHistory } = useBlockHistory();
 
   useEffect(() => {
     const setPageBlocks = (block: Block, position: number, isGlobalBlock: boolean, globalBlockId: string) => {
@@ -52,6 +56,7 @@ export default function useCanvas() {
     };
 
     const selectBlock = (blockId: string) => {
+      setSelectedRepeaterItem(null);
       const page = activePage;
       if (page) {
         const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
@@ -59,24 +64,6 @@ export default function useCanvas() {
         page.blocks = {
           ...page.blocks,
           [page.activeLanguageLocale]: newBlocks,
-        };
-        setPages(pages.map((p) => (p.active ? page : p)));
-      }
-    };
-
-    const addBlocksToPageHistory = (locale: string, blocks: PageBlock[]) => {
-      const page = activePage;
-      if (page) {
-        const history = page.history?.[locale]?.blocks ?? [];
-        const currentIndex = page.history?.[locale]?.currentIndex ?? -1;
-        let newHistory = history.slice(0, currentIndex + 1);
-        newHistory = [...newHistory, blocks];
-        page.history = {
-          ...page.history,
-          [locale]: {
-            currentIndex: currentIndex + 1,
-            blocks: newHistory,
-          },
         };
         setPages(pages.map((p) => (p.active ? page : p)));
       }
@@ -175,23 +162,30 @@ export default function useCanvas() {
         const blockId = data.content;
         setBlockToAddAsGlobalId(blockId);
       } else if (data.type === 'updateBlockInput') {
-        const { path, value } = JSON.parse(data.content);
+        const { propName, value, pageBlockId } = JSON.parse(data.content);
+
         const page = activePage;
         if (page) {
           const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
-          const activeBlock = blocks.find((block) => block.isSelected);
-          if (activeBlock) {
-            const blockInputs = activeBlock?.inputs || {};
-            const newInputs = updateBlockInputs(blockInputs || {}, path, value);
-            activeBlock.inputs = { ...newInputs };
+          const foundBlock = blocks.find((block) => block.id === pageBlockId);
+          if (foundBlock) {
+            const path = propName.split('.');
+
+            const blockInputs = updateValueByPath(foundBlock.inputs, path, value);
+
             page.blocks = {
               ...page.blocks,
-              [page.activeLanguageLocale]: blocks,
+              [page.activeLanguageLocale]: blocks.map((block) =>
+                block.id === pageBlockId ? { ...block, inputs: blockInputs } : block,
+              ),
             };
             setPages(pages.map((p) => (p.active ? page : p)));
             addBlocksToPageHistory(page.activeLanguageLocale, [...JSON.parse(JSON.stringify(blocks))]);
           }
         }
+      } else if (data.type === 'setSelectedRepeaterItemSchema') {
+        const subRepeaterSchema = JSON.parse(data.content);
+        setSelectedRepeaterItem(subRepeaterSchema);
       }
     };
 
@@ -200,7 +194,7 @@ export default function useCanvas() {
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [pages, blocks, setPages, activePage, undo, redo]);
+  }, [pages, blocks, setPages, activePage, undo, redo, globalBlocks, setSelectedRepeaterItem, addBlocksToPageHistory]);
 
   return { blockToAddAsGlobalId, setBlockToAddAsGlobalId };
 }

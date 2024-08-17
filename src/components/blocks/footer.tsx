@@ -1,5 +1,7 @@
 import { Block } from '@/lib/exposed-types';
 import Text from '../exposed-components/text';
+import Repeater from '../exposed-components/repeater';
+import RepeaterItem from '../exposed-components/repeater/repeater-item';
 
 const navigation = {
   solutions: [
@@ -96,9 +98,18 @@ interface NavigationItem {
   supportHeader: string;
   companyHeader: string;
   subscriptionHeader: string;
+  pageBlockId?: string;
+  solutions: { name: string; href: string; subSolutions?: { name: string; href: string }[] }[];
 }
 
-const Footer: Block<NavigationItem> = ({ solutionsHeader, supportHeader, companyHeader, subscriptionHeader }) => {
+const Footer: Block<NavigationItem> = ({
+  solutionsHeader,
+  supportHeader,
+  companyHeader,
+  subscriptionHeader,
+  pageBlockId = '',
+  solutions,
+}) => {
   return (
     <footer aria-labelledby="footer-heading" className="visio-cms-bg-gray-900">
       <h2 id="footer-heading" className="visio-cms-sr-only">
@@ -111,23 +122,76 @@ const Footer: Block<NavigationItem> = ({ solutionsHeader, supportHeader, company
               <div>
                 <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
                   <Text
+                    pageBlockId={pageBlockId}
                     allowedControls={['bold', 'italic', 'text-color']}
                     defaultValue={solutionsHeader}
                     propName="solutionsHeader"
                   />
                 </h3>
-                <ul role="list" className="visio-cms-mt-6 visio-cms-space-y-4">
-                  {navigation.solutions.map((item) => (
-                    <li key={item.name}>
+                <Repeater
+                  component={'ul'}
+                  defaultValue={solutions}
+                  pageBlockId={pageBlockId}
+                  propName="solutions"
+                  className="visio-cms-mt-6 visio-cms-space-y-4"
+                  renderBlock={(index, { name, href, subSolutions }, pathName) => (
+                    <RepeaterItem
+                      propName={`${pathName}`}
+                      component="li"
+                      key={`${pathName}-${index}`}
+                      subRepeatersSchema={[
+                        {
+                          name: 'subSolutions',
+                          schema: {
+                            name: 'Sub Solutions',
+                            href: '/sub-solutions',
+                          },
+                        },
+                        {
+                          name: 'subWorkers',
+                          schema: {
+                            name: 'Sub Workers',
+                            href: '/sub-workers',
+                          },
+                        },
+                        {
+                          name: 'anti_toxic',
+                          schema: {
+                            name: 'Anti Toxic',
+                            href: '/ant-toxic',
+                          },
+                        },
+                      ]}
+                    >
                       <a
-                        href={item.href}
+                        href={href}
                         className="visio-cms-text-sm visio-cms-leading-6 visio-cms-text-gray-300 hover:visio-cms-text-white"
                       >
-                        {item.name}
+                        <Text pageBlockId={pageBlockId} defaultValue={name} propName={`${pathName}.name`} />
                       </a>
-                    </li>
-                  ))}
-                </ul>
+
+                      {subSolutions && (
+                        <Repeater
+                          component={'ul'}
+                          defaultValue={subSolutions}
+                          pageBlockId={pageBlockId}
+                          propName={`${pathName}.subSolutions`}
+                          className="visio-cms-mt-6 visio-cms-space-y-4"
+                          renderBlock={(subIndex, { name, href }, pathName) => (
+                            <RepeaterItem propName={pathName} key={`${href}-${subIndex}`} component="li">
+                              <Text
+                                pageBlockId={pageBlockId}
+                                key={`${name}`}
+                                defaultValue={name}
+                                propName={`${pathName}.name`}
+                              />
+                            </RepeaterItem>
+                          )}
+                        />
+                      )}
+                    </RepeaterItem>
+                  )}
+                />
               </div>
               <div className="visio-cms-mt-10 md:visio-cms-mt-0">
                 <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
@@ -135,6 +199,7 @@ const Footer: Block<NavigationItem> = ({ solutionsHeader, supportHeader, company
                     allowedControls={['bold', 'italic', 'text-color']}
                     defaultValue={supportHeader}
                     propName="supportHeader"
+                    pageBlockId={pageBlockId}
                   />
                 </h3>
                 <ul role="list" className="visio-cms-mt-6 visio-cms-space-y-4">
@@ -158,6 +223,7 @@ const Footer: Block<NavigationItem> = ({ solutionsHeader, supportHeader, company
                     allowedControls={['bold', 'italic', 'text-color']}
                     defaultValue={companyHeader}
                     propName="companyHeader"
+                    pageBlockId={pageBlockId}
                   />
                 </h3>
                 <ul role="list" className="visio-cms-mt-6 visio-cms-space-y-4">
@@ -198,6 +264,7 @@ const Footer: Block<NavigationItem> = ({ solutionsHeader, supportHeader, company
                 allowedControls={['bold', 'text-color', 'underline']}
                 defaultValue={subscriptionHeader}
                 propName="subscriptionHeader"
+                pageBlockId={pageBlockId}
               />
             </h3>
             <p className="visio-cms-mt-2 visio-cms-text-sm visio-cms-leading-6 visio-cms-text-gray-300">
@@ -254,6 +321,7 @@ Footer.Schema = {
     supportHeader: 'Support',
     companyHeader: 'Company',
     subscriptionHeader: 'Subscribe to our newsletter',
+    solutions: navigation.solutions,
   },
   group: 'Navigation',
 };

@@ -24,7 +24,7 @@ export default function useTextEditor({
   }, [activePage, globalBlocks, pageBlockId]);
 
   const debouncedOnUpdate = debounce(({ value }: { value: string }) => {
-    sendMessageToParent({ type: 'updateBlockInput', content: JSON.stringify({ path: propName, value }) });
+    sendMessageToParent({ type: 'updateBlockInput', content: JSON.stringify({ propName, value, pageBlockId }) });
   }, 500);
 
   const html = sanitizeHtml(defaultValue || '');

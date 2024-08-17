@@ -6,6 +6,7 @@ import { PageBlock } from '@/lib/states/usePagesState';
 import BlockAction from './block-action';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { usePageContentState } from '@/lib/states/usePageContentState';
+import { useRepeaterState } from '@/lib/states/useRepeaterState';
 
 export default function BlockItem({
   block,
@@ -21,10 +22,12 @@ export default function BlockItem({
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
   const { globalBlocks } = usePageContentState();
   const globalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
+  const { setRepeaterId } = useRepeaterState();
   return (
     <div
       onClick={(e) => {
         e.stopPropagation();
+        setRepeaterId('');
         sendMessageToParent({ type: 'selectBlock', content: pageBlock.id });
       }}
       className={cn('visio-cms-relative')}

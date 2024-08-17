@@ -14,7 +14,11 @@ export default function RichTextEditor({
   propName: string;
   pageBlockId: string;
 }) {
-  const { debouncedOnUpdate, isBlockGlobal } = useTextEditor({ propName, defaultValue, pageBlockId });
+  const { debouncedOnUpdate, isBlockGlobal } = useTextEditor({
+    propName,
+    defaultValue,
+    pageBlockId,
+  });
 
   return (
     <Tiptap
