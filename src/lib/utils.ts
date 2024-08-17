@@ -241,3 +241,7 @@ export function getValueByPath(obj: any, path: Path): any {
     return undefined;
   }, obj);
 }
+
+export function stripHtmlTags(input: string): string {
+  return input.replace(/<\/?[^>]+(>|$)/g, '');
+}

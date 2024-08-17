@@ -1,7 +1,6 @@
 import { Block } from '@/lib/exposed-types';
 import Text from '../exposed-components/text';
-import Repeater from '../exposed-components/repeater';
-import RepeaterItem from '../exposed-components/repeater/repeater-item';
+import { Repeater, RepeaterItem } from '../exposed-components/repeater';
 
 const navigation = {
   solutions: [
@@ -143,7 +142,7 @@ const Footer: Block<NavigationItem> = ({
                     <RepeaterItem
                       propName={`${pathName}`}
                       component="li"
-                      key={`${itemKey}`}
+                      key={`${itemKey}-${name}`}
                       subRepeatersSchema={[
                         {
                           name: 'subSolutions',
@@ -184,7 +183,8 @@ const Footer: Block<NavigationItem> = ({
                           className="visio-cms-mt-6 visio-cms-space-y-4"
                           renderBlock={(subIndex, { name, itemKey }, pathName) => (
                             <RepeaterItem propName={pathName} key={`${itemKey}`} component="li">
-                              <Text pageBlockId={pageBlockId} defaultValue={name} propName={`${pathName}.name`} />
+                              {/* <Text pageBlockId={pageBlockId} defaultValue={name} propName={`${pathName}.name`} /> */}
+                              <p>{name}</p>
                             </RepeaterItem>
                           )}
                         />

@@ -15,6 +15,7 @@ import { EditorControlTypes } from '@/lib/types';
 import { useEffect } from 'react';
 import TextAlign from '@tiptap/extension-text-align';
 import { usePageContentState } from '@/lib/states/usePageContentState';
+import { stripHtmlTags } from '@/lib/utils';
 
 type Levels = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -110,12 +111,13 @@ const Tiptap = ({
     editable: isEditable,
     content: defaultValue,
     onUpdate: ({ editor }) => {
+      if (stripHtmlTags(defaultValue || '') == stripHtmlTags(editor.getHTML())) return;
       onChange(editor?.getHTML());
     },
   });
 
   useEffect(() => {
-    if (editor) {
+    if (activePage && editor) {
       editor.commands.setContent(defaultValue || '');
     }
   }, [activePage, editor]);

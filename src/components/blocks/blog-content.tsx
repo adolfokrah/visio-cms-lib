@@ -3,13 +3,14 @@ import RichTextEditor from '../exposed-components/rich-text-editor';
 
 interface BlogContentProps {
   content: string;
+  pageBlockId?: string;
 }
 
-const BlogContent: Block<BlogContentProps> = ({ content }: { content: string }) => {
+const BlogContent: Block<BlogContentProps> = ({ content, pageBlockId = '' }) => {
   return (
     <div className="visio-cms-py-2">
       <div className="visio-cms-mx-auto visio-cms-w-[80%]">
-        <RichTextEditor propName="content" defaultValue={content} />
+        <RichTextEditor propName="content" defaultValue={content} pageBlockId={pageBlockId} />
       </div>
     </div>
   );

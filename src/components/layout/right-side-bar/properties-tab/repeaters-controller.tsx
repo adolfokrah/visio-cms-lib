@@ -20,9 +20,12 @@ export default function RepeatersController() {
 
   if (!selectedRepeaterItem || !foundBlock) return null;
   const repeaterItemPath = selectedRepeaterItem?.repeaterItemId.split('.');
-  const repeaterItemIndex = Number(repeaterItemPath[repeaterItemPath.length - 1]);
+  const repeaterItemIndex = Number(repeaterItemPath[repeaterItemPath?.length - 1]);
+
   repeaterItemPath.pop();
   const repeaterItemParentValue: Record<string, any>[] = getValueByPath(foundBlock.inputs, repeaterItemPath);
+
+  if (isNaN(repeaterItemParentValue?.length)) return null;
 
   const moveRepeaterItem = (direction: 'up' | 'down') => {
     let index = repeaterItemIndex;
@@ -71,7 +74,9 @@ export default function RepeatersController() {
       ),
     };
     setPages(pages.map((p) => (p.active ? page : p)));
-    addBlocksToPageHistory(page.activeLanguageLocale, [...JSON.parse(JSON.stringify(blocks))]);
+    addBlocksToPageHistory(page.activeLanguageLocale, [
+      ...JSON.parse(JSON.stringify(page.blocks?.[page.activeLanguageLocale])),
+    ]);
   };
   return (
     <>
@@ -86,7 +91,7 @@ export default function RepeatersController() {
             <Button
               variant={'ghost'}
               onClick={() => moveRepeaterItem('down')}
-              disabled={repeaterItemIndex == repeaterItemParentValue.length - 1}
+              disabled={repeaterItemIndex == repeaterItemParentValue?.length - 1}
             >
               Move
               <ArrowDown size={16} className="visio-cms-ml-2" />

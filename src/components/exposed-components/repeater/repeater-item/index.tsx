@@ -12,7 +12,7 @@ export default function RepeaterItem({
   propName: string;
   subRepeatersSchema?: Omit<RepeaterSchema, 'propName'>[];
 }) {
-  const Tag = component || 'div';
+  const Tag = component;
 
   return (
     <Tag
