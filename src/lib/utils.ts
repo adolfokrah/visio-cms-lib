@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { BlockList, Folder, GroupedBlock, Message, OsTypes, PageTreeItem } from './types';
+import { BlockList, Folder, GroupedBlock, Message, OsTypes, PageTreeItem, SideEditingProps } from './types';
 import { Page } from './states/usePagesState';
 import * as jose from 'jose';
 import { JSON_WEB_SECRET, PAGES } from './constants';
@@ -283,4 +283,24 @@ export function updateColorById(
 
   // Return a new array with updated elements
   return data.map((item) => traverseAndUpdate(item));
+}
+
+export function groupSideEditingProps(items: SideEditingProps[]): { group: string; items: SideEditingProps[] }[] {
+  const groupedItems: { [key: string]: SideEditingProps[] } = items.reduce(
+    (acc, item) => {
+      const group = item.group || 'default';
+      if (!acc[group]) {
+        acc[group] = [];
+      }
+      acc[group].push(item);
+      return acc;
+    },
+    {} as { [key: string]: SideEditingProps[] },
+  );
+
+  // Convert the grouped object into an array
+  return Object.keys(groupedItems).map((group) => ({
+    group,
+    items: groupedItems[group],
+  }));
 }

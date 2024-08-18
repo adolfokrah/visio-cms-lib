@@ -18,7 +18,7 @@ export default function RepeaterItem({
   pageBlockId?: string;
   className?: string;
   subRepeatersSchema?: Omit<RepeaterSchema, 'propName'>[];
-  sideEditingProps?: SideEditingProps[];
+  sideEditingProps?: Omit<SideEditingProps, 'group'>[];
 } & React.HTMLAttributes<HTMLLIElement>) {
   const { pages, globalBlocks } = usePageContentState();
   const activePage = pages.find((page) => page.active);

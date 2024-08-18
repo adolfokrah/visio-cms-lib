@@ -72,6 +72,7 @@ export interface SideEditingProps {
   propName: string;
   label: string;
   type: SideEditingPropsType;
+  group?: string;
 }
 
 export type BlockSchema<T = Record<string, any>> = {

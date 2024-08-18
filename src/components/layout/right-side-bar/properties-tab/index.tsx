@@ -1,6 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { convertToTitleCase, getValueByPath } from '@/lib/utils';
+import { convertToTitleCase, getValueByPath, groupSideEditingProps } from '@/lib/utils';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import useRepeaterController from '@/lib/hooks/useRepeaterController';
@@ -37,6 +37,8 @@ export default function PropertiesTab() {
     repeaterItemParentValue && selectedRepeaterItem
       ? selectedRepeaterItem?.sideEditingProps || []
       : blocks.find((block) => block.Schema.id === foundBlock?.blockId)?.Schema.sideEditingProps || [];
+
+  const groupedSideEditingProps = !selectedRepeaterItem ? groupSideEditingProps(sideEditingProp) : [];
 
   return (
     <div>
@@ -128,7 +130,26 @@ export default function PropertiesTab() {
                   </AccordionContent>
                 </AccordionItem>
               ) : (
-                <Controllers sideEditingProp={sideEditingProp} />
+                <>
+                  {groupedSideEditingProps
+                    .filter((group) => group.group != 'default')
+                    .map((group) => (
+                      <AccordionItem key={group.group} value={group.group}>
+                        <AccordionTrigger>{group.group}</AccordionTrigger>
+                        <AccordionContent>
+                          <Controllers sideEditingProp={group.items} />
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+
+                  <>
+                    {groupedSideEditingProps
+                      .filter((group) => group.group == 'default')
+                      .map((group) => (
+                        <Controllers key={group.group} sideEditingProp={group.items} />
+                      ))}
+                  </>
+                </>
               )}
             </>
           )}

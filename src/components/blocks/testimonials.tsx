@@ -9,9 +9,11 @@ const stats = [
 
 type TestimonialProps = {
   backgroundColor: Color;
+  title: string;
+  subTitle: string;
 };
 
-const Testimonial: Block<TestimonialProps> = ({ backgroundColor }) => {
+const Testimonial: Block<TestimonialProps> = ({ backgroundColor, title, subTitle }) => {
   return (
     <div
       className="visio-cms-bg-gray-900 visio-cms-py-24 sm:visio-cms-py-32"
@@ -21,11 +23,9 @@ const Testimonial: Block<TestimonialProps> = ({ backgroundColor }) => {
         <div className="visio-cms-mx-auto visio-cms-max-w-2xl lg:visio-cms-max-w-none">
           <div className="visio-cms-text-center">
             <h2 className="visio-cms-text-3xl visio-cms-font-bold visio-cms-tracking-tight visio-cms-text-white sm:visio-cms-text-4xl">
-              Trusted by creators worldwide
+              {title}
             </h2>
-            <p className="visio-cms-mt-4 visio-cms-text-lg visio-cms-leading-8 visio-cms-text-gray-300">
-              Lorem ipsum dolor sit amet consect adipisicing possimus.
-            </p>
+            <p className="visio-cms-mt-4 visio-cms-text-lg visio-cms-leading-8 visio-cms-text-gray-300">{subTitle}</p>
           </div>
           <dl className="visio-cms-mt-16 visio-cms-grid visio-cms-grid-cols-1 visio-cms-gap-0.5 visio-cms-overflow-hidden visio-cms-rounded-2xl visio-cms-text-center sm:visio-cms-grid-cols-2 lg:visio-cms-grid-cols-4">
             {stats.map((stat) => (
@@ -54,9 +54,23 @@ Testimonial.Schema = {
       label: 'Background Color',
       type: 'color',
     },
+    {
+      propName: 'title',
+      label: 'Title',
+      type: 'text',
+      group: 'Content',
+    },
+    {
+      propName: 'subTitle',
+      label: 'Sub Title',
+      type: 'text',
+      group: 'Content',
+    },
   ],
   defaultPropValues: {
     backgroundColor: { colorHex: '#1F2937', colorName: 'Gray', id: 'gray' },
+    title: 'Trusted by creators worldwide',
+    subTitle: 'Lorem ipsum dolor sit amet consect adipisicing possimus.',
   },
   group: 'Testimonials',
 };

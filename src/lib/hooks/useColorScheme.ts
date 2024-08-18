@@ -23,7 +23,10 @@ export default function useColorScheme() {
   const addNewColor = () => {
     setTheme({
       theme: {
-        colorScheme: [{ colorHex: '#ffffff', colorName: '', id: uuidv4() }, ...colorScheme],
+        colorScheme: [
+          { colorHex: '#ffffff', colorName: '', id: `${uuidv4()}__${btoa('visio_cms_color')}` },
+          ...colorScheme,
+        ],
       },
     });
   };
