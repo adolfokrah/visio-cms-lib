@@ -1,5 +1,6 @@
 import { usePageContentState } from '@/lib/states/usePageContentState';
 import { RepeaterSchema } from '@/lib/states/useRepeaterState';
+import { SideEditingProps } from '@/lib/types';
 import { cn, sendMessageToParent } from '@/lib/utils';
 import React from 'react';
 
@@ -9,6 +10,7 @@ export default function RepeaterItem({
   subRepeatersSchema,
   pageBlockId,
   className,
+  sideEditingProps,
   ...props
 }: {
   children: React.ReactNode;
@@ -16,7 +18,8 @@ export default function RepeaterItem({
   pageBlockId?: string;
   className?: string;
   subRepeatersSchema?: Omit<RepeaterSchema, 'propName'>[];
-}) {
+  sideEditingProps?: SideEditingProps[];
+} & React.HTMLAttributes<HTMLLIElement>) {
   const { pages, globalBlocks } = usePageContentState();
   const activePage = pages.find((page) => page.active);
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
@@ -38,6 +41,7 @@ export default function RepeaterItem({
                 propName: `${propName}.${schema.name}`,
                 pageBlockId,
               })) || [],
+            sideEditingProps,
           }),
         });
       }}

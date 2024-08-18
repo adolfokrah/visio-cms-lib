@@ -1,4 +1,4 @@
-import { Block, MediaFile } from '@/lib/exposed-types';
+import { Block, Color, MediaFile } from '@/lib/exposed-types';
 import { Repeater, RepeaterItem } from '../exposed-components/repeater';
 import Text from '../exposed-components/text';
 import { cn, isBuilderMode } from '@/lib/utils';
@@ -25,6 +25,7 @@ type NavbarProps = {
   sideButtons: {
     title: string;
     url: string;
+    color: Color;
   }[];
 };
 
@@ -121,8 +122,27 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
             <RepeaterItem
               key={button.title}
               className="visio-cms-px-3.5 visio-cms-py-1.5 hover:visio-cms-bg-indigo-500 visio-cms-cursor-pointer visio-cms-bg-indigo-400 visio-cms-rounded-md visio-cms-text-white"
+              style={{ backgroundColor: button.color.colorHex }}
+              sideEditingProps={[
+                {
+                  propName: `sideButtons.${index}.title`,
+                  label: 'Title',
+                  type: 'text',
+                },
+                {
+                  propName: `sideButtons.${index}.url`,
+                  label: 'URL',
+                  type: 'text',
+                },
+                {
+                  propName: `sideButtons.${index}.color`,
+                  label: 'Color',
+                  type: 'color',
+                },
+              ]}
             >
-              <Text pageBlockId={pageBlockId} defaultValue={button.title} propName={`sideButtons.${index}.title`} />
+              {/* <Text pageBlockId={pageBlockId} defaultValue={button.title} propName={`sideButtons.${index}.title`} /> */}
+              {button.title}
             </RepeaterItem>
           ))}
       </Repeater>
@@ -139,8 +159,8 @@ Navbar.Schema = {
     logo: {
       mediaHash: 'https://placehold.co/70x70',
       altText: 'Hero Image',
-      width: 400,
-      height: 678,
+      width: 70,
+      height: 70,
     },
     links: [
       { title: 'Home', url: '/', itemKey: 'home' },
@@ -163,6 +183,7 @@ Navbar.Schema = {
       schema: {
         title: 'Login',
         url: '/',
+        color: { colorHex: '#000000' },
       },
       itemCount: 2,
     },

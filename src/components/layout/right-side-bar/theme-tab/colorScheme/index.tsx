@@ -28,14 +28,24 @@ export default function ColorScheme() {
         </Button>
       </div>
 
-      {colorScheme.map(({ colorName, colorHex }, index) => (
-        <ColorName key={`${colorName}-${index}`} colorName={colorName} colorHex={colorHex} index={index} />
+      {colorScheme.map(({ colorName, colorHex, id }, index) => (
+        <ColorName key={`${colorName}-${index}`} colorName={colorName} colorHex={colorHex} index={index} id={id} />
       ))}
     </div>
   );
 }
 
-function ColorName({ colorName, colorHex, index }: { colorName: string; colorHex: string; index: number }) {
+function ColorName({
+  colorName,
+  colorHex,
+  index,
+  id,
+}: {
+  colorName: string;
+  colorHex: string;
+  index: number;
+  id: string;
+}) {
   const { isEditing, setIsEditing, updateColor, deleteColor } = useColorScheme();
 
   return (
@@ -63,13 +73,13 @@ function ColorName({ colorName, colorHex, index }: { colorName: string; colorHex
             <PopoverContent className="visio-cms-w-auto visio-cms-p-0" side="left" align="start" sideOffset={20}>
               <HexColorPicker
                 color={colorHex}
-                onChange={(newColor) => updateColor(newColor, colorName || colorHex, index)}
+                onChange={(newColor) => updateColor(newColor, colorName || colorHex, index, id)}
               />
               <Input
                 key={colorHex}
                 defaultValue={colorHex}
                 className="visio-cms-mt-2"
-                onBlur={(e) => updateColor(e.target.value, colorName || colorHex, index)}
+                onBlur={(e) => updateColor(e.target.value, colorName || colorHex, index, id)}
               />
             </PopoverContent>
           </Popover>
@@ -84,7 +94,7 @@ function ColorName({ colorName, colorHex, index }: { colorName: string; colorHex
                 defaultValue={colorName}
                 autoFocus
                 className="visio-cms-border-none visio-cms-outline-none visio-cms-bg-transparent"
-                onBlur={(e) => updateColor(colorHex, e.target.value || colorHex, index)}
+                onBlur={(e) => updateColor(colorHex, e.target.value || colorHex, index, id)}
               />
             )}
           </div>

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { SideEditingProps } from '../types';
 
 export type RepeaterSchema = {
   propName: string;
@@ -11,10 +12,17 @@ type State = {
   repeaterId: string;
   setRepeaterId: (value: string) => void;
   selectedRepeaterItem: {
+    sideEditingProps?: SideEditingProps[];
     repeaterItemId: string;
     subRepeatersSchemas: RepeaterSchema[];
   } | null;
-  setSelectedRepeaterItem: (value: { repeaterItemId: string; subRepeatersSchemas: RepeaterSchema[] } | null) => void;
+  setSelectedRepeaterItem: (
+    value: {
+      repeaterItemId: string;
+      subRepeatersSchemas: RepeaterSchema[];
+      sideEditingProps: SideEditingProps[];
+    } | null,
+  ) => void;
 };
 
 export const useRepeaterState = create<State>((set) => ({

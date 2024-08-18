@@ -21,6 +21,11 @@ export default function useImage({ defaultValue, pageBlockId }: { defaultValue: 
   }, [activePage, globalBlocks, pageBlockId]);
 
   useEffect(() => {
+    console.log(defaultValue?.mediaHash);
+    if (defaultValue?.mediaHash?.includes('http') || defaultValue?.mediaHash?.includes('https')) {
+      return;
+    }
+
     const getImagePublicUrl = async (mediaHash: string, width: number, height: number) => {
       const publicUrl = db.storage.from(bucketName).getPublicUrl(mediaHash, {
         transform: {

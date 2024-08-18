@@ -5,6 +5,8 @@ import { ArrowDown, ArrowUp } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import useRepeaterController from '@/lib/hooks/useRepeaterController';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
+import { Label } from '@/components/ui/label';
+import RenderController from './controllers';
 
 export default function RepeatersController() {
   const {
@@ -61,43 +63,59 @@ export default function RepeatersController() {
       </>
 
       {repeaterItems && repeaterItems.length > 0 && (
-        <AccordionItem value={'repeater-add-items'}>
-          <AccordionTrigger>Add items</AccordionTrigger>
-          <AccordionContent>
-            <div>
-              {repeaterItems.map((schema, index) => {
-                const path = schema.propName.split('.');
-                const value = getValueByPath(foundBlock.inputs, path);
-                const itemCount = schema?.itemCount || 400;
+        <>
+          <AccordionItem value={'repeater-add-items'}>
+            <AccordionTrigger>Add items</AccordionTrigger>
+            <AccordionContent>
+              <div>
+                {repeaterItems.map((schema, index) => {
+                  const path = schema.propName.split('.');
+                  const value = getValueByPath(foundBlock.inputs, path);
+                  const itemCount = schema?.itemCount || 400;
 
-                return (
-                  <Button
-                    key={`${schema.propName}-${index}`}
-                    variant={'outline'}
-                    className="visio-cms-mt-2 visio-cms-w-full"
-                    disabled={value && value.length >= itemCount}
-                    onClick={() => {
-                      if (page) {
-                        if (foundBlock) {
-                          const path = schema.propName.split('.');
+                  return (
+                    <Button
+                      key={`${schema.propName}-${index}`}
+                      variant={'outline'}
+                      className="visio-cms-mt-2 visio-cms-w-full"
+                      disabled={value && value.length >= itemCount}
+                      onClick={() => {
+                        if (page) {
+                          if (foundBlock) {
+                            const path = schema.propName.split('.');
 
-                          const value = getValueByPath(foundBlock.inputs, path);
+                            const value = getValueByPath(foundBlock.inputs, path);
 
-                          updateBlockValue(
-                            path,
-                            value
-                              ? [...value, { ...schema.schema, itemKey: uuidv4() }]
-                              : [{ ...schema.schema, itemKey: uuidv4() }],
-                          );
+                            updateBlockValue(
+                              path,
+                              value
+                                ? [...value, { ...schema.schema, itemKey: uuidv4() }]
+                                : [{ ...schema.schema, itemKey: uuidv4() }],
+                            );
+                          }
                         }
-                      }
-                    }}
-                  >
-                    Add {convertToTitleCase(schema.name)}
-                  </Button>
-                );
-              })}
-            </div>
+                      }}
+                    >
+                      Add {convertToTitleCase(schema.name)}
+                    </Button>
+                  );
+                })}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </>
+      )}
+
+      {selectedRepeaterItem?.sideEditingProps && selectedRepeaterItem?.sideEditingProps.length > 0 && (
+        <AccordionItem value={'repeater-side-editing'}>
+          <AccordionTrigger>Editing props</AccordionTrigger>
+          <AccordionContent>
+            {selectedRepeaterItem?.sideEditingProps.map((sideEditingProp, index) => (
+              <div key={`${sideEditingProp.propName}.${index}`} className="visio-cms-mt-3 visio-cms-space-y-2">
+                <Label>{sideEditingProp.label}</Label>
+                <RenderController type={sideEditingProp.type} propName={sideEditingProp.propName} />
+              </div>
+            ))}
           </AccordionContent>
         </AccordionItem>
       )}

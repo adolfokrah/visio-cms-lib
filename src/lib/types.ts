@@ -7,6 +7,12 @@ export type Language = {
   locale: string;
 };
 
+export type Color = {
+  colorHex: string;
+  colorName: string;
+  id: string;
+};
+
 export type ProjectConfiguration = {
   emailSender: string;
   supabaseProjectUrl: string;
@@ -16,10 +22,7 @@ export type ProjectConfiguration = {
   projectId: string;
   bucketName: string;
   theme: {
-    colorScheme: {
-      colorHex: string;
-      colorName: string;
-    }[];
+    colorScheme: Color[];
   };
   blocks: BlockList[];
   globalBlocks: {
@@ -61,7 +64,7 @@ export interface InvitedUser {
   photo: string | null; // URL to the user's photo, or null if not available
 }
 
-export type SideEditingPropsType = 'text' | 'select';
+export type SideEditingPropsType = 'text' | 'select' | 'color' | 'media' | 'number' | 'boolean';
 
 export interface SideEditingProps {
   propName: string;

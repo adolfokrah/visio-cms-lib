@@ -1,6 +1,6 @@
 import { HexColorPicker } from 'react-colorful';
 import { Input } from './input';
-import { ProjectConfiguration } from '@/lib/types';
+import { Color, ProjectConfiguration } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -9,21 +9,26 @@ export default function ColorChooser({
   onChange,
 }: {
   colorHex?: string;
-  onChange: (color: string) => void;
+  onChange: (color: string | Color) => void;
 }) {
   const [colors, setColors] = useState<Pick<ProjectConfiguration, 'theme'>['theme']['colorScheme']>([]);
 
   useEffect(() => {
+    const getColors = () => {
+      const projectConfiguration = JSON.parse(sessionStorage.getItem('project-configuration-storage') || '{}');
+
+      if (projectConfiguration.state.theme.colorScheme) {
+        setColors(projectConfiguration.state.theme.colorScheme);
+      }
+    };
     const handleStorageChange = (event: StorageEvent) => {
       // Check if the change is in sessionStorage
       if (event.storageArea === sessionStorage) {
-        const projectConfiguration = JSON.parse(sessionStorage.getItem('project-configuration-storage') || '{}');
-
-        if (projectConfiguration.state.theme.colorScheme) {
-          setColors(projectConfiguration.state.theme.colorScheme);
-        }
+        getColors();
       }
     };
+
+    getColors();
 
     window.addEventListener('storage', handleStorageChange);
 
@@ -43,16 +48,16 @@ export default function ColorChooser({
       />
 
       <div className="visio-cms-flex visio-cms-gap-2 visio-cms-flex-wrap visio-cms-my-2 visio-cms-max-h-[200px] visio-cms-overflow-y-auto scrollbar-custom">
-        {colors.map(({ colorHex, colorName }) => (
-          <Tooltip key={colorName}>
+        {colors.map((color) => (
+          <Tooltip key={color.colorName}>
             <TooltipTrigger asChild>
               <div
-                style={{ backgroundColor: colorHex }}
+                style={{ backgroundColor: color.colorHex }}
                 className="visio-cms-w-6 visio-cms-h-6 visio-cms-rounded-full visio-cms-cursor-pointer"
-                onClick={() => onChange(colorHex)}
+                onClick={() => onChange(color)}
               />
             </TooltipTrigger>
-            <TooltipContent>{colorName}</TooltipContent>
+            <TooltipContent>{color.colorName}</TooltipContent>
           </Tooltip>
         ))}
       </div>

@@ -249,3 +249,38 @@ export function stripHtmlTags(input: string): string {
 export const isBuilderMode = () => {
   return window.location.pathname.includes(PAGES.PAGE_CONTENT);
 };
+
+export function updateColorById(
+  data: { [key: string]: any }[],
+  targetId: string,
+  newColorHex: string,
+  newColorName: string,
+): { [key: string]: any }[] {
+  // Recursive helper function to traverse and update the color
+  function traverseAndUpdate(obj: any): any {
+    // Create a shallow copy of the object to avoid mutation
+    const newObj = { ...obj };
+
+    // Check if the current object has an 'id' field that matches the targetId
+    if (newObj.id === targetId) {
+      newObj.colorHex = newColorHex;
+      newObj.colorName = newColorName;
+    }
+
+    // Iterate over all keys in the current object
+    for (const key in newObj) {
+      if (Object.prototype.hasOwnProperty.call(newObj, key)) {
+        const value = newObj[key];
+        // If the value is an object or array, recurse and update it
+        if (typeof value === 'object' && value !== null) {
+          newObj[key] = Array.isArray(value) ? value.map(traverseAndUpdate) : traverseAndUpdate(value);
+        }
+      }
+    }
+
+    return newObj;
+  }
+
+  // Return a new array with updated elements
+  return data.map((item) => traverseAndUpdate(item));
+}

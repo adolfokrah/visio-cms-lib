@@ -5,7 +5,7 @@ import useBlockHistory from '@/lib/hooks/useBlockHistory';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 
 export default function useRepeaterController() {
-  const { selectedRepeaterItem } = useRepeaterState();
+  const { selectedRepeaterItem, setSelectedRepeaterItem } = useRepeaterState();
   const { pages, setPages } = usePagesState();
   const { globalBlocks } = useProjectConfigurationState();
   const { addBlocksToPageHistory } = useBlockHistory();
@@ -39,14 +39,17 @@ export default function useRepeaterController() {
       index = repeaterItemIndex + 1;
     }
 
-    console.log(repeaterItemParentValue);
-
-    sendMessageToParent({
-      type: 'setSelectedRepeaterItemSchema',
-      content: JSON.stringify({
-        repeaterItemId: `${repeaterItemPath.join('.')}.${index}`,
-        subRepeatersSchemas: selectedRepeaterItem?.subRepeatersSchemas,
-      }),
+    setSelectedRepeaterItem({
+      repeaterItemId: `${repeaterItemPath.join('.')}.${index}`,
+      subRepeatersSchemas: selectedRepeaterItem?.subRepeatersSchemas || [],
+      sideEditingProps:
+        selectedRepeaterItem?.sideEditingProps?.map((prop) => {
+          const newPropName = `${repeaterItemPath.join('.')}.${index}.${prop.propName.split('.')[prop.propName.split('.').length - 1]}`;
+          return {
+            ...prop,
+            propName: `${newPropName}`,
+          };
+        }) || [],
     });
 
     updateBlockValue(repeaterItemPath, repeaterItemParentValue);
