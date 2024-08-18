@@ -41,6 +41,7 @@ export default function TextColorPopOver({
       </PopoverTrigger>
       <PopoverContent className="visio-cms-space-y-2 visio-cms-w-max">
         <ColorChooser
+          isFromTiptap
           colorHex={color}
           onChange={(color) => {
             setColor(() => color);

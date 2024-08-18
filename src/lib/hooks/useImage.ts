@@ -21,7 +21,6 @@ export default function useImage({ defaultValue, pageBlockId }: { defaultValue: 
   }, [activePage, globalBlocks, pageBlockId]);
 
   useEffect(() => {
-    console.log(defaultValue?.mediaHash);
     if (defaultValue?.mediaHash?.includes('http') || defaultValue?.mediaHash?.includes('https')) {
       return;
     }

@@ -13,6 +13,13 @@ export type Color = {
   id: string;
 };
 
+export type GlobalBlock = {
+  name: string;
+  id: string;
+  blockId: string;
+  inputs: { [key: string]: any };
+};
+
 export type ProjectConfiguration = {
   emailSender: string;
   supabaseProjectUrl: string;
@@ -25,12 +32,7 @@ export type ProjectConfiguration = {
     colorScheme: Color[];
   };
   blocks: BlockList[];
-  globalBlocks: {
-    name: string;
-    id: string;
-    blockId: string;
-    inputs: { [key: string]: any };
-  }[];
+  globalBlocks: GlobalBlock[];
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 

@@ -57,6 +57,7 @@ export default function useCanvas() {
 
     const selectBlock = (blockId: string) => {
       setSelectedRepeaterItem(null);
+
       const page = activePage;
       if (page) {
         const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];

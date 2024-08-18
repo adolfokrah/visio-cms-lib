@@ -22,16 +22,15 @@ export default function Repeater({ pageBlockId, propName, className, children, .
     <ul
       {...props}
       id={propName}
-      onClick={(e) => {
+      onClick={() => {
         if (globalBlock) {
           return null;
         }
-        e.stopPropagation();
         setRepeaterId(propName);
       }}
       className={cn(className, {
         'visio-cms-outline-blue-400 visio-cms-outline visio-cms-outline-2 -visio-cms-outline-offset-2 visio-cms-w-max':
-          repeaterId === propName,
+          repeaterId === propName && pageBlockId === pageBlocks.find((block) => block.isSelected)?.id,
       })}
     >
       {React.Children.map(children, (child, index) => (

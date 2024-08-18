@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
-import { Color } from '../types';
+import { Color, GlobalBlock } from '../types';
 import { updateColorById } from '../utils';
 import { PageBlock, usePagesState } from '../states/usePagesState';
 import lodash from 'lodash';
 export default function useColorScheme() {
-  const { theme, setTheme } = useProjectConfigurationState();
+  const { theme, setTheme, globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
   const { pages, setPages } = usePagesState();
   const [isEditing, setIsEditing] = useState(false);
   const { colorScheme } = theme;
@@ -55,7 +55,10 @@ export default function useColorScheme() {
         });
       }
 
+      const newGlobalblocks = updateColorById(globalBlocks, color.id, color.colorHex, color.colorName) as GlobalBlock[];
+
       setPages(pages.map((p) => (p.active ? page : p)));
+      setGlobalBlocks(newGlobalblocks);
     }
   };
 

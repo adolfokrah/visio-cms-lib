@@ -1,4 +1,4 @@
-import { Block } from '@/lib/exposed-types';
+import { Block, Color } from '@/lib/exposed-types';
 
 const stats = [
   { id: 1, name: 'Creators on the platform', value: '8,000+' },
@@ -7,9 +7,16 @@ const stats = [
   { id: 4, name: 'Paid out to creators', value: '$70M' },
 ];
 
-const Testimonial: Block = () => {
+type TestimonialProps = {
+  backgroundColor: Color;
+};
+
+const Testimonial: Block<TestimonialProps> = ({ backgroundColor }) => {
   return (
-    <div className="visio-cms-bg-gray-900 visio-cms-py-24 sm:visio-cms-py-32">
+    <div
+      className="visio-cms-bg-gray-900 visio-cms-py-24 sm:visio-cms-py-32"
+      style={{ backgroundColor: backgroundColor?.colorHex }}
+    >
       <div className="visio-cms-mx-auto visio-cms-max-w-7xl visio-cms-px-6 lg:visio-cms-px-8">
         <div className="visio-cms-mx-auto visio-cms-max-w-2xl lg:visio-cms-max-w-none">
           <div className="visio-cms-text-center">
@@ -41,8 +48,16 @@ const Testimonial: Block = () => {
 Testimonial.Schema = {
   name: 'Testimonial Section',
   id: 'testimonial',
-  sideEditingProps: [],
-  defaultPropValues: {},
+  sideEditingProps: [
+    {
+      propName: 'backgroundColor',
+      label: 'Background Color',
+      type: 'color',
+    },
+  ],
+  defaultPropValues: {
+    backgroundColor: { colorHex: '#1F2937', colorName: 'Gray', id: 'gray' },
+  },
   group: 'Testimonials',
 };
 

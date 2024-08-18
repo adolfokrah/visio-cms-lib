@@ -7,9 +7,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 export default function ColorChooser({
   colorHex = '#ffffff',
   onChange,
+  isFromTiptap = false,
 }: {
   colorHex?: string;
   onChange: (color: string | Color) => void;
+  isFromTiptap?: boolean;
 }) {
   const [colors, setColors] = useState<Pick<ProjectConfiguration, 'theme'>['theme']['colorScheme']>([]);
 
@@ -47,20 +49,22 @@ export default function ColorChooser({
         onBlur={(e) => onChange(e.target.value)}
       />
 
-      <div className="visio-cms-flex visio-cms-gap-2 visio-cms-flex-wrap visio-cms-my-2 visio-cms-max-h-[200px] visio-cms-overflow-y-auto scrollbar-custom">
-        {colors.map((color) => (
-          <Tooltip key={color.colorName}>
-            <TooltipTrigger asChild>
-              <div
-                style={{ backgroundColor: color.colorHex }}
-                className="visio-cms-w-6 visio-cms-h-6 visio-cms-rounded-full visio-cms-cursor-pointer"
-                onClick={() => onChange(color)}
-              />
-            </TooltipTrigger>
-            <TooltipContent>{color.colorName}</TooltipContent>
-          </Tooltip>
-        ))}
-      </div>
+      {!isFromTiptap && (
+        <div className="visio-cms-flex visio-cms-gap-2 visio-cms-flex-wrap visio-cms-my-2 visio-cms-max-h-[200px] visio-cms-overflow-y-auto scrollbar-custom">
+          {colors.map((color) => (
+            <Tooltip key={color.colorName}>
+              <TooltipTrigger asChild>
+                <div
+                  style={{ backgroundColor: color.colorHex }}
+                  className="visio-cms-w-6 visio-cms-h-6 visio-cms-rounded-full visio-cms-cursor-pointer"
+                  onClick={() => onChange(color)}
+                />
+              </TooltipTrigger>
+              <TooltipContent>{color.colorName}</TooltipContent>
+            </Tooltip>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

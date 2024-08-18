@@ -29,7 +29,9 @@ export default function RepeaterItem({
   return (
     <li
       {...props}
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
+
         if (globalBlock) return;
         sendMessageToParent({
           type: 'setSelectedRepeaterItemSchema',
