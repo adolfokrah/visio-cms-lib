@@ -132,65 +132,50 @@ const Footer: Block<NavigationItem> = ({
                     propName="solutionsHeader"
                   />
                 </h3>
-                <Repeater
-                  component={'ul'}
-                  defaultValue={solutions}
-                  pageBlockId={pageBlockId}
-                  propName="solutions"
-                  className="visio-cms-mt-6 visio-cms-space-y-4"
-                  render={(index, { name, href, subSolutions, itemKey }, pathName) => (
+                <Repeater pageBlockId={pageBlockId} propName="solutions" className="visio-cms-mt-6 visio-cms-space-y-4">
+                  {solutions.map((solution, index) => (
                     <RepeaterItem
-                      propName={`${pathName}`}
-                      component="li"
-                      key={`${itemKey}-${name}`}
+                      key={solution.itemKey}
+                      className="visio-cms-text-sm visio-cms-leading-6 visio-cms-text-gray-300 hover:visio-cms-text-white"
                       subRepeatersSchema={[
                         {
                           name: 'subSolutions',
-                          schema: {
-                            name: 'Sub Solutions',
-                            href: '/sub-solutions',
-                          },
-                        },
-                        {
-                          name: 'subWorkers',
-                          schema: {
-                            name: 'Sub Workers',
-                            href: '/sub-workers',
-                          },
-                        },
-                        {
-                          name: 'anti_toxic',
-                          schema: {
-                            name: 'Anti Toxic',
-                            href: '/ant-toxic',
-                          },
+                          schema: { name: 'Sub Solution', href: '/sub-solution' },
+                          itemCount: 10,
                         },
                       ]}
                     >
-                      <a
-                        href={href}
-                        className="visio-cms-text-sm visio-cms-leading-6 visio-cms-text-gray-300 hover:visio-cms-text-white"
-                      >
-                        <Text pageBlockId={pageBlockId} defaultValue={name} propName={`${pathName}.name`} />
+                      <a href={solution.href}>
+                        <Text
+                          pageBlockId={pageBlockId}
+                          propName={`solutions.${index}.name`}
+                          defaultValue={solution.name}
+                        />
                       </a>
 
-                      {subSolutions && (
-                        <Repeater
-                          component={'ul'}
-                          defaultValue={subSolutions}
-                          pageBlockId={pageBlockId}
-                          propName={`${pathName}.subSolutions`}
-                          className="visio-cms-mt-6 visio-cms-space-y-4"
-                          render={(subIndex, { name, itemKey }, pathName) => (
-                            <RepeaterItem propName={pathName} key={`${itemKey}-${name}-${subIndex}`} component="li">
-                              <Text pageBlockId={pageBlockId} defaultValue={name} propName={`${pathName}.name`} />
-                            </RepeaterItem>
-                          )}
-                        />
-                      )}
+                      <Repeater
+                        pageBlockId={pageBlockId}
+                        propName={`solutions.${index}.subSolutions`}
+                        className="visio-cms-mt-2 visio-cms-space-y-2 visio-cms-pl-2"
+                      >
+                        {solution.subSolutions?.map((subSolution, subIndex) => (
+                          <RepeaterItem
+                            key={subSolution.itemKey}
+                            className="visio-cms-text-xs visio-cms-leading-6 visio-cms-text-gray-300 hover:visio-cms-text-white"
+                          >
+                            <a href={subSolution.href}>
+                              <Text
+                                pageBlockId={pageBlockId}
+                                propName={`solutions.${index}.subSolutions.${subIndex}.name`}
+                                defaultValue={subSolution.name}
+                              />
+                            </a>
+                          </RepeaterItem>
+                        ))}
+                      </Repeater>
                     </RepeaterItem>
-                  )}
-                />
+                  ))}
+                </Repeater>
               </div>
               <div className="visio-cms-mt-10 md:visio-cms-mt-0">
                 <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">

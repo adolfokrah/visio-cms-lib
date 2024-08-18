@@ -36,7 +36,7 @@ export default function Image({
           onImageChosen={(media) => {
             sendMessageToParent({
               type: 'updateBlockInput',
-              content: JSON.stringify({ path: propName, value: media, pageBlockId }),
+              content: JSON.stringify({ propName, value: media, pageBlockId }),
             });
             setOpenMediaExplorer(false);
           }}

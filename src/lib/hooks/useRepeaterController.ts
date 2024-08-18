@@ -2,10 +2,12 @@ import { useRepeaterState } from '@/lib/states/useRepeaterState';
 import { getValueByPath, Path, sendMessageToParent, updateValueByPath } from '@/lib/utils';
 import { usePagesState } from '@/lib/states/usePagesState';
 import useBlockHistory from '@/lib/hooks/useBlockHistory';
+import { useProjectConfigurationState } from '../states/useProjectConfigState';
 
 export default function useRepeaterController() {
   const { selectedRepeaterItem } = useRepeaterState();
   const { pages, setPages } = usePagesState();
+  const { globalBlocks } = useProjectConfigurationState();
   const { addBlocksToPageHistory } = useBlockHistory();
   const activePage = pages.find((page) => page.active);
   const page = activePage;
@@ -13,9 +15,10 @@ export default function useRepeaterController() {
   const blocks = page?.blocks?.[page.activeLanguageLocale] ?? [];
   const foundBlock = blocks.find((block) => block.isSelected);
 
+  const globalBlock = globalBlocks.find((block) => block.id === foundBlock?.globalBlockId);
+
   const repeaterItemPath = selectedRepeaterItem?.repeaterItemId.split('.');
   const repeaterItemIndex = Number(repeaterItemPath?.[repeaterItemPath?.length - 1]);
-
   repeaterItemPath?.pop();
   const repeaterItemParentValue: Record<string, any>[] = getValueByPath(foundBlock?.inputs, repeaterItemPath || []);
 
@@ -35,6 +38,8 @@ export default function useRepeaterController() {
       repeaterItemParentValue[repeaterItemIndex + 1] = temp;
       index = repeaterItemIndex + 1;
     }
+
+    console.log(repeaterItemParentValue);
 
     sendMessageToParent({
       type: 'setSelectedRepeaterItemSchema',
@@ -85,5 +90,6 @@ export default function useRepeaterController() {
     selectedRepeaterItem,
     foundBlock,
     updateBlockValue,
+    globalBlock,
   };
 }

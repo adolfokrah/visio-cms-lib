@@ -7,7 +7,9 @@ export default function useImage({ defaultValue, pageBlockId }: { defaultValue: 
   const db = supabase();
   const { bucketName } = useProjectConfigurationState();
   const [openMediaExplorer, setOpenMediaExplorer] = useState(false);
-  const [imagePublicUrl, setImagePublicUrl] = useState<string>('https://placehold.co/600x400');
+  const [imagePublicUrl, setImagePublicUrl] = useState<string>(
+    defaultValue?.mediaHash || 'https://placehold.co/600x400',
+  );
   const { pages, globalBlocks } = usePageContentState();
   const activePage = pages.find((page) => page.active);
 

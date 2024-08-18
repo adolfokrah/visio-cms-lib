@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { BlockList, Folder, GroupedBlock, Message, OsTypes, PageTreeItem } from './types';
 import { Page } from './states/usePagesState';
 import * as jose from 'jose';
-import { JSON_WEB_SECRET } from './constants';
+import { JSON_WEB_SECRET, PAGES } from './constants';
 import { useDbState } from './states/usedbState';
 
 export function cn(...inputs: ClassValue[]) {
@@ -245,3 +245,7 @@ export function getValueByPath(obj: any, path: Path): any {
 export function stripHtmlTags(input: string): string {
   return input.replace(/<\/?[^>]+(>|$)/g, '');
 }
+
+export const isBuilderMode = () => {
+  return window.location.pathname.includes(PAGES.PAGE_CONTENT);
+};

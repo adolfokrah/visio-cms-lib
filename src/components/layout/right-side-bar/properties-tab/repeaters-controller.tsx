@@ -16,10 +16,11 @@ export default function RepeatersController() {
     selectedRepeaterItem,
     foundBlock,
     updateBlockValue,
+    globalBlock,
   } = useRepeaterController();
   const { blocks } = useProjectConfigurationState();
 
-  if (!foundBlock || !page) return null;
+  if (!foundBlock || !page || globalBlock) return null;
 
   const repeaterItems = selectedRepeaterItem?.subRepeatersSchemas.length
     ? selectedRepeaterItem?.subRepeatersSchemas
