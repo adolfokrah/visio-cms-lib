@@ -21,12 +21,11 @@ export default function useColorScheme() {
   }, 300);
 
   const addNewColor = () => {
+    const id = `${uuidv4()}__${btoa(String(colorScheme.length + 1))}`;
+    console.log(id);
     setTheme({
       theme: {
-        colorScheme: [
-          { colorHex: '#ffffff', colorName: '', id: `${uuidv4()}__${btoa('visio_cms_color')}` },
-          ...colorScheme,
-        ],
+        colorScheme: [{ colorHex: '#ffffff', colorName: '', id }, ...colorScheme],
       },
     });
   };

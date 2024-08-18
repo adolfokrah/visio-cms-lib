@@ -13,7 +13,11 @@ export default function ColorController({
 }) {
   const { theme } = useProjectConfigurationState();
   const color = useMemo(
-    () => theme.colorScheme.find((color) => color.id === defaultValue?.id) || defaultValue,
+    () =>
+      theme.colorScheme.find((color) => color.id === defaultValue?.id) || {
+        ...defaultValue,
+        colorName: defaultValue.colorHex,
+      },
     [theme.colorScheme, defaultValue],
   );
   return (
