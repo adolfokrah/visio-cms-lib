@@ -41,6 +41,8 @@ export default function RenderController({ type, propName }: { type: SideEditing
       return <LinkController defaultValue={defaultValue} onChange={debounceChangePropValue} />;
     case 'image':
       return <ImageController defaultValue={defaultValue} onChange={debounceChangePropValue} />;
+    case 'number':
+      return <TextController defaultValue={defaultValue} onChange={debounceChangePropValue} type="number" />;
     default:
       return null;
   }
