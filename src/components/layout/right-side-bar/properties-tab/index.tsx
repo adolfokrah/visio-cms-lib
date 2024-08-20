@@ -8,6 +8,7 @@ import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState
 import { Label } from '@/components/ui/label';
 import RenderController from './controllers';
 import { SideEditingProps } from '@/lib/types';
+import { toast } from 'sonner';
 
 export default function PropertiesTab() {
   const {
@@ -99,6 +100,7 @@ export default function PropertiesTab() {
                                 const path = schema.propName.split('.');
 
                                 const value = getValueByPath(foundBlock.inputs, path);
+                                toast.success('Item added successfully');
 
                                 updateBlockValue(
                                   path,
