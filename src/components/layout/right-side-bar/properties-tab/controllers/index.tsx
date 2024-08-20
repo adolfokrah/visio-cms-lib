@@ -5,6 +5,7 @@ import { usePagesState } from '@/lib/states/usePagesState';
 import lodash from 'lodash';
 import useBlockHistory from '@/lib/hooks/useBlockHistory';
 import ColorController from './color-controller';
+import LinkController from './link-controller';
 
 export default function RenderController({ type, propName }: { type: SideEditingPropsType; propName: string }) {
   const { pages, setPages } = usePagesState();
@@ -35,6 +36,8 @@ export default function RenderController({ type, propName }: { type: SideEditing
       return <TextController defaultValue={defaultValue} onChange={debounceChangePropValue} />;
     case 'color':
       return <ColorController defaultValue={defaultValue} onChange={debounceChangePropValue} />;
+    case 'link':
+      return <LinkController defaultValue={defaultValue} onChange={debounceChangePropValue} />;
     default:
       return null;
   }

@@ -12,7 +12,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import Highlight from '@tiptap/extension-highlight';
 import { PreventNewLine } from './custom-extensions/prevent-new-line';
 import { EditorControlTypes } from '@/lib/types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import TextAlign from '@tiptap/extension-text-align';
 import { usePageContentState } from '@/lib/states/usePageContentState';
 import { stripHtmlTags } from '@/lib/utils';
@@ -106,12 +106,18 @@ const Tiptap = ({
 }) => {
   const { pages } = usePageContentState();
   const activePage = pages.find((page) => page.active)?.id;
+  const [created, setCreated] = useState(true);
+
   const editor = useEditor({
     extensions: [...extensions, PreventNewLine.configure({ allowNewLines })],
     editable: isEditable,
     content: defaultValue,
     onUpdate: ({ editor }) => {
-      if (stripHtmlTags(defaultValue || '') == stripHtmlTags(editor.getHTML())) return;
+      if (stripHtmlTags(defaultValue || '') == stripHtmlTags(editor.getHTML()) && created) {
+        setCreated(false);
+        return;
+      }
+
       onChange(editor?.getHTML());
     },
   });

@@ -66,7 +66,7 @@ export interface InvitedUser {
   photo: string | null; // URL to the user's photo, or null if not available
 }
 
-export type SideEditingPropsType = 'text' | 'select' | 'color' | 'media' | 'number' | 'boolean';
+export type SideEditingPropsType = 'text' | 'select' | 'color' | 'media' | 'number' | 'boolean' | 'link';
 
 export interface SideEditingProps {
   propName: string;

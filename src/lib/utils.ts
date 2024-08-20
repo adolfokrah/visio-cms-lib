@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { BlockList, Folder, GroupedBlock, Message, OsTypes, PageTreeItem, SideEditingProps } from './types';
-import { Page } from './states/usePagesState';
+import { Page, usePagesState } from './states/usePagesState';
 import * as jose from 'jose';
 import { JSON_WEB_SECRET, PAGES } from './constants';
 import { useDbState } from './states/usedbState';
@@ -303,4 +303,10 @@ export function groupSideEditingProps(items: SideEditingProps[]): { group: strin
     group,
     items: groupedItems[group],
   }));
+}
+
+export function getLink(link: string) {
+  const { pages } = usePagesState.getState();
+  const page = pages.find((page) => page.id === link)?.slug || link;
+  return page;
 }
