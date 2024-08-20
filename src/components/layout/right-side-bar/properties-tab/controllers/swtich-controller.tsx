@@ -14,7 +14,7 @@ export default function SwitchController({
 }) {
   return (
     <div className="visio-cms-flex visio-cms-items-center visio-cms-space-x-2">
-      <Switch id="switch" onCheckedChange={onChange} />
+      <Switch checked={defaultValue} id="switch" onCheckedChange={onChange} />
 
       <Label htmlFor="switch">{defaultValue ? onLabel || 'True' : offLabel || 'False'}</Label>
     </div>
