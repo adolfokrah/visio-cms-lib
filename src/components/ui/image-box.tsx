@@ -13,7 +13,10 @@ const ImageBox = (props: { image?: MediaFile; onImageChosen?: (image: MediaFile 
   const [open, setOpen] = useState(false);
   const [mediaHash, setMediaHash] = useState<string | undefined>(image?.mediaHash);
   const db = useMemo(() => supabase(), []);
-  const imagePublicUrl = db.storage.from(bucketName).getPublicUrl(mediaHash || '').data.publicUrl;
+  const imagePublicUrl =
+    image?.mediaHash?.includes('https') || image?.mediaHash?.includes('http')
+      ? image?.mediaHash
+      : db.storage.from(bucketName).getPublicUrl(mediaHash || '').data.publicUrl;
 
   return (
     <>

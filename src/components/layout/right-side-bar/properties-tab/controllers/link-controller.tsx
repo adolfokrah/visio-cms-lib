@@ -38,8 +38,8 @@ export default function LinkController({
           className={cn(
             'visio-cms-flex visio-cms-group visio-cms-bg-dark-900 visio-cms-pl-2 visio-cms-rounded-md visio-cms-mb-3 visio-cms-items-center visio-cms-justify-between hover:visio-cms-bg-dark-700 visio-cms-cursor-pointer',
             {
-              'visio-cms-p-[10px] ': defaultValue.length < 1,
-              'visio-cms-p-1 ': defaultValue.length > 0,
+              'visio-cms-p-[10px] ': defaultValue?.length < 1 || !defaultValue,
+              'visio-cms-p-1 ': defaultValue?.length > 0,
             },
           )}
         >

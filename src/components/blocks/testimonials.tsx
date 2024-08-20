@@ -1,5 +1,5 @@
-import { Block, Color } from '@/lib/exposed-types';
-import { getLink } from '@/lib/utils';
+import { Block, Color, MediaFile } from '@/lib/exposed-types';
+import { getImageUrl, getLink } from '@/lib/utils';
 
 const stats = [
   { id: 1, name: 'Creators on the platform', value: '8,000+' },
@@ -13,13 +13,17 @@ type TestimonialProps = {
   title: string;
   subTitle: string;
   link?: string;
+  backgroundImage: MediaFile;
 };
 
-const Testimonial: Block<TestimonialProps> = ({ backgroundColor, title, subTitle, link }) => {
+const Testimonial: Block<TestimonialProps> = ({ backgroundColor, title, backgroundImage, link }) => {
   return (
     <div
       className="visio-cms-bg-gray-900 visio-cms-py-24 sm:visio-cms-py-32"
-      style={{ backgroundColor: backgroundColor?.colorHex }}
+      style={{
+        backgroundColor: backgroundColor?.colorHex,
+        backgroundImage: `url(${getImageUrl(backgroundImage)})`,
+      }}
     >
       <div className="visio-cms-mx-auto visio-cms-max-w-7xl visio-cms-px-6 lg:visio-cms-px-8">
         <div className="visio-cms-mx-auto visio-cms-max-w-2xl lg:visio-cms-max-w-none">
@@ -28,7 +32,7 @@ const Testimonial: Block<TestimonialProps> = ({ backgroundColor, title, subTitle
               {title}
             </h2>
             <p className="visio-cms-mt-4 visio-cms-text-lg visio-cms-leading-8 visio-cms-text-gray-300">
-              {getLink(link)}
+              {getLink(link || '')}
             </p>
           </div>
           <dl className="visio-cms-mt-16 visio-cms-grid visio-cms-grid-cols-1 visio-cms-gap-0.5 visio-cms-overflow-hidden visio-cms-rounded-2xl visio-cms-text-center sm:visio-cms-grid-cols-2 lg:visio-cms-grid-cols-4">
@@ -76,8 +80,20 @@ Testimonial.Schema = {
       type: 'link',
       group: 'Content',
     },
+    {
+      propName: 'backgroundImage',
+      label: 'Background Image',
+      type: 'image',
+      group: 'Content',
+    },
   ],
   defaultPropValues: {
+    backgroundImage: {
+      mediaHash: 'https://cdn.hometogo.net/assets/media/pics/1920_600/611ba13125591.jpg',
+      altText: '',
+      width: 0,
+      height: 0,
+    },
     backgroundColor: { colorHex: '#1F2937', colorName: 'Gray', id: 'gray' },
     title: 'Trusted by creators worldwide',
     subTitle: 'Lorem ipsum dolor sit amet consect adipisicing possimus.',

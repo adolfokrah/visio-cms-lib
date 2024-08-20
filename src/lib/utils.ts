@@ -1,10 +1,11 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { BlockList, Folder, GroupedBlock, Message, OsTypes, PageTreeItem, SideEditingProps } from './types';
+import { BlockList, Folder, GroupedBlock, MediaFile, Message, OsTypes, PageTreeItem, SideEditingProps } from './types';
 import { Page, usePagesState } from './states/usePagesState';
 import * as jose from 'jose';
 import { JSON_WEB_SECRET, PAGES } from './constants';
 import { useDbState } from './states/usedbState';
+import { useProjectConfigurationState } from './states/useProjectConfigState';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -309,4 +310,14 @@ export function getLink(link: string) {
   const { pages } = usePagesState.getState();
   const page = pages.find((page) => page.id === link)?.slug || link;
   return page;
+}
+
+export function getImageUrl(image: MediaFile) {
+  const db = supabase();
+  if (image?.mediaHash?.includes('https') || image?.mediaHash?.includes('http')) {
+    return `${image.mediaHash}?t=${new Date().getTime()}`;
+  }
+  const { bucketName } = useProjectConfigurationState.getState();
+  const imagePublicUrl = db.storage.from(bucketName).getPublicUrl(image?.mediaHash || '')?.data.publicUrl;
+  return `${imagePublicUrl}?t=${new Date().getTime()}`;
 }

@@ -18,7 +18,15 @@ export type Media = {
   altText?: string;
   hashed_file_name?: string;
 };
-export default function useMediaExplorer({ chosenImage, open }: { chosenImage: MediaFile | undefined; open: boolean }) {
+export default function useMediaExplorer({
+  chosenImage,
+  open,
+  onImageChosen,
+}: {
+  chosenImage: MediaFile | undefined;
+  open: boolean;
+  onImageChosen: (image: MediaFile | null) => void;
+}) {
   const db = supabase();
   const { projectId, bucketName } = useProjectConfigurationState();
   const [files, setFiles] = useState<Media[]>([]);
@@ -192,6 +200,10 @@ export default function useMediaExplorer({ chosenImage, open }: { chosenImage: M
       const activePage = pages.find((page) => page.active);
       if (activePage) {
         await setPageSeoFeaturedImages(activePage);
+      }
+
+      if (chosenImage?.mediaHash === file.hashed_file_name) {
+        onImageChosen(null);
       }
 
       toast.success('File deleted successfully');
