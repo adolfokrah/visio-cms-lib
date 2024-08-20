@@ -8,9 +8,10 @@ export default function useBlockHistory() {
     if (page) {
       const history = page.history?.[locale]?.blocks ?? [];
       const currentIndex = page.history?.[locale]?.currentIndex ?? -1;
-      let newHistory = history.slice(0, currentIndex + 1);
+      const newHistory = history.slice(0, currentIndex + 1);
 
-      newHistory = [...newHistory, blocks];
+      newHistory.push(blocks);
+
       page.history = {
         ...page.history,
         [locale]: {

@@ -163,7 +163,7 @@ export default function useCanvas() {
         const blockId = data.content;
         setBlockToAddAsGlobalId(blockId);
       } else if (data.type === 'updateBlockInput') {
-        const { propName, value, pageBlockId } = JSON.parse(data.content);
+        const { propName, value, pageBlockId, editor } = JSON.parse(data.content);
 
         const page = activePage;
         if (page) {
@@ -181,7 +181,7 @@ export default function useCanvas() {
               ),
             };
             setPages(pages.map((p) => (p.active ? page : p)));
-            addBlocksToPageHistory(page.activeLanguageLocale, [...JSON.parse(JSON.stringify(blocks))]);
+            if (!editor) addBlocksToPageHistory(page.activeLanguageLocale, [...JSON.parse(JSON.stringify(blocks))]);
           }
         }
       } else if (data.type === 'setSelectedRepeaterItemSchema') {
