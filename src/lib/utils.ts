@@ -312,12 +312,19 @@ export function getLink(link: string) {
   return page;
 }
 
-export function getImageUrl(image: MediaFile) {
+export function getImageUrl(image: MediaFile, allowTransformation = false): string {
   const db = supabase();
   if (image?.mediaHash?.includes('https') || image?.mediaHash?.includes('http')) {
-    return `${image.mediaHash}?t=${new Date().getTime()}`;
+    return `${image.mediaHash}`;
   }
   const { bucketName } = useProjectConfigurationState.getState();
-  const imagePublicUrl = db.storage.from(bucketName).getPublicUrl(image?.mediaHash || '')?.data.publicUrl;
-  return `${imagePublicUrl}?t=${new Date().getTime()}`;
+  const data: { [keys: string]: any } = {};
+  if (allowTransformation) {
+    data['transform'] = {
+      width: image?.width,
+      height: image?.height,
+    };
+  }
+  const publicUrl = db.storage.from(bucketName).getPublicUrl(image?.mediaHash || '', data).data.publicUrl;
+  return `${publicUrl}`;
 }

@@ -3,7 +3,15 @@ import { supabase } from '@/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { MediaFile } from '../types';
 import { usePageContentState } from '../states/usePageContentState';
-export default function useImage({ defaultValue, pageBlockId }: { defaultValue: MediaFile; pageBlockId: string }) {
+export default function useImage({
+  defaultValue,
+  pageBlockId,
+  allowTransformation,
+}: {
+  defaultValue: MediaFile;
+  pageBlockId: string;
+  allowTransformation?: boolean;
+}) {
   const db = supabase();
   const { bucketName } = useProjectConfigurationState();
   const [openMediaExplorer, setOpenMediaExplorer] = useState(false);
@@ -26,21 +34,15 @@ export default function useImage({ defaultValue, pageBlockId }: { defaultValue: 
     }
 
     const getImagePublicUrl = async (mediaHash: string, width: number, height: number) => {
-      const publicUrl = db.storage.from(bucketName).getPublicUrl(mediaHash, {
-        transform: {
+      const data: { [keys: string]: any } = {};
+      if (allowTransformation) {
+        data['transform'] = {
           width,
           height,
-        },
-      }).data.publicUrl;
-      const res = await fetch(publicUrl);
-      const data = await res.json();
-
-      if (data?.error) {
-        const newPublicUrl = db.storage.from(bucketName).getPublicUrl(mediaHash).data.publicUrl;
-
-        setImagePublicUrl(newPublicUrl);
-        return;
+        };
       }
+      const publicUrl = db.storage.from(bucketName).getPublicUrl(mediaHash, data).data.publicUrl;
+
       setImagePublicUrl(publicUrl);
     };
     if (defaultValue?.mediaHash) {
