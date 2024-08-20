@@ -15,9 +15,17 @@ type TestimonialProps = {
   link?: string;
   backgroundImage: MediaFile;
   counter: number;
+  showCounter: boolean;
 };
 
-const Testimonial: Block<TestimonialProps> = ({ backgroundColor, title, backgroundImage, link, counter }) => {
+const Testimonial: Block<TestimonialProps> = ({
+  backgroundColor,
+  title,
+  backgroundImage,
+  link,
+  counter,
+  showCounter,
+}) => {
   return (
     <div
       className="visio-cms-bg-gray-900 visio-cms-py-24 sm:visio-cms-py-32"
@@ -35,7 +43,7 @@ const Testimonial: Block<TestimonialProps> = ({ backgroundColor, title, backgrou
             <p className="visio-cms-mt-4 visio-cms-text-lg visio-cms-leading-8 visio-cms-text-gray-300">
               {getLink(link || '')}
             </p>
-            <h1>{counter}</h1>
+            {showCounter && <h1>{counter}</h1>}
           </div>
           <dl className="visio-cms-mt-16 visio-cms-grid visio-cms-grid-cols-1 visio-cms-gap-0.5 visio-cms-overflow-hidden visio-cms-rounded-2xl visio-cms-text-center sm:visio-cms-grid-cols-2 lg:visio-cms-grid-cols-4">
             {stats.map((stat) => (
@@ -94,8 +102,17 @@ Testimonial.Schema = {
       type: 'number',
       group: 'Content',
     },
+    {
+      propName: 'showCounter',
+      label: 'Show Counter',
+      type: 'switch',
+      group: 'Content',
+      onLabel: 'Yes',
+      offLabel: 'No',
+    },
   ],
   defaultPropValues: {
+    showCounter: true,
     counter: 0,
     backgroundImage: {
       mediaHash: 'https://cdn.hometogo.net/assets/media/pics/1920_600/611ba13125591.jpg',

@@ -163,7 +163,7 @@ function Controllers({ sideEditingProp }: { sideEditingProp: SideEditingProps[] 
   return sideEditingProp.map((sideEditingProp, index) => (
     <div key={`${sideEditingProp.propName}.${index}`} className="visio-cms-mt-3 visio-cms-space-y-2">
       <Label>{sideEditingProp.label}</Label>
-      <RenderController type={sideEditingProp.type} propName={sideEditingProp.propName} />
+      <RenderController {...sideEditingProp} type={sideEditingProp.type} propName={sideEditingProp.propName} />
     </div>
   ));
 }

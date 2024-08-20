@@ -1,4 +1,4 @@
-import { SideEditingPropsType } from '@/lib/types';
+import { SideEditingProps, SwitchEditingProp } from '@/lib/types';
 import TextController from './text-controller';
 import { getValueByPath, updateValueByPath } from '@/lib/utils';
 import { usePagesState } from '@/lib/states/usePagesState';
@@ -7,8 +7,16 @@ import useBlockHistory from '@/lib/hooks/useBlockHistory';
 import ColorController from './color-controller';
 import LinkController from './link-controller';
 import ImageController from './image-controller';
+import SwitchController from './swtich-controller';
 
-export default function RenderController({ type, propName }: { type: SideEditingPropsType; propName: string }) {
+export default function RenderController({
+  type,
+  propName,
+  ...props
+}: {
+  type: SideEditingProps['type'];
+  propName: string;
+} & Omit<SwitchEditingProp, 'type'>) {
   const { pages, setPages } = usePagesState();
   const activePage = pages.find((page) => page.active);
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
@@ -43,6 +51,15 @@ export default function RenderController({ type, propName }: { type: SideEditing
       return <ImageController defaultValue={defaultValue} onChange={debounceChangePropValue} />;
     case 'number':
       return <TextController defaultValue={defaultValue} onChange={debounceChangePropValue} type="number" />;
+    case 'switch':
+      return (
+        <SwitchController
+          defaultValue={defaultValue}
+          onChange={debounceChangePropValue}
+          onLabel={props.onLabel || ''}
+          offLabel={props?.offLabel || ''}
+        />
+      );
     default:
       return null;
   }

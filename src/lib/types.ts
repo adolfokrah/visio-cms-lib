@@ -66,14 +66,24 @@ export interface InvitedUser {
   photo: string | null; // URL to the user's photo, or null if not available
 }
 
-export type SideEditingPropsType = 'text' | 'select' | 'color' | 'image' | 'number' | 'switch' | 'link';
-
-export interface SideEditingProps {
+type BasePropSchema = {
   propName: string;
   label: string;
-  type: SideEditingPropsType;
   group?: string;
-}
+};
+
+export type SwitchEditingProp = BasePropSchema & {
+  type: 'switch';
+  onLabel?: string;
+  offLabel?: string;
+};
+
+export type SideEditingPropsType = 'text' | 'select' | 'color' | 'image' | 'number' | 'link';
+export type SideEditingProps =
+  | SwitchEditingProp
+  | (BasePropSchema & {
+      type: SideEditingPropsType;
+    });
 
 export type BlockSchema<T = Record<string, any>> = {
   name: string;
