@@ -71,7 +71,7 @@ export default function RenderController(props: SideEditingProps) {
       );
     case 'custom':
       return (
-        <props.component {...props.additionalProps} defaultValue={defaultValue} onChange={debounceChangePropValue} />
+        <props.component {...props.componentProps} defaultValue={defaultValue} onChange={debounceChangePropValue} />
       );
     default:
       return null;

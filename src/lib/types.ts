@@ -92,7 +92,7 @@ type SelectEditingProp = BasePropSchema & {
 type CustomEditingProp = BasePropSchema & {
   type: 'custom';
   component: React.FC<any>;
-  additionalProps?: Record<string, any>;
+  componentProps?: Record<string, any>;
 };
 
 type BaseEditingProps = BasePropSchema & {

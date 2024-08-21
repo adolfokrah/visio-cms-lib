@@ -100,7 +100,7 @@ export default function PropertiesTab() {
                                 const path = schema.propName.split('.');
 
                                 const value = getValueByPath(foundBlock.inputs, path);
-                                toast.success('Item added successfully');
+                                toast.success(`${convertToTitleCase(schema.name)} added successfully`);
 
                                 updateBlockValue(
                                   path,
@@ -164,7 +164,9 @@ export default function PropertiesTab() {
 function Controllers({ sideEditingProp }: { sideEditingProp: SideEditingProps[] }) {
   return sideEditingProp.map((sideEditingProp, index) => (
     <div key={`${sideEditingProp.propName}.${index}`} className="visio-cms-mt-3 visio-cms-space-y-2">
-      <Label>{sideEditingProp.label}</Label>
+      <div>
+        <Label>{sideEditingProp.label}</Label>
+      </div>
       <RenderController {...sideEditingProp} />
     </div>
   ));

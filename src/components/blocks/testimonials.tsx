@@ -172,7 +172,7 @@ Testimonial.Schema = {
       type: 'custom',
       group: 'Content',
       component: DatePicker,
-      additionalProps: {
+      componentProps: {
         maximumDate: '2022-12-31',
         minimumDate: '2021-01-01',
       },
