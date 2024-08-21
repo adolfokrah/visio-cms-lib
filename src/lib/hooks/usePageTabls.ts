@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePagesState } from '../states/usePagesState';
+import { useTabState } from '../states/useTabsState';
 
 const usePageTabs = () => {
   const {
@@ -12,7 +13,8 @@ const usePageTabs = () => {
   const [visibleTabs, setVisibleTabs] = useState<string[]>([]);
   const [hiddenTabs, setHiddenTabs] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const tabRefs = useRef<Map<string, HTMLDivElement>>(new Map()); // Store tab references
+  const tabRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const { tabs, setTabs } = useTabState(); // Store tab references
 
   useEffect(() => {
     const updateTabVisibility = () => {
@@ -98,6 +100,7 @@ const usePageTabs = () => {
   const handleTabClick = (name: string) => {
     setSelectedTab(name);
     const newPages = pages.map((page) => ({ ...page, active: page.name == name }));
+    setTabs(tabs.map((tab) => ({ ...tab, active: tab.name == name })));
     setPages(newPages);
     const activePage = newPages.find((page) => page.active);
     if (activePage) {
@@ -113,10 +116,21 @@ const usePageTabs = () => {
       active: page.name == name ? false : page.active,
       pinned: page.name == name ? false : page.pinned,
     }));
+    setTabs(tabs.filter((tab) => tab.name != name));
     setPages(newPages);
   };
 
-  return { visibleTabs, hiddenTabs, containerRef, pages, tabRefs, setSelectedTab, handleTabClick, handleRemovePage };
+  return {
+    visibleTabs,
+    hiddenTabs,
+    containerRef,
+    pages,
+    tabRefs,
+    tabs,
+    setSelectedTab,
+    handleTabClick,
+    handleRemovePage,
+  };
 };
 
 export default usePageTabs;

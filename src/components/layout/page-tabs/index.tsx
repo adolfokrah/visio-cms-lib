@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { FileIcon, MoreVerticalIcon, X } from 'lucide-react';
+import { BoxSelect, FileIcon, MoreVerticalIcon, X } from 'lucide-react';
 import usePageTabs from '@/lib/hooks/usePageTabls';
 import {
   DropdownMenu,
@@ -14,8 +14,8 @@ import LanguageControls from '../canvas/components/language-controls';
 import UndoRedoControls from './undo-redo-controls';
 
 export default function PageTabs() {
-  const { hiddenTabs, containerRef, pages, handleTabClick, tabRefs, handleRemovePage } = usePageTabs();
-  const pinnedPages = pages.filter((page) => page.pinned);
+  const { hiddenTabs, containerRef, tabs, pages, handleTabClick, tabRefs, handleRemovePage } = usePageTabs();
+  const pinnedPages = tabs;
 
   const tabClicked = useCallback(
     (name: string) => {
@@ -30,7 +30,7 @@ export default function PageTabs() {
         className="visio-cms-flex  visio-cms-overflow-x-hidden visio-cms-whitespace-nowrap visio-cms-flex-1"
         ref={containerRef}
       >
-        {pinnedPages.map(({ name, active }) => (
+        {pinnedPages.map(({ name, type, active }) => (
           <div
             key={name}
             id={name}
@@ -44,10 +44,18 @@ export default function PageTabs() {
               },
             )}
           >
-            <FileIcon
-              size={12}
-              color={active ? 'hsl(var(--visio-cms-primary))' : 'rgb(148 163 184 / var(--tw-text-opacity))'}
-            />
+            {type === 'globalBlock' ? (
+              <BoxSelect
+                size={12}
+                color={active ? 'hsl(var(--visio-cms-primary))' : 'rgb(148 163 184 / var(--tw-text-opacity))'}
+              />
+            ) : (
+              <FileIcon
+                size={12}
+                color={active ? 'hsl(var(--visio-cms-primary))' : 'rgb(148 163 184 / var(--tw-text-opacity))'}
+              />
+            )}
+
             <div className="visio-cms-w-24 visio-cms-truncate visio-cms-overflow-hidden visio-cms-whitespace-nowrap">
               {name}
             </div>

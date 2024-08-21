@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import { BoxSelect, TrashIcon } from 'lucide-react';
+import { BoxSelect, EditIcon, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
 import {
   AlertDialog,
@@ -15,12 +15,18 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { useTabState } from '@/lib/states/useTabsState';
+import { usePagesState } from '@/lib/states/usePagesState';
 
 export default function GlobalBlocks() {
   const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
   const [search, setSearch] = useState<string>('');
   const [blockToDelete, setBlockToDelete] = useState<string | null>(null);
+  const { tabs, setTabs } = useTabState();
+  const { pages, setPages } = usePagesState();
+
   const deleteGlobalBlock = (id: string) => {
+    setTabs([...tabs.filter((tab) => tab.id !== id)]);
     setGlobalBlocks(globalBlocks.filter((block) => block.id !== id));
     setBlockToDelete(null);
   };
@@ -55,6 +61,22 @@ export default function GlobalBlocks() {
               >
                 <BoxSelect size={16} />
                 <GlobalBlockName name={name} id={id} />
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (tabs.find((tab) => tab.id === id)) return;
+
+                    setTabs([
+                      ...tabs.map((tab) => ({ ...tab, active: false })),
+                      { id, type: 'globalBlock', name, active: true },
+                    ]);
+                    setPages(pages.map((page) => ({ ...page, active: false })));
+                  }}
+                  variant={'ghost'}
+                  className="visio-cms-bg-dark-800 visio-cms-text-white visio-cms-invisible group-hover:visio-cms-visible"
+                >
+                  <EditIcon size={16} />
+                </Button>
 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>

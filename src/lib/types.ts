@@ -18,6 +18,7 @@ export type GlobalBlock = {
   id: string;
   blockId: string;
   inputs: { [key: string]: any };
+  active?: boolean;
 };
 
 export type ProjectConfiguration = {

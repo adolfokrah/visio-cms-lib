@@ -19,6 +19,7 @@ import {
 import usePage from '@/lib/hooks/usePage';
 import DeletePageAction from './delete-page-action';
 import AddNewPageForm from '../../add-new-page-form';
+import { useTabState } from '@/lib/states/useTabsState';
 
 export default function PageTree({ items }: { items: PageTreeItem[] }) {
   return (
@@ -234,18 +235,25 @@ function PageItem({ item }: { item: PageTreeItem }) {
   const { pages, setPages, setPageSeoFeaturedImages } = usePagesState();
   const { duplicatePage } = usePage({});
   const [openAlert, setOpenAlert] = useState<{ withPages: boolean } | null>(null);
+  const { tabs, setTabs } = useTabState();
   const updateSelectedPage = useCallback(() => {
+    if (tabs.find((tab) => tab.id == item.id)) return;
+
     const newPages = pages.map((page) => ({
       ...page,
       active: page.id == item.id,
       pinned: page.id == item.id ? true : page.pinned,
     }));
     setPages(newPages);
+    setTabs([
+      ...tabs.map((tab) => ({ ...tab, active: false })),
+      { name: item.name, type: 'page', id: item.id, active: true },
+    ]);
     const activePage = newPages.find((page) => page.active);
     if (activePage) {
       setPageSeoFeaturedImages(activePage);
     }
-  }, [pages, setPages, item, setPageSeoFeaturedImages]);
+  }, [pages, setPages, item, setPageSeoFeaturedImages, tabs, setTabs]);
 
   if (item.type == 'Folder') return null;
 
@@ -260,10 +268,10 @@ function PageItem({ item }: { item: PageTreeItem }) {
       onClick={() => {
         updateSelectedPage();
       }}
-      draggable={true} // Add draggable attribute
+      draggable={true}
       onDragStart={(e) => {
         e.stopPropagation();
-        e.dataTransfer.setData('text/plain', item.id); // Set the data to be transferred during drag
+        e.dataTransfer.setData('text/plain', item.id);
       }}
     >
       <div className="visio-cms-flex visio-cms-gap-2 visio-cms-w-full visio-cms-justify-between  visio-cms-items-center">

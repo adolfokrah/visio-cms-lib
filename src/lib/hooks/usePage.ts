@@ -9,9 +9,11 @@ import { formatStringToSlug } from '../utils';
 import { useAuthState } from '../states/useAuthState';
 import { useTreeView } from '../states/useTreeView';
 import { PageTreeItem } from '../types';
+import { useTabState } from '../states/useTabsState';
 
 export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
   const { pages, setPages } = usePagesState();
+  const { tabs, setTabs } = useTabState();
   const { defaultLanguage } = useProjectConfigurationState();
   const [loading, setLoading] = useState(false);
   const { user } = useAuthState();
@@ -77,6 +79,8 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
     setTimeout(() => {
       const newPages = pages.filter((fPage) => (withPages ? fPage.folderId != page.id : fPage.id != page.id));
       setPages(newPages);
+
+      setTabs([...tabs.filter((tab) => tab.id != page.id)]);
       if (page.type == 'Folder') setItems(items.filter((item) => item.id != page.id));
       setLoading(false);
     }, 1000);
@@ -101,6 +105,10 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
             pinned: true,
             active: true,
           },
+        ]);
+        setTabs([
+          ...tabs.map((tab) => ({ ...tab, active: false })),
+          { name: `${foundPage.name}-${id}`, type: 'page', id, active: true },
         ]);
       }
       setLoading(false);
