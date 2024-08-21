@@ -12,7 +12,7 @@ export default function SelectController({
   placeholder?: string;
 }) {
   return (
-    <Select defaultValue={defaultValue || 'Select an option'} onValueChange={onChange}>
+    <Select value={defaultValue || 'Select an option'} onValueChange={onChange}>
       <SelectTrigger className="visio-cms-w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

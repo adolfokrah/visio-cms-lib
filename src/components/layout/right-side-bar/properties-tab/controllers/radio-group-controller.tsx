@@ -11,7 +11,7 @@ export default function RadioGroupController({
   options: { label: string; value: string }[];
 }) {
   return (
-    <RadioGroup defaultValue={defaultValue} onValueChange={onChange}>
+    <RadioGroup value={defaultValue} onValueChange={onChange}>
       {options.map(({ label, value }) => (
         <div className="visio-cms-flex visio-cms-items-center visio-cms-space-x-2">
           <RadioGroupItem value={value} id={value} />
