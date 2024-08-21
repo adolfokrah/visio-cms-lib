@@ -42,7 +42,7 @@ export default function PropertiesTab() {
   const groupedSideEditingProps = !selectedRepeaterItem ? groupSideEditingProps(sideEditingProp) : [];
 
   return (
-    <div>
+    <div className="visio-cms-overflow-auto visio-cms-h-[calc(100vh-100px)] scrollbar-custom  visio-cms-px-1">
       <Accordion type="multiple">
         <>
           <>
@@ -165,7 +165,7 @@ function Controllers({ sideEditingProp }: { sideEditingProp: SideEditingProps[] 
   return sideEditingProp.map((sideEditingProp, index) => (
     <div key={`${sideEditingProp.propName}.${index}`} className="visio-cms-mt-3 visio-cms-space-y-2">
       <Label>{sideEditingProp.label}</Label>
-      <RenderController {...sideEditingProp} type={sideEditingProp.type} propName={sideEditingProp.propName} />
+      <RenderController {...sideEditingProp} />
     </div>
   ));
 }

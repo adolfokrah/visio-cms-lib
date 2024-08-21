@@ -58,12 +58,12 @@ export type MediaFile = {
 };
 
 export interface InvitedUser {
-  id: string; // UUID for the user
-  email: string; // User's email address
-  first_name: string; // User's first name
-  last_name: string; // User's last name
-  role: string; // User's role
-  photo: string | null; // URL to the user's photo, or null if not available
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  role: string;
+  photo: string | null;
 }
 
 type BasePropSchema = {
@@ -72,18 +72,28 @@ type BasePropSchema = {
   group?: string;
 };
 
-export type SwitchEditingProp = BasePropSchema & {
+type SwitchEditingProp = BasePropSchema & {
   type: 'switch';
   onLabel?: string;
   offLabel?: string;
 };
 
-export type SideEditingPropsType = 'text' | 'select' | 'color' | 'image' | 'number' | 'link';
-export type SideEditingProps =
-  | SwitchEditingProp
-  | (BasePropSchema & {
-      type: SideEditingPropsType;
-    });
+type RadioGroupEditingProp = BasePropSchema & {
+  type: 'radio-group';
+  options: { label: string; value: string }[];
+};
+
+type SelectEditingProp = BasePropSchema & {
+  type: 'select';
+  options: { label: string; value: string }[];
+  placeholder?: string;
+};
+
+type BaseEditingProps = BasePropSchema & {
+  type: 'text' | 'color' | 'link' | 'image' | 'number';
+};
+
+export type SideEditingProps = SwitchEditingProp | RadioGroupEditingProp | SelectEditingProp | BaseEditingProps;
 
 export type BlockSchema<T = Record<string, any>> = {
   name: string;

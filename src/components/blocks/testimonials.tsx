@@ -1,5 +1,5 @@
 import { Block, Color, MediaFile } from '@/lib/exposed-types';
-import { getImageUrl, getLink } from '@/lib/utils';
+import { cn, getImageUrl, getLink } from '@/lib/utils';
 
 const stats = [
   { id: 1, name: 'Creators on the platform', value: '8,000+' },
@@ -16,6 +16,7 @@ type TestimonialProps = {
   backgroundImage: MediaFile;
   counter: number;
   showCounter: boolean;
+  numberOfColumns: '4' | '2';
 };
 
 const Testimonial: Block<TestimonialProps> = ({
@@ -25,6 +26,7 @@ const Testimonial: Block<TestimonialProps> = ({
   link,
   counter,
   showCounter,
+  numberOfColumns,
 }) => {
   return (
     <div
@@ -45,7 +47,15 @@ const Testimonial: Block<TestimonialProps> = ({
             </p>
             {showCounter && <h1>{counter}</h1>}
           </div>
-          <dl className="visio-cms-mt-16 visio-cms-grid visio-cms-grid-cols-1 visio-cms-gap-0.5 visio-cms-overflow-hidden visio-cms-rounded-2xl visio-cms-text-center sm:visio-cms-grid-cols-2 lg:visio-cms-grid-cols-4">
+          <dl
+            className={cn(
+              'visio-cms-mt-16 visio-cms-grid visio-cms-grid-cols-1 visio-cms-gap-0.5 visio-cms-overflow-hidden visio-cms-rounded-2xl visio-cms-text-center sm:visio-cms-grid-cols-2',
+              {
+                'lg:visio-cms-grid-cols-4': numberOfColumns === '4',
+                'lg:visio-cms-grid-cols-2': numberOfColumns === '2',
+              },
+            )}
+          >
             {stats.map((stat) => (
               <div key={stat.id} className="visio-cms-flex visio-cms-flex-col visio-cms-bg-white/5 visio-cms-p-8">
                 <dt className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-gray-300">
@@ -110,8 +120,30 @@ Testimonial.Schema = {
       onLabel: 'Yes',
       offLabel: 'No',
     },
+    {
+      propName: 'numberOfColumns',
+      label: 'Number of Columns',
+      type: 'radio-group',
+      group: 'Columns',
+      options: [
+        { label: '4 columns', value: '4' },
+        { label: '2 columns', value: '2' },
+      ],
+    },
+    {
+      propName: 'numberOfColumns',
+      label: 'Number of Columns',
+      type: 'select',
+      group: 'Columns',
+      options: [
+        { label: '4 columns', value: '4' },
+        { label: '2 columns', value: '2' },
+      ],
+      placeholder: 'Please select a number of columns',
+    },
   ],
   defaultPropValues: {
+    numberOfColumns: '4',
     showCounter: true,
     counter: 0,
     backgroundImage: {
