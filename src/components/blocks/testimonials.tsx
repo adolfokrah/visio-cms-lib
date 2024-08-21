@@ -17,6 +17,7 @@ type TestimonialProps = {
   counter: number;
   showCounter: boolean;
   numberOfColumns: '4' | '2';
+  date: string;
 };
 
 const Testimonial: Block<TestimonialProps> = ({
@@ -27,6 +28,7 @@ const Testimonial: Block<TestimonialProps> = ({
   counter,
   showCounter,
   numberOfColumns,
+  date,
 }) => {
   return (
     <div
@@ -46,6 +48,8 @@ const Testimonial: Block<TestimonialProps> = ({
               {getLink(link || '')}
             </p>
             {showCounter && <h1>{counter}</h1>}
+
+            <p>date is: {date}</p>
           </div>
           <dl
             className={cn(
@@ -72,6 +76,27 @@ const Testimonial: Block<TestimonialProps> = ({
     </div>
   );
 };
+
+function DatePicker({
+  onChange,
+  defaultValue,
+  maximumDate,
+  minimumDate,
+}: {
+  onChange: (value: string) => void;
+  defaultValue: string;
+  maximumDate: string;
+  minimumDate: string;
+}) {
+  return (
+    <>
+      <input type="date" onChange={(e) => onChange(e.target.value)} />
+      <p>min Date{minimumDate}</p>
+      <p>max Date {maximumDate}</p>
+      <p>default Value {defaultValue}</p>
+    </>
+  );
+}
 
 Testimonial.Schema = {
   name: 'Testimonial Section',
@@ -141,8 +166,20 @@ Testimonial.Schema = {
       ],
       placeholder: 'Please select a number of columns',
     },
+    {
+      propName: 'date',
+      label: 'Current Date',
+      type: 'custom',
+      group: 'Content',
+      component: DatePicker,
+      additionalProps: {
+        maximumDate: '2022-12-31',
+        minimumDate: '2021-01-01',
+      },
+    },
   ],
   defaultPropValues: {
+    date: '2021-01-01',
     numberOfColumns: '4',
     showCounter: true,
     counter: 0,

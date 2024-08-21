@@ -89,11 +89,22 @@ type SelectEditingProp = BasePropSchema & {
   placeholder?: string;
 };
 
+type CustomEditingProp = BasePropSchema & {
+  type: 'custom';
+  component: React.FC<any>;
+  additionalProps?: Record<string, any>;
+};
+
 type BaseEditingProps = BasePropSchema & {
   type: 'text' | 'color' | 'link' | 'image' | 'number';
 };
 
-export type SideEditingProps = SwitchEditingProp | RadioGroupEditingProp | SelectEditingProp | BaseEditingProps;
+export type SideEditingProps =
+  | SwitchEditingProp
+  | RadioGroupEditingProp
+  | SelectEditingProp
+  | BaseEditingProps
+  | CustomEditingProp;
 
 export type BlockSchema<T = Record<string, any>> = {
   name: string;
