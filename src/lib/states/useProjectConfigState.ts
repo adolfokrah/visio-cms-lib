@@ -15,6 +15,7 @@ type Actions = {
       | 'defaultLanguage'
       | 'supportedLanguages'
       | 'blocks'
+      | 'allowImageTransformation'
     >,
   ) => void;
   setTheme: (props: Pick<ProjectConfiguration, 'theme'>) => void;
@@ -24,6 +25,7 @@ type Actions = {
 export const useProjectConfigurationState = create(
   persist<ProjectConfiguration & Actions>(
     (set) => ({
+      allowImageTransformation: false,
       supabaseAnonKey: '',
       supabaseProjectUrl: '',
       globalBlocks: [],

@@ -59,6 +59,7 @@ export default function Auth(
     | 'defaultLanguage'
     | 'supportedLanguages'
     | 'blocks'
+    | 'allowImageTransformation'
   >,
 ) {
   const { setConfiguration, supabaseProjectUrl, supabaseAnonKey, projectId } = useProjectConfigurationState();

@@ -33,6 +33,7 @@ export type ProjectConfiguration = {
   };
   blocks: BlockList[];
   globalBlocks: GlobalBlock[];
+  allowImageTransformation: boolean;
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 

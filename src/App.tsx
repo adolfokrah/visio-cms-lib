@@ -5,6 +5,7 @@ import './styles/tailwind.css';
 function App() {
   return (
     <Cms
+      allowImageTransformation={false}
       blocks={blocks}
       defaultLanguage={{
         language: 'English',

@@ -312,14 +312,14 @@ export function getLink(link: string) {
   return page;
 }
 
-export function getImageUrl(image: MediaFile, allowTransformation = false): string {
+export function getImageUrl(image: MediaFile): string {
   const db = supabase();
   if (image?.mediaHash?.includes('https') || image?.mediaHash?.includes('http')) {
     return `${image.mediaHash}`;
   }
-  const { bucketName } = useProjectConfigurationState.getState();
+  const { bucketName, allowImageTransformation } = useProjectConfigurationState.getState();
   const data: { [keys: string]: any } = {};
-  if (allowTransformation) {
+  if (allowImageTransformation) {
     data['transform'] = {
       width: image?.width,
       height: image?.height,
