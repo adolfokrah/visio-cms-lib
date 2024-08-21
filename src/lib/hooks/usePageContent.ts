@@ -9,8 +9,12 @@ export default function usePageContent() {
 
   useEffect(() => {
     const pages = JSON.parse(sessionStorage.getItem('pages-storage') || '{}');
+    const projectConfiguration = JSON.parse(sessionStorage.getItem('project-configuration-storage') || '{}');
     if (pages && pages.state.pages) {
       setPages(pages.state.pages);
+    }
+    if (projectConfiguration.state.globalBlocks) {
+      setGlobalBlocks(projectConfiguration.state.globalBlocks);
     }
     const handleStorageChange = (event: StorageEvent) => {
       // Check if the change is in sessionStorage

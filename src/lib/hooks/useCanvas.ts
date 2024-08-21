@@ -7,6 +7,7 @@ import useUndoAndRedo from './useUndoAndRedo';
 import { updateValueByPath } from '../utils';
 import { useRepeaterState } from '../states/useRepeaterState';
 import useBlockHistory from './useBlockHistory';
+import { useTabState } from '../states/useTabsState';
 
 export default function useCanvas() {
   const { pages, setPages } = usePagesState();
@@ -16,6 +17,7 @@ export default function useCanvas() {
   const [blockToAddAsGlobalId, setBlockToAddAsGlobalId] = useState<string | null>(null);
   const { setSelectedRepeaterItem } = useRepeaterState();
   const { addBlocksToPageHistory } = useBlockHistory();
+  const { tabs } = useTabState();
 
   useEffect(() => {
     const setPageBlocks = (block: Block, position: number, isGlobalBlock: boolean, globalBlockId: string) => {
@@ -164,6 +166,7 @@ export default function useCanvas() {
         setBlockToAddAsGlobalId(blockId);
       } else if (data.type === 'updateBlockInput') {
         const { propName, value, pageBlockId, editor } = JSON.parse(data.content);
+        console.log(propName);
 
         const page = activePage;
         if (page) {
@@ -183,6 +186,9 @@ export default function useCanvas() {
             setPages(pages.map((p) => (p.active ? page : p)));
             if (!editor) addBlocksToPageHistory(page.activeLanguageLocale, [...JSON.parse(JSON.stringify(blocks))]);
           }
+        } else {
+          ///user is editing a global block
+          const globalBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
         }
       } else if (data.type === 'setSelectedRepeaterItemSchema') {
         const subRepeaterSchema = JSON.parse(data.content);

@@ -38,6 +38,7 @@ export const PAGES = {
   UPDATE_PASSWORD: `${CMS_BASE_PATH}/update-password`,
   PAGE_NOT_FOUND: `${CMS_BASE_PATH}/page-not-found`,
   PAGE_CONTENT: `${CMS_BASE_PATH}/page-content`,
+  GLOBAL_BLOCK_EDIT_CONTENT: `${CMS_BASE_PATH}/global-block-edit-content`,
 };
 
 export const RESPONSIVE_VIEWS: ResponsiveViews[] = [

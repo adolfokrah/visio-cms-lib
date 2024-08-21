@@ -23,6 +23,7 @@ export default function BlockItem({
   const { globalBlocks } = usePageContentState();
   const globalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
   const { setRepeaterId } = useRepeaterState();
+  const blockInputs = globalBlock?.inputs || pageBlock.inputs || block.Schema.defaultPropValues;
   return (
     <div
       onClick={(e) => {
@@ -52,7 +53,7 @@ export default function BlockItem({
           <div>
             {React.createElement(block, {
               key: block.Schema.id,
-              ...(pageBlock.inputs || block.Schema.defaultPropValues),
+              ...blockInputs,
               pageBlockId: pageBlock.id,
             })}
             <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} />

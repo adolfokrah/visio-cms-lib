@@ -1,14 +1,14 @@
 import { PAGES } from '@/lib/constants';
-import { usePagesState } from '@/lib/states/usePagesState';
+import { useTabState } from '@/lib/states/useTabsState';
 import { useRef } from 'react';
 
 export default function IframeView() {
-  const url = `${window.location.protocol}//${window.location.host}${PAGES.PAGE_CONTENT}`;
+  const { tabs } = useTabState();
+  const pinnedTab = tabs.find((tab) => tab.active);
+  const url = `${window.location.protocol}//${window.location.host}${pinnedTab?.type === 'page' ? PAGES.PAGE_CONTENT : PAGES.GLOBAL_BLOCK_EDIT_CONTENT}`;
   const ref = useRef<HTMLIFrameElement | null>(null);
-  const { pages } = usePagesState();
-  const activePage = pages.find((page) => page.active);
 
-  if (!activePage) return null;
+  if (!pinnedTab) return null;
   return (
     <iframe
       ref={ref}

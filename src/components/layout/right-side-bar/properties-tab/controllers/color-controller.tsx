@@ -16,7 +16,7 @@ export default function ColorController({
     () =>
       theme.colorScheme.find((color) => color.id === defaultValue?.id) || {
         ...defaultValue,
-        colorName: defaultValue.colorHex,
+        colorName: defaultValue?.colorHex,
       },
     [theme.colorScheme, defaultValue],
   );

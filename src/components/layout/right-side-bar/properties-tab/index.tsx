@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import RenderController from './controllers';
 import { SideEditingProps } from '@/lib/types';
 import { toast } from 'sonner';
+import { useTabState } from '@/lib/states/useTabsState';
 
 export default function PropertiesTab() {
   const {
@@ -21,23 +22,28 @@ export default function PropertiesTab() {
     foundBlock,
     updateBlockValue,
     globalBlock,
+    globalBlocks,
   } = useRepeaterController();
   const { blocks } = useProjectConfigurationState();
+  const { tabs } = useTabState();
 
-  if (!foundBlock || !page || globalBlock) return null;
+  const activeGlobalPinnedBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
+
+  if ((!foundBlock || !page || globalBlock) && !activeGlobalPinnedBlock) return null;
 
   const repeaterItems = selectedRepeaterItem?.subRepeatersSchemas.length
     ? selectedRepeaterItem?.subRepeatersSchemas
     : !selectedRepeaterItem
       ? blocks
-          .find((block) => block.Schema.id === foundBlock.blockId)
+          .find((block) => block.Schema.id === foundBlock?.blockId)
           ?.Schema.repeaters?.map((schema) => ({ ...schema, propName: schema.name }))
       : [] || [];
 
   const sideEditingProp =
     repeaterItemParentValue && selectedRepeaterItem
       ? selectedRepeaterItem?.sideEditingProps || []
-      : blocks.find((block) => block.Schema.id === foundBlock?.blockId)?.Schema.sideEditingProps || [];
+      : blocks.find((block) => block.Schema.id === (foundBlock?.blockId || activeGlobalPinnedBlock?.blockId))?.Schema
+          .sideEditingProps || [];
 
   const groupedSideEditingProps = !selectedRepeaterItem ? groupSideEditingProps(sideEditingProp) : [];
 
@@ -85,7 +91,7 @@ export default function PropertiesTab() {
                   <div>
                     {repeaterItems.map((schema, index) => {
                       const path = schema.propName.split('.');
-                      const value = getValueByPath(foundBlock.inputs, path);
+                      const value = getValueByPath(foundBlock?.inputs, path);
                       const itemCount = schema?.itemCount || 400;
 
                       return (

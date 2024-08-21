@@ -94,5 +94,6 @@ export default function useRepeaterController() {
     foundBlock,
     updateBlockValue,
     globalBlock,
+    globalBlocks,
   };
 }

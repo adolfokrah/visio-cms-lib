@@ -10,29 +10,41 @@ import ImageController from './image-controller';
 import SwitchController from './switch-controller';
 import RadioGroupController from './radio-group-controller';
 import SelectController from './select-controller';
+import { useTabState } from '@/lib/states/useTabsState';
+import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 
 export default function RenderController(props: SideEditingProps) {
   const { pages, setPages } = usePagesState();
+  const { tabs } = useTabState();
+  const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
   const activePage = pages.find((page) => page.active);
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
-  const activeBlock = pageBlocks.find((block) => block.isSelected);
+  const activeBlock =
+    pageBlocks.find((block) => block.isSelected) ||
+    globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
   const { addBlocksToPageHistory } = useBlockHistory();
   const defaultValue = getValueByPath(activeBlock?.inputs, props.propName.split('.'));
 
   const debounceChangePropValue = lodash.debounce((value: any) => {
     const page = activePage;
-    if (activeBlock && page) {
+    if (activeBlock) {
       const blockInputs = updateValueByPath(activeBlock?.inputs, props.propName.split('.'), value);
-      page.blocks = {
-        ...page.blocks,
-        [page.activeLanguageLocale]: pageBlocks.map((block) =>
-          block.id === activeBlock.id ? { ...block, inputs: blockInputs } : block,
-        ),
-      };
-      setPages(pages.map((p) => (p.active ? page : p)));
-      addBlocksToPageHistory(page.activeLanguageLocale, [
-        ...JSON.parse(JSON.stringify(page.blocks?.[page.activeLanguageLocale])),
-      ]);
+      if (page) {
+        page.blocks = {
+          ...page.blocks,
+          [page.activeLanguageLocale]: pageBlocks.map((block) =>
+            block.id === activeBlock.id ? { ...block, inputs: blockInputs } : block,
+          ),
+        };
+        setPages(pages.map((p) => (p.active ? page : p)));
+        addBlocksToPageHistory(page.activeLanguageLocale, [
+          ...JSON.parse(JSON.stringify(page.blocks?.[page.activeLanguageLocale])),
+        ]);
+      } else {
+        setGlobalBlocks(
+          globalBlocks.map((block) => (block.id === activeBlock.id ? { ...block, inputs: blockInputs } : block)),
+        );
+      }
     }
   }, 300);
 
