@@ -71,7 +71,7 @@ export default function BlockAction({
           className="hover:!visio-cms-bg-dark-700"
           onClick={(e) => {
             e.stopPropagation();
-            sendMessageToParent({ type: 'editGlobalBlock', content: pageBlockId });
+            sendMessageToParent({ type: 'editGlobalBlock', content: pageBlock?.globalBlockId || '' });
           }}
         >
           <Edit size={16} />

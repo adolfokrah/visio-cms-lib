@@ -17,7 +17,7 @@ export default function useCanvas() {
   const [blockToAddAsGlobalId, setBlockToAddAsGlobalId] = useState<string | null>(null);
   const { setSelectedRepeaterItem } = useRepeaterState();
   const { addBlocksToPageHistory } = useBlockHistory();
-  const { tabs } = useTabState();
+  const { tabs, setTabs } = useTabState();
 
   useEffect(() => {
     const setPageBlocks = (block: Block, position: number, isGlobalBlock: boolean, globalBlockId: string) => {
@@ -199,6 +199,21 @@ export default function useCanvas() {
         setSelectedRepeaterItem(subRepeaterSchema);
       } else if (data.type === 'remove-selected-repeater') {
         setSelectedRepeaterItem(null);
+      } else if (data.type === 'editGlobalBlock') {
+        const blockId = data.content;
+
+        const globalBlock = globalBlocks.find((block) => block.id === blockId);
+        if (globalBlock) {
+          if (tabs.find((tab) => tab.id === blockId)) {
+            setTabs([...tabs.map((tab) => ({ ...tab, active: tab.id === blockId }))]);
+            return;
+          }
+          setTabs([
+            ...tabs.map((tab) => ({ ...tab, active: false })),
+            { id: blockId, type: 'globalBlock', active: true, name: globalBlock?.name },
+          ]);
+          setPages(pages.map((page) => ({ ...page, active: false })));
+        }
       }
     };
 
@@ -207,7 +222,20 @@ export default function useCanvas() {
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [pages, blocks, setPages, activePage, undo, redo, globalBlocks, setSelectedRepeaterItem, addBlocksToPageHistory]);
+  }, [
+    pages,
+    blocks,
+    setPages,
+    activePage,
+    undo,
+    redo,
+    globalBlocks,
+    setSelectedRepeaterItem,
+    addBlocksToPageHistory,
+    setTabs,
+    tabs,
+    setGlobalBlocks,
+  ]);
 
   return { blockToAddAsGlobalId, setBlockToAddAsGlobalId };
 }
