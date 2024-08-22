@@ -97,10 +97,10 @@ const usePageTabs = () => {
     }
   }, [selectedTab]);
 
-  const handleTabClick = (name: string) => {
-    setSelectedTab(name);
-    const newPages = pages.map((page) => ({ ...page, active: page.name == name }));
-    setTabs(tabs.map((tab) => ({ ...tab, active: tab.name == name })));
+  const handleTabClick = (id: string) => {
+    setSelectedTab(id);
+    const newPages = pages.map((page) => ({ ...page, active: page.id == id }));
+    setTabs(tabs.map((tab) => ({ ...tab, active: tab.id == id })));
     setPages(newPages);
     const activePage = newPages.find((page) => page.active);
     if (activePage) {
@@ -110,13 +110,13 @@ const usePageTabs = () => {
     }
   };
 
-  const handleRemovePage = (name: string) => {
+  const handleRemovePage = (id: string) => {
     const newPages = pages.map((page) => ({
       ...page,
-      active: page.name == name ? false : page.active,
-      pinned: page.name == name ? false : page.pinned,
+      active: page.id == id ? false : page.active,
+      pinned: page.id == id ? false : page.pinned,
     }));
-    setTabs(tabs.filter((tab) => tab.name != name));
+    setTabs(tabs.filter((tab) => tab.id != id));
     setPages(newPages);
   };
 

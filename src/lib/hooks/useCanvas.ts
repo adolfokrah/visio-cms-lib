@@ -12,7 +12,7 @@ import { useTabState } from '../states/useTabsState';
 export default function useCanvas() {
   const { pages, setPages } = usePagesState();
   const activePage = pages.find((page) => page.active);
-  const { blocks, globalBlocks } = useProjectConfigurationState();
+  const { blocks, globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
   const { undo, redo } = useUndoAndRedo();
   const [blockToAddAsGlobalId, setBlockToAddAsGlobalId] = useState<string | null>(null);
   const { setSelectedRepeaterItem } = useRepeaterState();
@@ -166,7 +166,6 @@ export default function useCanvas() {
         setBlockToAddAsGlobalId(blockId);
       } else if (data.type === 'updateBlockInput') {
         const { propName, value, pageBlockId, editor } = JSON.parse(data.content);
-        console.log(propName);
 
         const page = activePage;
         if (page) {
@@ -189,10 +188,17 @@ export default function useCanvas() {
         } else {
           ///user is editing a global block
           const globalBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
+          const path = propName.split('.');
+          const blockInputs = updateValueByPath(globalBlock?.inputs || {}, path, value);
+          setGlobalBlocks(
+            globalBlocks.map((block) => (block.id === globalBlock?.id ? { ...block, inputs: blockInputs } : block)),
+          );
         }
       } else if (data.type === 'setSelectedRepeaterItemSchema') {
         const subRepeaterSchema = JSON.parse(data.content);
         setSelectedRepeaterItem(subRepeaterSchema);
+      } else if (data.type === 'remove-selected-repeater') {
+        setSelectedRepeaterItem(null);
       }
     };
 

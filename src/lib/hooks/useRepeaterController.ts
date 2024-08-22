@@ -3,24 +3,30 @@ import { getValueByPath, Path, sendMessageToParent, updateValueByPath } from '@/
 import { usePagesState } from '@/lib/states/usePagesState';
 import useBlockHistory from '@/lib/hooks/useBlockHistory';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
+import { useTabState } from '../states/useTabsState';
 
 export default function useRepeaterController() {
   const { selectedRepeaterItem, setSelectedRepeaterItem } = useRepeaterState();
   const { pages, setPages } = usePagesState();
-  const { globalBlocks } = useProjectConfigurationState();
+  const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
   const { addBlocksToPageHistory } = useBlockHistory();
+  const { tabs } = useTabState();
   const activePage = pages.find((page) => page.active);
   const page = activePage;
 
   const blocks = page?.blocks?.[page.activeLanguageLocale] ?? [];
   const foundBlock = blocks.find((block) => block.isSelected);
+  const activeGlobalPinnedBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
 
   const globalBlock = globalBlocks.find((block) => block.id === foundBlock?.globalBlockId);
 
   const repeaterItemPath = selectedRepeaterItem?.repeaterItemId.split('.');
   const repeaterItemIndex = Number(repeaterItemPath?.[repeaterItemPath?.length - 1]);
   repeaterItemPath?.pop();
-  const repeaterItemParentValue: Record<string, any>[] = getValueByPath(foundBlock?.inputs, repeaterItemPath || []);
+  const repeaterItemParentValue: Record<string, any>[] = getValueByPath(
+    foundBlock?.inputs || activeGlobalPinnedBlock?.inputs,
+    repeaterItemPath || [],
+  );
 
   const moveRepeaterItem = (direction: 'up' | 'down') => {
     if (!repeaterItemPath) return;
@@ -67,19 +73,26 @@ export default function useRepeaterController() {
   };
 
   const updateBlockValue = (path: Path, value: any) => {
-    if (!foundBlock || !page) return;
-    const blockInputs = updateValueByPath(foundBlock.inputs, path, value);
+    const blockInputs = updateValueByPath(foundBlock?.inputs || activeGlobalPinnedBlock?.inputs || {}, path, value);
 
-    page.blocks = {
-      ...page.blocks,
-      [page.activeLanguageLocale]: blocks.map((block) =>
-        block.id === foundBlock.id ? { ...block, inputs: blockInputs } : block,
-      ),
-    };
-    setPages(pages.map((p) => (p.active ? page : p)));
-    addBlocksToPageHistory(page.activeLanguageLocale, [
-      ...JSON.parse(JSON.stringify(page.blocks?.[page.activeLanguageLocale])),
-    ]);
+    if (foundBlock && page) {
+      page.blocks = {
+        ...page.blocks,
+        [page.activeLanguageLocale]: blocks.map((block) =>
+          block.id === foundBlock.id ? { ...block, inputs: blockInputs } : block,
+        ),
+      };
+      setPages(pages.map((p) => (p.active ? page : p)));
+      addBlocksToPageHistory(page.activeLanguageLocale, [
+        ...JSON.parse(JSON.stringify(page.blocks?.[page.activeLanguageLocale])),
+      ]);
+    } else if (activeGlobalPinnedBlock) {
+      setGlobalBlocks(
+        globalBlocks.map((block) =>
+          block.id === activeGlobalPinnedBlock.id ? { ...block, inputs: blockInputs } : block,
+        ),
+      );
+    }
   };
 
   return {

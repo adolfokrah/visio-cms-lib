@@ -18,8 +18,8 @@ export default function PageTabs() {
   const pinnedPages = tabs;
 
   const tabClicked = useCallback(
-    (name: string) => {
-      handleTabClick(name);
+    (id: string) => {
+      handleTabClick(id);
     },
     [handleTabClick],
   );
@@ -30,12 +30,12 @@ export default function PageTabs() {
         className="visio-cms-flex  visio-cms-overflow-x-hidden visio-cms-whitespace-nowrap visio-cms-flex-1"
         ref={containerRef}
       >
-        {pinnedPages.map(({ name, type, active }) => (
+        {pinnedPages.map(({ name, id, type, active }) => (
           <div
-            key={name}
-            id={name}
+            key={id}
+            id={id}
             title={name}
-            onClick={() => tabClicked(name)}
+            onClick={() => tabClicked(id)}
             ref={(el) => el && tabRefs.current.set(name, el)} // Store reference
             className={cn(
               'visio-cms-p-3 visio-cms-border-r visio-cms-border-dark-900 visio-cms-group visio-cms-text-slate-400 visio-cms-flex visio-cms-gap-2 visio-cms-cursor-pointer hover:visio-cms-bg-dark-700 visio-cms-items-center',
@@ -64,7 +64,7 @@ export default function PageTabs() {
               className="visio-cms-invisible group-hover:visio-cms-visible"
               onClick={(e) => {
                 e.stopPropagation();
-                handleRemovePage(name);
+                handleRemovePage(id);
               }}
             />
           </div>
@@ -80,10 +80,10 @@ export default function PageTabs() {
           <DropdownMenuContent>
             {pages
               .filter((page) => hiddenTabs.includes(page.name))
-              .map(({ name }) => (
+              .map(({ name, id }) => (
                 <DropdownMenuItem
                   key={name}
-                  onClick={() => handleTabClick(name)}
+                  onClick={() => handleTabClick(id)}
                   className={cn(
                     'visio-cms-p-3 visio-cms-place-items-center visio-cms-justify-between visio-cms-group visio-cms-text-slate-400 visio-cms-flex visio-cms-gap-2 visio-cms-cursor-pointer hover:visio-cms-bg-dark-900 visio-cms-items-center',
                   )}
@@ -97,7 +97,7 @@ export default function PageTabs() {
                     className="visio-cms-invisible group-hover:visio-cms-visible"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleRemovePage(name);
+                      handleRemovePage(id);
                     }}
                   />
                 </DropdownMenuItem>

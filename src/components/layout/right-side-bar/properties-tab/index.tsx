@@ -35,7 +35,9 @@ export default function PropertiesTab() {
     ? selectedRepeaterItem?.subRepeatersSchemas
     : !selectedRepeaterItem
       ? blocks
-          .find((block) => block.Schema.id === foundBlock?.blockId)
+          .find(
+            (block) => block.Schema.id == foundBlock?.blockId || block.Schema.id == activeGlobalPinnedBlock?.blockId,
+          )
           ?.Schema.repeaters?.map((schema) => ({ ...schema, propName: schema.name }))
       : [] || [];
 
@@ -101,20 +103,18 @@ export default function PropertiesTab() {
                           className="visio-cms-mt-2 visio-cms-w-full"
                           disabled={value && value.length >= itemCount}
                           onClick={() => {
-                            if (page) {
-                              if (foundBlock) {
-                                const path = schema.propName.split('.');
+                            if (foundBlock || activeGlobalPinnedBlock) {
+                              const path = schema.propName.split('.');
 
-                                const value = getValueByPath(foundBlock.inputs, path);
-                                toast.success(`${convertToTitleCase(schema.name)} added successfully`);
+                              const value = getValueByPath(foundBlock?.inputs || activeGlobalPinnedBlock?.inputs, path);
+                              toast.success(`${convertToTitleCase(schema.name)} added successfully`);
 
-                                updateBlockValue(
-                                  path,
-                                  value
-                                    ? [...value, { ...schema.schema, itemKey: uuidv4() }]
-                                    : [{ ...schema.schema, itemKey: uuidv4() }],
-                                );
-                              }
+                              updateBlockValue(
+                                path,
+                                value
+                                  ? [...value, { ...schema.schema, itemKey: uuidv4() }]
+                                  : [{ ...schema.schema, itemKey: uuidv4() }],
+                              );
                             }
                           }}
                         >

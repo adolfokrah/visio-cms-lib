@@ -237,7 +237,14 @@ function PageItem({ item }: { item: PageTreeItem }) {
   const [openAlert, setOpenAlert] = useState<{ withPages: boolean } | null>(null);
   const { tabs, setTabs } = useTabState();
   const updateSelectedPage = useCallback(() => {
-    if (tabs.find((tab) => tab.id == item.id)) return;
+    if (tabs.find((tab) => tab.id == item.id)) {
+      setTabs([...tabs.map((tab) => ({ ...tab, active: tab.id == item.id }))]);
+    } else {
+      setTabs([
+        ...tabs.map((tab) => ({ ...tab, active: false })),
+        { name: item.name, type: 'page', id: item.id, active: true },
+      ]);
+    }
 
     const newPages = pages.map((page) => ({
       ...page,
@@ -245,10 +252,7 @@ function PageItem({ item }: { item: PageTreeItem }) {
       pinned: page.id == item.id ? true : page.pinned,
     }));
     setPages(newPages);
-    setTabs([
-      ...tabs.map((tab) => ({ ...tab, active: false })),
-      { name: item.name, type: 'page', id: item.id, active: true },
-    ]);
+
     const activePage = newPages.find((page) => page.active);
     if (activePage) {
       setPageSeoFeaturedImages(activePage);

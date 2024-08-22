@@ -2,6 +2,7 @@ import usePageContent from '@/lib/hooks/usePageContent';
 import { usePageContentState } from '@/lib/states/usePageContentState';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import { useTabState } from '@/lib/states/useTabsState';
+import { sendMessageToParent } from '@/lib/utils';
 import React from 'react';
 
 export default function GlobalEditContent() {
@@ -15,7 +16,12 @@ export default function GlobalEditContent() {
   if (!block || !foundGlobalBlock) return null;
 
   return (
-    <div>
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+        sendMessageToParent({ type: 'remove-selected-repeater', content: '' });
+      }}
+    >
       {React.createElement(block, {
         key: block.Schema.id,
         ...(foundGlobalBlock.inputs || block.Schema.defaultPropValues),

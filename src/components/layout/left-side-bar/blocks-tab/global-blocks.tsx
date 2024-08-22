@@ -64,7 +64,10 @@ export default function GlobalBlocks() {
                 <Button
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (tabs.find((tab) => tab.id === id)) return;
+                    if (tabs.find((tab) => tab.id === id)) {
+                      setTabs([...tabs.map((tab) => ({ ...tab, active: tab.id === id }))]);
+                      return;
+                    }
 
                     setTabs([
                       ...tabs.map((tab) => ({ ...tab, active: false })),
@@ -114,9 +117,11 @@ export default function GlobalBlocks() {
 
 const GlobalBlockName = ({ name, id }: { name: string; id: string }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const { tabs, setTabs } = useTabState();
   const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
   const updateBlockName = (name: string) => {
     const block = globalBlocks.find((block) => block.name.toLowerCase() === name.toLowerCase() && block.id !== id);
+    setTabs(tabs.map((tab) => (tab.id === id ? { ...tab, name } : tab)));
     if (block) {
       toast.error('Block with the same name already exists');
       return;

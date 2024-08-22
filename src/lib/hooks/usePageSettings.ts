@@ -1,10 +1,12 @@
 import { SchedulePublished, Status, usePagesState } from '@/lib/states/usePagesState';
 import { useCallback, useMemo, useState } from 'react';
 import { formatStringToSlug } from '../utils';
+import { useTabState } from '../states/useTabsState';
 export default function usePageSettings() {
   const { pages, setPages } = usePagesState();
   const [error, setError] = useState<string>('');
   const page = useMemo(() => pages.find((page) => page.active), [pages]);
+  const { tabs, setTabs } = useTabState();
 
   const updatePageStatus = useCallback(
     (value: Status) => {
@@ -49,10 +51,12 @@ export default function usePageSettings() {
         setError(`Page name ${value} already exists`);
         return;
       }
+      const page = pages.find((page) => page.active);
       setPages(pages.map((page) => ({ ...page, name: page.active ? value : page.name })));
+      setTabs(tabs.map((tab) => (tab.id === page?.id ? { ...tab, name: value } : tab)));
       setError('');
     },
-    [pages, setPages],
+    [pages, setPages, tabs, setTabs],
   );
 
   const handleUpdatePageTag = useCallback(
