@@ -19,6 +19,7 @@ export type GlobalBlock = {
   blockId: string;
   inputs: { [key: string]: any };
   active?: boolean;
+  history?: { currentIndex: number; inputs: { [key: string]: any }[] };
 };
 
 export type ProjectConfiguration = {

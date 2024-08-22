@@ -1,20 +1,19 @@
 import usePageContent from '@/lib/hooks/usePageContent';
 import { usePageContentState } from '@/lib/states/usePageContentState';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import { useTabState } from '@/lib/states/useTabsState';
 import { sendMessageToParent } from '@/lib/utils';
 import React from 'react';
 
 export default function GlobalEditContent() {
-  const { tabs } = useTabState();
   const { blocks } = useProjectConfigurationState();
-  const { globalBlocks } = usePageContentState();
+  const { globalBlocks, tabs } = usePageContentState();
   usePageContent();
   const pinnedTab = tabs.find((tab) => tab.active);
   const foundGlobalBlock = globalBlocks.find((globalBlock) => globalBlock.id === pinnedTab?.id);
   const block = blocks.find((block) => block.Schema.id === foundGlobalBlock?.blockId);
   if (!block || !foundGlobalBlock) return null;
 
+  console.log(foundGlobalBlock.inputs);
   return (
     <div
       onClick={(e) => {

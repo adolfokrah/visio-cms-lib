@@ -4,30 +4,30 @@ import { sendMessageToParent } from '../utils';
 import { usePageContentState } from '../states/usePageContentState';
 
 export default function usePageContent() {
-  const { pages, setPages, setGlobalBlocks } = usePageContentState();
+  const { pages, setPages, setGlobalBlocks, setTabs } = usePageContentState();
   const activePage = pages.find((page) => page.active);
 
   useEffect(() => {
-    const pages = JSON.parse(sessionStorage.getItem('pages-storage') || '{}');
-    const projectConfiguration = JSON.parse(sessionStorage.getItem('project-configuration-storage') || '{}');
-    if (pages && pages.state.pages) {
-      setPages(pages.state.pages);
+    function getStorageData() {
+      const pages = JSON.parse(sessionStorage.getItem('pages-storage') || '{}');
+      const projectConfiguration = JSON.parse(sessionStorage.getItem('project-configuration-storage') || '{}');
+      const tabs = JSON.parse(sessionStorage.getItem('tabs-storage') || '{}');
+      if (pages && pages.state.pages) {
+        setPages(pages.state.pages);
+      }
+      if (projectConfiguration.state.globalBlocks) {
+        setGlobalBlocks(projectConfiguration.state.globalBlocks);
+      }
+      if (tabs.state.tabs) {
+        setTabs(tabs.state.tabs);
+      }
     }
-    if (projectConfiguration.state.globalBlocks) {
-      setGlobalBlocks(projectConfiguration.state.globalBlocks);
-    }
+
+    getStorageData();
     const handleStorageChange = (event: StorageEvent) => {
       // Check if the change is in sessionStorage
       if (event.storageArea === sessionStorage) {
-        const pages = JSON.parse(sessionStorage.getItem('pages-storage') || '{}');
-        const projectConfiguration = JSON.parse(sessionStorage.getItem('project-configuration-storage') || '{}');
-        if (pages.state.pages) {
-          setPages(pages.state.pages);
-        }
-
-        if (projectConfiguration.state.globalBlocks) {
-          setGlobalBlocks(projectConfiguration.state.globalBlocks);
-        }
+        getStorageData();
       }
     };
 

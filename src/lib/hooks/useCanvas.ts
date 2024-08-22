@@ -16,7 +16,7 @@ export default function useCanvas() {
   const { undo, redo } = useUndoAndRedo();
   const [blockToAddAsGlobalId, setBlockToAddAsGlobalId] = useState<string | null>(null);
   const { setSelectedRepeaterItem } = useRepeaterState();
-  const { addBlocksToPageHistory } = useBlockHistory();
+  const { addBlocksToPageHistory, addInputsToGlobalBlockHistory } = useBlockHistory();
   const { tabs, setTabs } = useTabState();
 
   useEffect(() => {
@@ -165,7 +165,7 @@ export default function useCanvas() {
         const blockId = data.content;
         setBlockToAddAsGlobalId(blockId);
       } else if (data.type === 'updateBlockInput') {
-        const { propName, value, pageBlockId, editor } = JSON.parse(data.content);
+        const { propName, value, pageBlockId } = JSON.parse(data.content);
 
         const page = activePage;
         if (page) {
@@ -183,16 +183,20 @@ export default function useCanvas() {
               ),
             };
             setPages(pages.map((p) => (p.active ? page : p)));
-            if (!editor) addBlocksToPageHistory(page.activeLanguageLocale, [...JSON.parse(JSON.stringify(blocks))]);
+            addBlocksToPageHistory(page.activeLanguageLocale, blocks);
           }
         } else {
           ///user is editing a global block
           const globalBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
-          const path = propName.split('.');
-          const blockInputs = updateValueByPath(globalBlock?.inputs || {}, path, value);
-          setGlobalBlocks(
-            globalBlocks.map((block) => (block.id === globalBlock?.id ? { ...block, inputs: blockInputs } : block)),
-          );
+          if (globalBlock) {
+            const path = propName.split('.');
+            const blockInputs = updateValueByPath(globalBlock?.inputs || {}, path, value);
+            setGlobalBlocks(
+              globalBlocks.map((block) => (block.id === globalBlock?.id ? { ...block, inputs: blockInputs } : block)),
+            );
+
+            addInputsToGlobalBlockHistory(globalBlock?.id || '', blockInputs);
+          }
         }
       } else if (data.type === 'setSelectedRepeaterItemSchema') {
         const subRepeaterSchema = JSON.parse(data.content);
@@ -235,6 +239,7 @@ export default function useCanvas() {
     setTabs,
     tabs,
     setGlobalBlocks,
+    addInputsToGlobalBlockHistory,
   ]);
 
   return { blockToAddAsGlobalId, setBlockToAddAsGlobalId };

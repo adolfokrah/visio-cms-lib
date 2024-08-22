@@ -1,18 +1,18 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-type State = {
+export type TabsState = {
   tabs: {
     name: string;
     type: 'page' | 'globalBlock';
     id: string;
     active: boolean;
   }[];
-  setTabs: (tabs: State['tabs']) => void;
+  setTabs: (tabs: TabsState['tabs']) => void;
 };
 
 export const useTabState = create(
-  persist<State>(
+  persist<TabsState>(
     (set) => ({
       tabs: [],
       setTabs: (tabs) => set({ tabs }),

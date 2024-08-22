@@ -4,14 +4,35 @@ import { Button } from '@/components/ui/button';
 import useUndoAndRedo from '@/lib/hooks/useUndoAndRedo';
 
 export default function UndoRedoControls() {
-  const { undo, redo, history } = useUndoAndRedo();
+  const { undo, redo, history, activeGlobalPinnedBlock } = useUndoAndRedo();
 
+  const undoCheck = () => {
+    if (activeGlobalPinnedBlock) {
+      const globalBlockHistory = activeGlobalPinnedBlock.history;
+      return !globalBlockHistory || globalBlockHistory.inputs.length < 1 || (globalBlockHistory?.currentIndex || 0) < 0;
+    } else {
+      return !history || history?.blocks.length < 1 || history?.currentIndex < 0;
+    }
+  };
+
+  const redoCheck = () => {
+    if (activeGlobalPinnedBlock) {
+      const globalBlockHistory = activeGlobalPinnedBlock.history;
+      return (
+        !globalBlockHistory ||
+        globalBlockHistory?.inputs.length < 1 ||
+        globalBlockHistory?.currentIndex === globalBlockHistory.inputs.length - 1
+      );
+    } else {
+      return !history || history?.blocks.length < 1 || history?.currentIndex === history.blocks.length - 1;
+    }
+  };
   return (
     <div className="visio-cms-flex">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            disabled={!history || history?.blocks.length < 1 || history?.currentIndex < 0}
+            disabled={undoCheck()}
             onClick={undo}
             className="visio-cms-rounded-none !visio-cms-bg-dark-700 hover:!visio-cms-bg-dark-900"
           >
@@ -26,7 +47,7 @@ export default function UndoRedoControls() {
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            disabled={!history || history?.blocks.length < 1 || history?.currentIndex === history.blocks.length - 1}
+            disabled={redoCheck()}
             onClick={redo}
             className="visio-cms-rounded-none !visio-cms-bg-dark-700 hover:!visio-cms-bg-dark-900"
           >

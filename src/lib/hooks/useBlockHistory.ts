@@ -1,10 +1,12 @@
 import { PageBlock, usePagesState } from '../states/usePagesState';
+import { useProjectConfigurationState } from '../states/useProjectConfigState';
 export default function useBlockHistory() {
-  const { pages, setPages } = usePagesState();
-  const activePage = pages.find((page) => page.active);
+  const { setPages } = usePagesState();
+  const { setGlobalBlocks } = useProjectConfigurationState();
 
   const addBlocksToPageHistory = (locale: string, blocks: PageBlock[]) => {
-    const page = activePage;
+    const pages = usePagesState.getState().pages;
+    const page = pages.find((page) => page.active);
     if (page) {
       const history = page.history?.[locale]?.blocks ?? [];
       const currentIndex = page.history?.[locale]?.currentIndex ?? -1;
@@ -23,5 +25,26 @@ export default function useBlockHistory() {
     }
   };
 
-  return { addBlocksToPageHistory };
+  const addInputsToGlobalBlockHistory = (blockId: string, inputs: Record<string, any>) => {
+    const globalBlocks = useProjectConfigurationState.getState().globalBlocks;
+    const globalBlock = globalBlocks.find((block) => block.id === blockId);
+    if (globalBlock) {
+      const history = globalBlock.history?.inputs ?? [];
+      const currentIndex = globalBlock.history?.currentIndex ?? -1;
+      const newHistory = history.slice(0, currentIndex + 1);
+
+      newHistory.push(inputs);
+
+      globalBlock.history = {
+        currentIndex: currentIndex + 1,
+        inputs: newHistory,
+      };
+
+      console.log(inputs, globalBlock);
+
+      setGlobalBlocks(globalBlocks.map((block) => (block.id === blockId ? globalBlock : block)));
+    }
+  };
+
+  return { addBlocksToPageHistory, addInputsToGlobalBlockHistory };
 }

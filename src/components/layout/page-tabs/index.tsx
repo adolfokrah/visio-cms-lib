@@ -106,7 +106,7 @@ export default function PageTabs() {
         </DropdownMenu>
       ) : null}
 
-      <LanguageControls />
+      {tabs.find((tab) => tab.active)?.type === 'page' && <LanguageControls />}
       <ResponsiveBar />
       <UndoRedoControls />
     </div>
