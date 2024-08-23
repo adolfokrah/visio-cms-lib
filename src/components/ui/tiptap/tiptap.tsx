@@ -105,26 +105,25 @@ const Tiptap = ({
 }) => {
   const { tabs } = usePageContentState();
   const activeTab = tabs.find((tab) => tab.active)?.id;
+  const value = defaultValue?.includes('<p>') ? defaultValue : `<p>${defaultValue}</p>`;
 
   const editor = useEditor({
     extensions: [...extensions, PreventNewLine.configure({ allowNewLines })],
     editable: isEditable,
-    content: defaultValue,
+    content: value,
     onUpdate: ({ editor }) => {
-      if (editor.getHTML() === defaultValue) {
+      if (editor.getHTML() == value) {
         return;
       }
-      console.log('changed', editor?.getHTML());
       onChange(editor?.getHTML());
     },
   });
 
   useEffect(() => {
-    console.log(defaultValue);
-    if (activeTab && editor && defaultValue) {
-      editor.commands.setContent(defaultValue || '');
+    if (activeTab && editor && value) {
+      editor.commands.setContent(value || '');
     }
-  }, [activeTab, editor, defaultValue]);
+  }, [activeTab, editor, value]);
 
   useEffect(() => {
     if (editor) {

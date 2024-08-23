@@ -9,7 +9,7 @@ export default function useRepeaterController() {
   const { selectedRepeaterItem, setSelectedRepeaterItem } = useRepeaterState();
   const { pages, setPages } = usePagesState();
   const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
-  const { addBlocksToPageHistory } = useBlockHistory();
+  const { addBlocksToPageHistory, addInputsToGlobalBlockHistory } = useBlockHistory();
   const { tabs } = useTabState();
   const activePage = pages.find((page) => page.active);
   const page = activePage;
@@ -92,6 +92,7 @@ export default function useRepeaterController() {
           block.id === activeGlobalPinnedBlock.id ? { ...block, inputs: blockInputs } : block,
         ),
       );
+      addInputsToGlobalBlockHistory(activeGlobalPinnedBlock.id, blockInputs);
     }
   };
 

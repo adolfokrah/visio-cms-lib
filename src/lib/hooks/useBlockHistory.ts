@@ -2,7 +2,7 @@ import { PageBlock, usePagesState } from '../states/usePagesState';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 export default function useBlockHistory() {
   const { setPages } = usePagesState();
-  const { setGlobalBlocks } = useProjectConfigurationState();
+  const { setGlobalBlocks, globalBlocks } = useProjectConfigurationState();
 
   const addBlocksToPageHistory = (locale: string, blocks: PageBlock[]) => {
     const pages = usePagesState.getState().pages;
@@ -14,23 +14,30 @@ export default function useBlockHistory() {
 
       newHistory.push(blocks);
 
-      page.history = {
-        ...page.history,
-        [locale]: {
-          currentIndex: currentIndex + 1,
-          blocks: newHistory,
+      const newPage = {
+        ...page,
+        blocks: {
+          ...page.blocks,
+          [locale]: blocks,
+        },
+        history: {
+          ...page.history,
+          [locale]: {
+            currentIndex: currentIndex + 1,
+            blocks: newHistory,
+          },
         },
       };
-      setPages(pages.map((p) => (p.active ? page : p)));
+
+      setPages(pages.map((p) => (p.active ? newPage : p)));
     }
   };
 
   const addInputsToGlobalBlockHistory = (blockId: string, inputs: Record<string, any>) => {
-    const globalBlocks = useProjectConfigurationState.getState().globalBlocks;
     const globalBlock = globalBlocks.find((block) => block.id === blockId);
     if (globalBlock) {
-      const history = globalBlock.history?.inputs ?? [];
-      const currentIndex = globalBlock.history?.currentIndex ?? -1;
+      const history = globalBlock.history?.inputs ?? [{ ...globalBlock.inputs }];
+      const currentIndex = (globalBlock.history?.currentIndex || 0) ?? -1;
       const newHistory = history.slice(0, currentIndex + 1);
 
       newHistory.push(inputs);
@@ -39,8 +46,7 @@ export default function useBlockHistory() {
         currentIndex: currentIndex + 1,
         inputs: newHistory,
       };
-
-      console.log(inputs, globalBlock);
+      globalBlock.inputs = { ...inputs };
 
       setGlobalBlocks(globalBlocks.map((block) => (block.id === blockId ? globalBlock : block)));
     }

@@ -13,7 +13,6 @@ export default function GlobalEditContent() {
   const block = blocks.find((block) => block.Schema.id === foundGlobalBlock?.blockId);
   if (!block || !foundGlobalBlock) return null;
 
-  console.log(foundGlobalBlock.inputs);
   return (
     <div
       onClick={(e) => {

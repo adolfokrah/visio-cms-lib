@@ -120,7 +120,6 @@ export default function useMediaExplorer({
         chunkSize: 6 * 1024 * 1024, // NOTE: it must be set to 6MB (for now) do not change it
         onError: function (error: Error) {
           // Specify the type for the 'error' parameter
-          console.log('Failed because: ' + error);
           reject(error);
         },
         onProgress: function (bytesUploaded: number, bytesTotal: number) {

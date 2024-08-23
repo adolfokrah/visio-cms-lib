@@ -22,7 +22,7 @@ export default function RenderController(props: SideEditingProps) {
   const activeBlock =
     pageBlocks.find((block) => block.isSelected) ||
     globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
-  const { addBlocksToPageHistory } = useBlockHistory();
+  const { addBlocksToPageHistory, addInputsToGlobalBlockHistory } = useBlockHistory();
   const defaultValue = getValueByPath(activeBlock?.inputs, props.propName.split('.'));
 
   const debounceChangePropValue = lodash.debounce((value: any) => {
@@ -44,6 +44,7 @@ export default function RenderController(props: SideEditingProps) {
         setGlobalBlocks(
           globalBlocks.map((block) => (block.id === activeBlock.id ? { ...block, inputs: blockInputs } : block)),
         );
+        addInputsToGlobalBlockHistory(activeBlock.id, blockInputs);
       }
     }
   }, 300);

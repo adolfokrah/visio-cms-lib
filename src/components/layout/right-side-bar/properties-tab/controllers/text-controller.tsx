@@ -1,4 +1,5 @@
 import { Input } from '@/components/ui/input';
+import { useEffect, useState } from 'react';
 
 export default function TextController({
   defaultValue,
@@ -9,5 +10,19 @@ export default function TextController({
   onChange: (value: string) => void;
   type?: 'text' | 'number' | 'email' | 'password';
 }) {
-  return <Input defaultValue={defaultValue} type={type} onChange={(e) => onChange(e.target.value)} />;
+  const [value, setValue] = useState(defaultValue);
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
+
+  return (
+    <Input
+      value={value}
+      type={type}
+      onChange={(e) => {
+        onChange(e.target.value);
+        setValue(e.target.value);
+      }}
+    />
+  );
 }

@@ -99,7 +99,7 @@ export default function useUndoAndRedo() {
       const globalBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
       if (globalBlock) {
         const history = globalBlock.history?.inputs ?? [];
-        const currentIndex = globalBlock.history?.currentIndex || 1;
+        const currentIndex = globalBlock.history?.currentIndex || 0;
 
         if (currentIndex < history.length - 1) {
           const newInputs = history[currentIndex + 1];

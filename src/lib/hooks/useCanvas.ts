@@ -34,11 +34,8 @@ export default function useCanvas() {
           isGlobalBlock,
           globalBlockId,
         });
-        page.blocks = {
-          ...page.blocks,
-          [page.activeLanguageLocale]: newBlocks,
-        };
-        setPages(pages.map((p) => (p.active ? page : p)));
+
+        // setPages(pages.map((p) => (p.active ? page : p)));
         addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
       }
     };
@@ -48,11 +45,8 @@ export default function useCanvas() {
       if (page) {
         const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
         const newBlocks = blocks.filter((block) => block.id !== blockId);
-        page.blocks = {
-          ...page.blocks,
-          [page.activeLanguageLocale]: newBlocks,
-        };
-        setPages(pages.map((p) => (p.active ? page : p)));
+
+        // setPages(pages.map((p) => (p.active ? page : p)));
         addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
       }
     };
@@ -96,11 +90,8 @@ export default function useCanvas() {
           if (blockIndex === 0) return;
           const newBlocks = [...blocks];
           [newBlocks[blockIndex - 1], newBlocks[blockIndex]] = [newBlocks[blockIndex], newBlocks[blockIndex - 1]];
-          page.blocks = {
-            ...page.blocks,
-            [page.activeLanguageLocale]: newBlocks,
-          };
-          setPages(pages.map((p) => (p.active ? page : p)));
+
+          // setPages(pages.map((p) => (p.active ? page : p)));
           addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         }
       } else if (data.type === 'moveBlockDown') {
@@ -112,11 +103,8 @@ export default function useCanvas() {
           if (blockIndex === blocks.length - 1) return;
           const newBlocks = [...blocks];
           [newBlocks[blockIndex], newBlocks[blockIndex + 1]] = [newBlocks[blockIndex + 1], newBlocks[blockIndex]];
-          page.blocks = {
-            ...page.blocks,
-            [page.activeLanguageLocale]: newBlocks,
-          };
-          setPages(pages.map((p) => (p.active ? page : p)));
+
+          // setPages(pages.map((p) => (p.active ? page : p)));
           addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         }
       } else if (data.type === 'copyBlock') {
@@ -132,11 +120,8 @@ export default function useCanvas() {
           };
           const newBlocks = [...blocks].map((block) => ({ ...block, isSelected: false }));
           newBlocks.splice(blockIndex + 1, 0, newBlock);
-          page.blocks = {
-            ...page.blocks,
-            [page.activeLanguageLocale]: newBlocks,
-          };
-          setPages(pages.map((p) => (p.active ? page : p)));
+
+          // setPages(pages.map((p) => (p.active ? page : p)));
           addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         }
       } else if (data.type === 'Undo') {
@@ -158,7 +143,7 @@ export default function useCanvas() {
             [page.activeLanguageLocale]: newBlocks,
           };
 
-          setPages(pages.map((p) => (p.active ? page : p)));
+          // setPages(pages.map((p) => (p.active ? page : p)));
           addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         }
       } else if (data.type === 'convertBlockToGlobal') {
@@ -182,8 +167,8 @@ export default function useCanvas() {
                 block.id === pageBlockId ? { ...block, inputs: blockInputs } : block,
               ),
             };
-            setPages(pages.map((p) => (p.active ? page : p)));
-            addBlocksToPageHistory(page.activeLanguageLocale, blocks);
+            // setPages(pages.map((p) => (p.active ? page : p)));
+            addBlocksToPageHistory(page.activeLanguageLocale, page.blocks[page.activeLanguageLocale]);
           }
         } else {
           ///user is editing a global block
@@ -191,10 +176,7 @@ export default function useCanvas() {
           if (globalBlock) {
             const path = propName.split('.');
             const blockInputs = updateValueByPath(globalBlock?.inputs || {}, path, value);
-            setGlobalBlocks(
-              globalBlocks.map((block) => (block.id === globalBlock?.id ? { ...block, inputs: blockInputs } : block)),
-            );
-
+            //update global block inputs and inputs to history
             addInputsToGlobalBlockHistory(globalBlock?.id || '', blockInputs);
           }
         }
