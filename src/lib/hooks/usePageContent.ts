@@ -4,7 +4,7 @@ import { sendMessageToParent } from '../utils';
 import { usePageContentState } from '../states/usePageContentState';
 
 export default function usePageContent() {
-  const { pages, setPages, setGlobalBlocks, setTabs } = usePageContentState();
+  const { pages, setPages, setGlobalBlocks, setTabs, setSelectedRepeaterItem } = usePageContentState();
   const activePage = pages.find((page) => page.active);
 
   useEffect(() => {
@@ -12,6 +12,7 @@ export default function usePageContent() {
       const pages = JSON.parse(localStorage.getItem('pages-storage') || '{}');
       const projectConfiguration = JSON.parse(localStorage.getItem('project-configuration-storage') || '{}');
       const tabs = JSON.parse(localStorage.getItem('tabs-storage') || '{}');
+      const repeaterState = JSON.parse(localStorage.getItem('repeater-storage') || '{}');
       if (pages && pages.state.pages) {
         setPages(pages.state.pages);
       }
@@ -20,6 +21,9 @@ export default function usePageContent() {
       }
       if (tabs.state.tabs) {
         setTabs(tabs.state.tabs);
+      }
+      if (repeaterState.state) {
+        setSelectedRepeaterItem(repeaterState.state.selectedRepeaterItem);
       }
     }
 

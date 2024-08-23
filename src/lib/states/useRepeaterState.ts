@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { SideEditingProps } from '../types';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type RepeaterSchema = {
   propName: string;
@@ -8,7 +9,7 @@ export type RepeaterSchema = {
   schema: Record<string, any>;
 };
 
-type State = {
+export type RepeaterState = {
   repeaterId: string;
   setRepeaterId: (value: string) => void;
   selectedRepeaterItem: {
@@ -25,9 +26,17 @@ type State = {
   ) => void;
 };
 
-export const useRepeaterState = create<State>((set) => ({
-  repeaterId: '',
-  setRepeaterId: (repeaterId) => set(() => ({ repeaterId })),
-  selectedRepeaterItem: null,
-  setSelectedRepeaterItem: (selectedRepeaterItem) => set(() => ({ selectedRepeaterItem })),
-}));
+export const useRepeaterState = create(
+  persist<RepeaterState>(
+    (set) => ({
+      repeaterId: '',
+      setRepeaterId: (repeaterId) => set(() => ({ repeaterId })),
+      selectedRepeaterItem: null,
+      setSelectedRepeaterItem: (selectedRepeaterItem) => set(() => ({ selectedRepeaterItem })),
+    }),
+    {
+      name: 'repeater-storage',
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);

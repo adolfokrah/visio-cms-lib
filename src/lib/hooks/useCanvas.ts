@@ -51,8 +51,10 @@ export default function useCanvas() {
       }
     };
 
-    const selectBlock = (blockId: string) => {
-      setSelectedRepeaterItem(null);
+    const selectBlock = (blockId: string, deselectRepeater = true) => {
+      if (deselectRepeater) {
+        setSelectedRepeaterItem(null);
+      }
 
       const page = activePage;
       if (page) {
@@ -183,6 +185,7 @@ export default function useCanvas() {
       } else if (data.type === 'setSelectedRepeaterItemSchema') {
         const subRepeaterSchema = JSON.parse(data.content);
         setSelectedRepeaterItem(subRepeaterSchema);
+        selectBlock(subRepeaterSchema.pageBlockId, false);
       } else if (data.type === 'remove-selected-repeater') {
         setSelectedRepeaterItem(null);
       } else if (data.type === 'editGlobalBlock') {

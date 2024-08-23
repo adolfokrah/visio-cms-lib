@@ -106,8 +106,6 @@ export default function PropertiesTab() {
                             if (foundBlock || activeGlobalPinnedBlock) {
                               const path = schema.propName.split('.');
 
-                              console.log(foundBlock?.inputs, path);
-
                               const value = getValueByPath(foundBlock?.inputs || activeGlobalPinnedBlock?.inputs, path);
 
                               try {
