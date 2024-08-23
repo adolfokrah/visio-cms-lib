@@ -15,7 +15,7 @@ export const useTreeView = create(
     }),
     {
       name: 'pageTreeItems-storage',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );

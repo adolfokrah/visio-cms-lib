@@ -247,9 +247,18 @@ export function stripHtmlTags(input: string): string {
   return input.replace(/<\/?[^>]+(>|$)/g, '');
 }
 
-export const isBuilderMode = () => {
-  return window.location.pathname.includes(PAGES.PAGE_CONTENT);
-};
+export function getProjectMode() {
+  if (
+    window.location.pathname.includes(PAGES.PAGE_CONTENT) ||
+    window.location.pathname.includes(PAGES.GLOBAL_BLOCK_EDIT_CONTENT)
+  ) {
+    return 'BUILDER';
+  } else if (window.location.pathname.includes(PAGES.PREVIEW_PAGE)) {
+    return 'PREVIEW';
+  } else {
+    return 'LIVE';
+  }
+}
 
 export function updateColorById(
   data: { [key: string]: any }[],

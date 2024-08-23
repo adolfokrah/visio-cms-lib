@@ -159,7 +159,7 @@ export const usePagesState = create(
     }),
     {
       name: 'pages-storage',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );

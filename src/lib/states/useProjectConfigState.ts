@@ -52,7 +52,7 @@ export const useProjectConfigurationState = create(
     }),
     {
       name: 'project-configuration-storage',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );

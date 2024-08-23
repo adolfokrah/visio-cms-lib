@@ -1,7 +1,7 @@
 import { Block, Color, MediaFile } from '@/lib/exposed-types';
 import { Repeater, RepeaterItem } from '../exposed-components/repeater';
 import Text from '../exposed-components/text';
-import { cn, isBuilderMode } from '@/lib/utils';
+import { cn, getProjectMode } from '@/lib/utils';
 import Image from '../exposed-components/image';
 type NavbarProps = {
   logo: MediaFile;
@@ -30,14 +30,14 @@ type NavbarProps = {
 };
 
 const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons }) => {
-  const isBuilder = isBuilderMode();
+  const projectMode = getProjectMode();
 
   return (
     <nav
       className={cn(
         'visio-cms-p-2  visio-cms-w-full visio-cms-justify-between visio-cms-flex visio-cms-gap-2 visio-cms-items-center visio-cms-bg-white ',
         {
-          'visio-cms-fixed visio-cms-z-30': !isBuilder,
+          'visio-cms-fixed visio-cms-z-30': projectMode != 'BUILDER',
         },
       )}
     >

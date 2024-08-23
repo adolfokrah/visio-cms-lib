@@ -17,15 +17,15 @@ export default function ColorChooser({
 
   useEffect(() => {
     const getColors = () => {
-      const projectConfiguration = JSON.parse(sessionStorage.getItem('project-configuration-storage') || '{}');
+      const projectConfiguration = JSON.parse(localStorage.getItem('project-configuration-storage') || '{}');
 
       if (projectConfiguration.state.theme.colorScheme) {
         setColors(projectConfiguration.state.theme.colorScheme);
       }
     };
     const handleStorageChange = (event: StorageEvent) => {
-      // Check if the change is in sessionStorage
-      if (event.storageArea === sessionStorage) {
+      // Check if the change is in localStorage
+      if (event.storageArea === localStorage) {
         getColors();
       }
     };

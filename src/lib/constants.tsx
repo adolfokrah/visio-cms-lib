@@ -39,6 +39,7 @@ export const PAGES = {
   PAGE_NOT_FOUND: `${CMS_BASE_PATH}/page-not-found`,
   PAGE_CONTENT: `${CMS_BASE_PATH}/page-content`,
   GLOBAL_BLOCK_EDIT_CONTENT: `${CMS_BASE_PATH}/global-block-edit-content`,
+  PREVIEW_PAGE: `${CMS_BASE_PATH}/preview-page`,
 };
 
 export const RESPONSIVE_VIEWS: ResponsiveViews[] = [

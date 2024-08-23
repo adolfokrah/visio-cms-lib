@@ -106,15 +106,21 @@ export default function PropertiesTab() {
                             if (foundBlock || activeGlobalPinnedBlock) {
                               const path = schema.propName.split('.');
 
-                              const value = getValueByPath(foundBlock?.inputs || activeGlobalPinnedBlock?.inputs, path);
-                              toast.success(`${convertToTitleCase(schema.name)} added successfully`);
+                              console.log(foundBlock?.inputs, path);
 
-                              updateBlockValue(
-                                path,
-                                value
-                                  ? [...value, { ...schema.schema, itemKey: uuidv4() }]
-                                  : [{ ...schema.schema, itemKey: uuidv4() }],
-                              );
+                              const value = getValueByPath(foundBlock?.inputs || activeGlobalPinnedBlock?.inputs, path);
+
+                              try {
+                                updateBlockValue(
+                                  path,
+                                  value
+                                    ? [...value, { ...schema.schema, itemKey: uuidv4() }]
+                                    : [{ ...schema.schema, itemKey: uuidv4() }],
+                                );
+                                toast.success(`${convertToTitleCase(schema.name)} added successfully`);
+                              } catch (e) {
+                                toast.error(`Error adding ${convertToTitleCase(schema.name)}`);
+                              }
                             }
                           }}
                         >

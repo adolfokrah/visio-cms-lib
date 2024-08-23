@@ -14,6 +14,7 @@ import { useAuthState } from '@/lib/states/useAuthState';
 import PageContent from './page-content';
 import { TooltipProvider } from '../ui/tooltip';
 import GlobalEditContent from './global-edit-content';
+import PagePreview from './page-preview';
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
   {
     path: PAGES.GLOBAL_BLOCK_EDIT_CONTENT,
     element: <GlobalEditContent />,
+  },
+  {
+    path: `${PAGES.PREVIEW_PAGE}/:id`,
+    element: <PagePreview />,
   },
 ]);
 

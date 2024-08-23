@@ -9,9 +9,9 @@ export default function usePageContent() {
 
   useEffect(() => {
     function getStorageData() {
-      const pages = JSON.parse(sessionStorage.getItem('pages-storage') || '{}');
-      const projectConfiguration = JSON.parse(sessionStorage.getItem('project-configuration-storage') || '{}');
-      const tabs = JSON.parse(sessionStorage.getItem('tabs-storage') || '{}');
+      const pages = JSON.parse(localStorage.getItem('pages-storage') || '{}');
+      const projectConfiguration = JSON.parse(localStorage.getItem('project-configuration-storage') || '{}');
+      const tabs = JSON.parse(localStorage.getItem('tabs-storage') || '{}');
       if (pages && pages.state.pages) {
         setPages(pages.state.pages);
       }
@@ -25,8 +25,8 @@ export default function usePageContent() {
 
     getStorageData();
     const handleStorageChange = (event: StorageEvent) => {
-      // Check if the change is in sessionStorage
-      if (event.storageArea === sessionStorage) {
+      // Check if the change is in localStorage
+      if (event.storageArea === localStorage) {
         getStorageData();
       }
     };

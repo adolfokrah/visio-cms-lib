@@ -19,7 +19,7 @@ export const useTabState = create(
     }),
     {
       name: 'tabs-storage',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );

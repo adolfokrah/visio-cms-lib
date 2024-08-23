@@ -99,8 +99,8 @@ export default function CustomBubbleMenu({
         onCloseModal={() => setOpenMediaExplorer(false)}
         onImageChosen={(image) => {
           setOpenMediaExplorer(false);
-          const imagePublicUrl = db.storage.from(bucketName).getPublicUrl(image.mediaHash || '').data.publicUrl;
-          editor.commands.setImage({ src: imagePublicUrl, alt: image.altText, title: image.altText });
+          const imagePublicUrl = db.storage.from(bucketName).getPublicUrl(image?.mediaHash || '').data.publicUrl;
+          editor.commands.setImage({ src: imagePublicUrl, alt: image?.altText, title: image?.altText });
         }}
       />
     </>

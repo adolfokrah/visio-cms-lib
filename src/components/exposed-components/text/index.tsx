@@ -1,6 +1,7 @@
 import React from 'react';
 import useTextEditor from '@/lib/hooks/useTextEditor';
 import { EditorControlTypes } from '@/lib/types';
+import { getProjectMode } from '@/lib/utils';
 const Tiptap = React.lazy(() => import('@/components/ui/tiptap/tiptap'));
 
 export type TextEditorControls = Exclude<
@@ -25,17 +26,20 @@ export default function Text({
     pageBlockId,
   });
 
-  return (
-    <React.Suspense fallback={<></>}>
-      <Tiptap
-        isEditable={!isBlockGlobal}
-        allowedControls={allowedControls}
-        defaultValue={defaultValue}
-        allowNewLines={false}
-        onChange={(value) => {
-          debouncedOnUpdate({ value });
-        }}
-      />
-    </React.Suspense>
-  );
+  const projectMode = getProjectMode();
+  if (projectMode === 'BUILDER')
+    return (
+      <React.Suspense fallback={<></>}>
+        <Tiptap
+          isEditable={!isBlockGlobal}
+          allowedControls={allowedControls}
+          defaultValue={defaultValue}
+          allowNewLines={false}
+          onChange={(value) => {
+            debouncedOnUpdate({ value });
+          }}
+        />
+      </React.Suspense>
+    );
+  else return <div dangerouslySetInnerHTML={{ __html: defaultValue || '' }} />;
 }

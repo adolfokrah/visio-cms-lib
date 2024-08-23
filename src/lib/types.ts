@@ -31,12 +31,12 @@ export type ProjectConfiguration = {
   defaultLanguage: Language;
   projectId: string;
   bucketName: string;
+  blocks: BlockList[];
+  allowImageTransformation: boolean;
   theme: {
     colorScheme: Color[];
   };
-  blocks: BlockList[];
   globalBlocks: GlobalBlock[];
-  allowImageTransformation: boolean;
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 
