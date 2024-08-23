@@ -9,10 +9,16 @@ import { cn } from '@/lib/utils';
 import { usePagesState } from '@/lib/states/usePagesState';
 import { RESPONSIVE_VIEWS } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
+import { useTabState } from '@/lib/states/useTabsState';
+import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 
 export default function ResponsiveBar() {
   const { pages, setPageResponsiveView } = usePagesState();
-  const activePage = pages.find((page) => page.active);
+  const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
+  const { tabs } = useTabState();
+
+  const activeGlobalPinnedBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
+  const activePage = pages.find((page) => page.active) || activeGlobalPinnedBlock;
   if (!activePage) return null;
   return (
     <DropdownMenu>
@@ -37,7 +43,18 @@ export default function ResponsiveBar() {
         {RESPONSIVE_VIEWS.map(({ view, size, icon }) => (
           <DropdownMenuItem
             key={view}
-            onClick={() => setPageResponsiveView(view)}
+            onClick={() => {
+              const activePage = pages.find((page) => page.active);
+              if (activePage) {
+                setPageResponsiveView(view);
+              } else {
+                setGlobalBlocks([
+                  ...globalBlocks.map((block) =>
+                    block.id === tabs.find((tab) => tab.active)?.id ? { ...block, selectedView: view } : block,
+                  ),
+                ]);
+              }
+            }}
             className={cn(
               'visio-cms-p-3 visio-cms-place-items-center visio-cms-justify-between visio-cms-group visio-cms-text-slate-400 visio-cms-flex visio-cms-gap-2 visio-cms-cursor-pointer hover:visio-cms-bg-dark-900 visio-cms-items-center',
               {

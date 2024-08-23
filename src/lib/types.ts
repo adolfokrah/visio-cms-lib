@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page } from './states/usePagesState';
+import { Page, ResponsiveView } from './states/usePagesState';
 import { RepeaterSchema } from './states/useRepeaterState';
 
 export type Language = {
@@ -20,6 +20,7 @@ export type GlobalBlock = {
   inputs: { [key: string]: any };
   active?: boolean;
   history?: { currentIndex: number; inputs: { [key: string]: any }[] };
+  selectedView: ResponsiveView;
 };
 
 export type ProjectConfiguration = {

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
-import { usePagesState } from '../states/usePagesState';
+import { ResponsiveView, usePagesState } from '../states/usePagesState';
 import { toast } from 'sonner';
 
 export default function useGlobalBlock(onClose?: () => void) {
@@ -49,6 +49,7 @@ export default function useGlobalBlock(onClose?: () => void) {
           name,
           blockId,
           inputs: { ...pageBlock?.inputs },
+          selectedView: 'Desktop' as ResponsiveView,
         },
       ];
       setGlobalBlocks(newGlobalBlocks);

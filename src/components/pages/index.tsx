@@ -13,7 +13,7 @@ import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState
 import { useAuthState } from '@/lib/states/useAuthState';
 import PageContent from './page-content';
 import { TooltipProvider } from '../ui/tooltip';
-import GlobalEditContent from './globa-edit-content';
+import GlobalEditContent from './global-edit-content';
 
 const router = createBrowserRouter([
   {
