@@ -39,8 +39,17 @@ export default function useImage({ defaultValue, pageBlockId }: { defaultValue: 
     };
     if (defaultValue?.mediaHash) {
       getImagePublicUrl(defaultValue?.mediaHash, defaultValue.width, defaultValue.height);
+    } else {
+      setImagePublicUrl('https://placehold.co/600x400');
     }
-  }, [bucketName, defaultValue?.mediaHash, defaultValue?.height, defaultValue?.width, db.storage]);
+  }, [
+    bucketName,
+    defaultValue?.mediaHash,
+    defaultValue?.height,
+    defaultValue?.width,
+    db.storage,
+    allowImageTransformation,
+  ]);
 
   return { openMediaExplorer, setOpenMediaExplorer, imagePublicUrl, isBlockGlobal };
 }

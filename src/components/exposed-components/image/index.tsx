@@ -8,7 +8,6 @@ export default function Image({
   propName,
   className,
   pageBlockId,
-  allowTransformation,
 }: {
   defaultValue: MediaFile;
   propName: string;
@@ -19,7 +18,6 @@ export default function Image({
   const { openMediaExplorer, setOpenMediaExplorer, imagePublicUrl, isBlockGlobal } = useImage({
     defaultValue,
     pageBlockId,
-    allowTransformation,
   });
 
   return (
