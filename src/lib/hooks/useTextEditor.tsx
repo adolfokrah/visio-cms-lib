@@ -30,7 +30,9 @@ export default function useTextEditor({
     });
   }, 500);
 
-  const html = sanitizeHtml(defaultValue || '');
+  let html = sanitizeHtml(defaultValue || '');
+  const removeRegexP = /<p><\/p>/g;
+  html = html.replace(removeRegexP, '<br>');
 
   return { html, debouncedOnUpdate, isBlockGlobal, activePage };
 }

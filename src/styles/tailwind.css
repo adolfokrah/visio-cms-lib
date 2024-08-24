@@ -62,7 +62,6 @@
   }
 
   .scrollbar-custom {
-    scrollbar-width: thin;
     scrollbar-color: hsl(var(-visio-cms-brand-dark-900)) hsl(var(-visio-cms-brand-dark-800));
   }
 

@@ -20,7 +20,7 @@ export default function Text({
   propName: string;
   pageBlockId: string;
 }) {
-  const { debouncedOnUpdate, isBlockGlobal } = useTextEditor({
+  const { debouncedOnUpdate, isBlockGlobal, html } = useTextEditor({
     propName,
     defaultValue,
     pageBlockId,
@@ -41,5 +41,5 @@ export default function Text({
         />
       </React.Suspense>
     );
-  else return <div dangerouslySetInnerHTML={{ __html: defaultValue || '' }} />;
+  else return <div dangerouslySetInnerHTML={{ __html: html || '' }} />;
 }

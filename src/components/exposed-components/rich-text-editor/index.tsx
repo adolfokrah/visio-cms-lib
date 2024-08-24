@@ -15,7 +15,7 @@ export default function RichTextEditor({
   propName: string;
   pageBlockId: string;
 }) {
-  const { debouncedOnUpdate, isBlockGlobal } = useTextEditor({
+  const { debouncedOnUpdate, isBlockGlobal,html } = useTextEditor({
     propName,
     defaultValue,
     pageBlockId,
@@ -34,5 +34,5 @@ export default function RichTextEditor({
         }}
       />
     );
-  else return <div dangerouslySetInnerHTML={{ __html: defaultValue || '' }} />;
+  else return <div dangerouslySetInnerHTML={{ __html: html || '' }} />;
 }

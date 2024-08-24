@@ -41,8 +41,6 @@ export default function PropertiesTab() {
           ?.Schema.repeaters?.map((schema) => ({ ...schema, propName: schema.name }))
       : [] || [];
 
-  console.log(selectedRepeaterItem);
-
   const sideEditingProp =
     repeaterItemParentValue && selectedRepeaterItem
       ? selectedRepeaterItem?.sideEditingProps || []
@@ -121,7 +119,6 @@ export default function PropertiesTab() {
                           }}
                         >
                           Add {convertToTitleCase(schema.name)}
-                          {schema.propName}
                         </Button>
                       );
                     })}
