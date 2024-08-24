@@ -41,6 +41,8 @@ export default function PropertiesTab() {
           ?.Schema.repeaters?.map((schema) => ({ ...schema, propName: schema.name }))
       : [] || [];
 
+  console.log(selectedRepeaterItem);
+
   const sideEditingProp =
     repeaterItemParentValue && selectedRepeaterItem
       ? selectedRepeaterItem?.sideEditingProps || []
@@ -104,10 +106,6 @@ export default function PropertiesTab() {
                           disabled={value && value.length >= itemCount}
                           onClick={() => {
                             if (foundBlock || activeGlobalPinnedBlock) {
-                              const path = schema.propName.split('.');
-
-                              const value = getValueByPath(foundBlock?.inputs || activeGlobalPinnedBlock?.inputs, path);
-
                               try {
                                 updateBlockValue(
                                   path,
@@ -123,6 +121,7 @@ export default function PropertiesTab() {
                           }}
                         >
                           Add {convertToTitleCase(schema.name)}
+                          {schema.propName}
                         </Button>
                       );
                     })}

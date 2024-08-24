@@ -47,7 +47,14 @@ export default function useRepeaterController() {
 
     setSelectedRepeaterItem({
       repeaterItemId: `${repeaterItemPath.join('.')}.${index}`,
-      subRepeatersSchemas: selectedRepeaterItem?.subRepeatersSchemas || [],
+      subRepeatersSchemas:
+        selectedRepeaterItem?.subRepeatersSchemas?.map((prop) => {
+          const newPropName = `${repeaterItemPath.join('.')}.${index}.${prop.propName.split('.')[prop.propName.split('.').length - 1]}`;
+          return {
+            ...prop,
+            propName: `${newPropName}`,
+          };
+        }) || [],
       sideEditingProps:
         selectedRepeaterItem?.sideEditingProps?.map((prop) => {
           const newPropName = `${repeaterItemPath.join('.')}.${index}.${prop.propName.split('.')[prop.propName.split('.').length - 1]}`;
