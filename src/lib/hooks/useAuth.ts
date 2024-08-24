@@ -111,27 +111,29 @@ export default function useAuth(page?: string) {
         last_name: lastName,
         role: users && users.length ? users[0].role : data?.token ? ROLES.EDITOR : ROLES.OWNER,
       };
-      const { error, data: d } = await db.auth.signUp({
-        email,
-        password,
-        options: {
-          data: metaData,
-          emailRedirectTo: `${window.location.protocol}//${window.location.host}${PAGES.LOGIN}`,
-        },
-      });
+      console.log(`${window.location.protocol}//${window.location.host}${PAGES.LOGIN}`);
 
-      const { error: insertError } =
-        data.token && users?.length
-          ? await db
-              .from('users')
-              .update({ id: d.user?.id, ...metaData, email, role: users[0].role })
-              .eq('email', email)
-          : await db.from('users').insert({ id: d.user?.id, ...metaData, email });
+      // const { error, data: d } = await db.auth.signUp({
+      //   email,
+      //   password,
+      //   options: {
+      //     data: metaData,
+      //     emailRedirectTo: `${window.location.protocol}//${window.location.host}${PAGES.LOGIN}`,
+      //   },
+      // });
 
-      if (error || insertError) {
-        setErrorMessage(error?.message || insertError?.message || '');
-        return;
-      }
+      // const { error: insertError } =
+      //   data.token && users?.length
+      //     ? await db
+      //         .from('users')
+      //         .update({ id: d.user?.id, ...metaData, email, role: users[0].role })
+      //         .eq('email', email)
+      //     : await db.from('users').insert({ id: d.user?.id, ...metaData, email });
+
+      // if (error || insertError) {
+      //   setErrorMessage(error?.message || insertError?.message || '');
+      //   return;
+      // }
       toast.success('Success', { description: 'User registered' });
       navigate(PAGES.BUILDER);
     } catch (e) {
