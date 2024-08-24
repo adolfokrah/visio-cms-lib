@@ -52,8 +52,7 @@ export default function RepeaterItem({
       }}
       className={cn(className, {
         'visio-cms-outline-blue-400 visio-cms-outline visio-cms-outline-2 -visio-cms-outline-offset-2 visio-cms-w-max':
-          selectedRepeaterItem?.repeaterItemId === propName &&
-          pageBlockId === pageBlocks.find((block) => block.isSelected)?.id,
+          selectedRepeaterItem?.repeaterItemId === propName,
       })}
     >
       {children}

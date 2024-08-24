@@ -185,7 +185,9 @@ export default function useCanvas() {
       } else if (data.type === 'setSelectedRepeaterItemSchema') {
         const subRepeaterSchema = JSON.parse(data.content);
         setSelectedRepeaterItem(subRepeaterSchema);
-        selectBlock(subRepeaterSchema.pageBlockId, false);
+        if (subRepeaterSchema?.pageBlockId) {
+          selectBlock(subRepeaterSchema.pageBlockId, false);
+        }
       } else if (data.type === 'remove-selected-repeater') {
         setSelectedRepeaterItem(null);
       } else if (data.type === 'editGlobalBlock') {

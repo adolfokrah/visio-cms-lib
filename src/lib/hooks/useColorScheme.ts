@@ -56,11 +56,10 @@ export default function useColorScheme() {
         });
       }
 
-      const newGlobalblocks = updateColorById(globalBlocks, color.id, color.colorHex, color.colorName) as GlobalBlock[];
-
       setPages(pages.map((p) => (p.active ? page : p)));
-      setGlobalBlocks(newGlobalblocks);
     }
+    const newGlobalblocks = updateColorById(globalBlocks, color.id, color.colorHex, color.colorName) as GlobalBlock[];
+    setGlobalBlocks(newGlobalblocks);
   };
 
   return { theme, isEditing, colorScheme, setIsEditing, updateColor, addNewColor, deleteColor };

@@ -13,6 +13,30 @@
     },
     "./types": {
       "types": "./dist/lib/exposed-types.d.ts"
+    },
+    "./Image": {
+      "import": "./dist/components/exposed-components/image/index.es.js",
+      "types": "./dist/components/exposed-components/image/index.d.ts"
+    },
+    "./Text": {
+      "import": "./dist/components/exposed-components/text/index.es.js",
+      "types": "./dist/components/exposed-components/text/index.d.ts"
+    },
+    "./RichText": {
+      "import": "./dist/components/exposed-components/rich-text-editor/index.es.js",
+      "types": "./dist/components/exposed-components/rich-text-editor/index.d.ts"
+    },
+    "./Repeater": {
+      "import": "./dist/components/exposed-components/repeater/repeater.es.js",
+      "types": "./dist/components/exposed-components/repeater/repeater.d.ts"
+    },
+    "./RepeaterItem": {
+      "import": "./dist/components/exposed-components/repeater/repeater-item/index.es.js",
+      "types": "./dist/components/exposed-components/repeater/repeater-item/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/libs/exposed-functions.es.js",
+      "types": "./dist/libs/exposed-functions.d.ts"
     }
   },
   "scripts": {

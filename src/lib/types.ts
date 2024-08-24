@@ -121,7 +121,7 @@ export type BlockSchema<T = Record<string, any>> = {
 
 export type Block<T = Record<string, any>> = React.FC<T> & { Schema: BlockSchema<T> };
 
-export type BlockList = Block | Block<Record<string, any>>;
+export type BlockList = Block | Block<Record<any, any>>;
 
 export type GroupedBlock = {
   [group: string]: BlockList[];

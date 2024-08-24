@@ -6,6 +6,6 @@ import Navbar from './navbar';
 import Testimonial from './testimonials';
 import VideoSection from './video-section';
 
-const blocks = [Hero, VideoSection, Navbar, Testimonial, Footer, BlogContent] as BlockList[];
+const blocks = [Hero, Navbar, Testimonial, Footer, BlogContent, VideoSection] as unknown as BlockList[];
 
 export default blocks;

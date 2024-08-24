@@ -93,7 +93,7 @@ export default function PropertiesTab() {
                   <div>
                     {repeaterItems.map((schema, index) => {
                       const path = schema.propName.split('.');
-                      const value = getValueByPath(foundBlock?.inputs, path);
+                      const value = getValueByPath(foundBlock?.inputs || activeGlobalPinnedBlock?.inputs, path);
                       const itemCount = schema?.itemCount || 400;
 
                       return (

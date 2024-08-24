@@ -1,7 +1,6 @@
 import { PAGES } from '@/lib/constants';
 import { useTabState } from '@/lib/states/useTabsState';
 import { useRef } from 'react';
-
 export default function IframeView() {
   const { tabs } = useTabState();
   const pinnedTab = tabs.find((tab) => tab.active);
@@ -14,9 +13,9 @@ export default function IframeView() {
       ref={ref}
       src={url}
       onLoad={() => {
-        ref?.current?.contentDocument?.body.classList.add('scrollbar-custom', 'visio-cms-bg-white');
+        ref?.current?.contentDocument?.body.classList.add('scrollbar-custom', '!visio-cms-bg-white');
       }}
-      className="visio-cms-w-full visio-cms-h-[calc(100vh-90px)] visio-cms-rounded-md visio-cms-m-0 visio-cms-p-0 "
+      className="visio-cms-w-full visio-cms-h-[calc(100vh-90px)] visio-cms-rounded-md visio-cms-m-0 visio-cms-p-0 visio-cms-bg-white"
     />
   );
 }

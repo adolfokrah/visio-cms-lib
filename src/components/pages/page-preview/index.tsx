@@ -14,15 +14,17 @@ export default function PagePreview() {
   if (!page) navigate(PAGES.PAGE_NOT_FOUND);
   return (
     <>
-      {page?.blocks?.[page.activeLanguageLocale]?.map((pageBlock) => {
+      {page?.blocks?.[page.activeLanguageLocale]?.map((pageBlock, index) => {
         const { blockId } = pageBlock;
-        const block = blocks.find((block) => block.Schema.id === blockId);
+
         const foundGlobalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
+        const id = foundGlobalBlock?.blockId || blockId;
+        const block = blocks.find((block) => block.Schema.id == id);
 
         if (!block) return null;
 
         return React.createElement(block, {
-          key: pageBlock.id,
+          key: `${pageBlock.id}-${index}`,
           ...(foundGlobalBlock?.inputs || pageBlock?.inputs),
           pageBlockId: pageBlock?.id,
         });
