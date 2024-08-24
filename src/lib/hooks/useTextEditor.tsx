@@ -30,9 +30,12 @@ export default function useTextEditor({
     });
   }, 500);
 
-  let html = sanitizeHtml(defaultValue || '');
+  let html = sanitizeHtml(defaultValue || '', {
+    allowedAttributes: false,
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+    allowedSchemes: ['http', 'https', 'ftp', 'mailto', 'tel'],
+  });
   const removeRegexP = /<p><\/p>/g;
   html = html.replace(removeRegexP, '<br>');
-
   return { html, debouncedOnUpdate, isBlockGlobal, activePage };
 }
