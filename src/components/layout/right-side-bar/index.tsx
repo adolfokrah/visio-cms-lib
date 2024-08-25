@@ -16,10 +16,10 @@ export default function RightSideBar() {
   const globalBlock = globalBlocks.find((block) => block.id === selectedBlock?.globalBlockId);
 
   return (
-    <div className="visio-cms-h-screen visio-cms-animate-fade-in visio-cms-bg-dark-800 visio-cms-pt-[50px] visio-cms-px-2">
+    <div className="visio-cms-h-screen visio-cms-animate-fade-in visio-cms-bg-dark-800 visio-cms-pt-[50px] ">
       <Tabs defaultValue={'properties'} className="visio-cms-w-full">
         <TabsList
-          className={cn('visio-cms-grid visio-cms-w-full visio-cms-grid-cols-2', {
+          className={cn('visio-cms-grid visio-cms-w-full visio-cms-grid-cols-2 visio-cms-mx-2', {
             'visio-cms-grid-cols-3': activePage != null && globalBlock == null,
           })}
         >
@@ -27,16 +27,22 @@ export default function RightSideBar() {
           {activePage && <TabsTrigger value="page">Page</TabsTrigger>}
           <TabsTrigger value="theme">Theme</TabsTrigger>
         </TabsList>
-        <TabsContent value="properties">
-          <PropertiesTab />
-        </TabsContent>
+        {!globalBlock && (
+          <TabsContent value="properties">
+            <PropertiesTab />
+          </TabsContent>
+        )}
         {activePage && (
           <TabsContent value="page">
-            <PageSettingsTab />
+            <div className="visio-cms-px-2">
+              <PageSettingsTab />
+            </div>
           </TabsContent>
         )}
         <TabsContent value="theme">
-          <ThemeTab />
+          <div className="visio-cms-px-2">
+            <ThemeTab />
+          </div>
         </TabsContent>
       </Tabs>
     </div>

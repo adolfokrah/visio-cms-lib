@@ -77,10 +77,14 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
   const deletePage = (page: PageTreeItem, withPages: boolean) => {
     setLoading(true);
     setTimeout(() => {
+      const pagesInFolder = pages.filter((fPage) => fPage.folderId == page.id).map((page) => page.id);
+
       const newPages = pages.filter((fPage) => (withPages ? fPage.folderId != page.id : fPage.id != page.id));
       setPages(newPages);
 
-      setTabs([...tabs.filter((tab) => tab.id != page.id)]);
+      const newTabs = [...tabs.filter((tab) => (withPages ? !pagesInFolder.includes(tab.id) : tab.id != page.id))];
+
+      setTabs(newTabs);
       if (page.type == 'Folder') setItems(items.filter((item) => item.id != page.id));
       setLoading(false);
     }, 1000);

@@ -1,6 +1,16 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { BlockList, Folder, GroupedBlock, MediaFile, Message, OsTypes, PageTreeItem, SideEditingProps } from './types';
+import {
+  BlockList,
+  Folder,
+  GroupedBlock,
+  ListSchema,
+  MediaFile,
+  Message,
+  OsTypes,
+  PageTreeItem,
+  SideEditingProps,
+} from './types';
 import { Page, usePagesState } from './states/usePagesState';
 import * as jose from 'jose';
 import { JSON_WEB_SECRET, PAGES } from './constants';
@@ -336,4 +346,146 @@ export function getImageUrl(image: MediaFile): string {
   }
   const publicUrl = db.storage.from(bucketName).getPublicUrl(image?.mediaHash || '', data).data.publicUrl;
   return `${publicUrl}`;
+}
+
+export function findObjectWithParents(array: ListSchema[], targetPropName: string): ListSchema[] | null {
+  for (const item of array) {
+    if (item.propName === targetPropName) {
+      return [item]; // Return the found object as an array
+    }
+
+    // If the item has subLists, search within them recursively
+    if (item.subLists && item.subLists.length > 0) {
+      const result = findObjectWithParents(item.subLists, targetPropName);
+      if (result) {
+        return [item, ...result]; // Return the current item and the found object(s)
+      }
+    }
+  }
+
+  return null; // No matching object found
+}
+
+function deepClone(obj: any): any {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+export function deleteItemByPathArray(data: NestedObject, path: string[]): NestedObject | null {
+  // Clone the original data to avoid mutating it
+  const dataCopy = deepClone(data);
+
+  let currentLevel: any = dataCopy;
+
+  // Traverse to the second last element of the path
+  for (let i = 0; i < path.length - 1; i++) {
+    const key = path[i];
+    const index = parseInt(key, 10);
+
+    if (Array.isArray(currentLevel) && !isNaN(index)) {
+      currentLevel = currentLevel[index];
+    } else if (typeof currentLevel === 'object' && key in currentLevel) {
+      currentLevel = currentLevel[key];
+    } else {
+      return null; // Path is invalid
+    }
+  }
+
+  const lastIndex = parseInt(path[path.length - 1], 10);
+
+  // Check if the target exists and delete it
+  if (Array.isArray(currentLevel) && !isNaN(lastIndex)) {
+    currentLevel.splice(lastIndex, 1);
+    return dataCopy; // Return the updated copy
+  }
+
+  return null; // Target not found or not deletable
+}
+
+export function moveItemByPathArray(data: NestedObject, path: string[], direction: 'up' | 'down'): NestedObject | null {
+  // Clone the original data to avoid mutating it
+  const dataCopy = deepClone(data);
+
+  let currentLevel: any = dataCopy;
+  let parentArray: any[] | null = null;
+  let indexToMove: number | null = null;
+
+  // Traverse to the level before the target item
+  for (let i = 0; i < path.length - 1; i++) {
+    const key = path[i];
+    const index = parseInt(key, 10);
+
+    if (Array.isArray(currentLevel) && !isNaN(index)) {
+      parentArray = currentLevel;
+      currentLevel = currentLevel[index];
+    } else if (typeof currentLevel === 'object' && key in currentLevel) {
+      parentArray = Object.values(currentLevel).filter(Array.isArray)[0] || null;
+      currentLevel = currentLevel[key];
+    } else {
+      return null; // Path is invalid
+    }
+  }
+
+  indexToMove = parseInt(path[path.length - 1], 10);
+
+  // Ensure we have a valid array to move the item in
+  if (Array.isArray(parentArray) && !isNaN(indexToMove) && parentArray[indexToMove] !== undefined) {
+    const item = parentArray[indexToMove];
+    const newIndex = direction === 'up' ? indexToMove - 1 : indexToMove + 1;
+
+    if (newIndex >= 0 && newIndex < parentArray.length) {
+      // Remove item from the old position
+      parentArray.splice(indexToMove, 1);
+      // Insert item at the new position
+      parentArray.splice(newIndex, 0, item);
+      return dataCopy; // Return the updated copy
+    }
+  }
+
+  return null; // Target not found or direction out of bounds
+}
+
+type Position = 'first' | 'last' | 'firstAndLast' | null;
+
+// Function to determine if the item is the first, last, or only item in its parent array
+export function getItemPositionByPathArray(data: NestedObject, path: string[]): Position {
+  let currentLevel: any = data;
+  let parentArray: any[] | null = null;
+  let indexToCheck: number | null = null;
+
+  // Traverse to the level before the target item
+  for (let i = 0; i < path.length - 1; i++) {
+    const key = path[i];
+    const index = parseInt(key, 10);
+
+    if (Array.isArray(currentLevel) && !isNaN(index)) {
+      parentArray = currentLevel;
+      currentLevel = currentLevel[index];
+    } else if (typeof currentLevel === 'object' && key in currentLevel) {
+      parentArray = Object.values(currentLevel).filter(Array.isArray)[0] || null;
+      currentLevel = currentLevel[key];
+    } else {
+      return null; // Path is invalid
+    }
+  }
+
+  indexToCheck = parseInt(path[path.length - 1], 10);
+
+  // Ensure we have a valid array to check position
+  if (Array.isArray(parentArray) && !isNaN(indexToCheck) && parentArray[indexToCheck] !== undefined) {
+    const isOnlyItem = parentArray.length === 1;
+    const isFirst = indexToCheck === 0;
+    const isLast = indexToCheck === parentArray.length - 1;
+
+    if (isOnlyItem) {
+      return 'firstAndLast'; // Item is the only one in the array
+    } else if (isFirst) {
+      return 'first'; // Item is the first item in the array
+    } else if (isLast) {
+      return 'last'; // Item is the last item in the array
+    } else {
+      return null; // Item is neither at the beginning nor at the end
+    }
+  }
+
+  return null; // Path is invalid or item not found
 }

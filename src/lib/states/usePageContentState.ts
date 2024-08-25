@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Page } from './usePagesState';
 import { ProjectConfiguration } from '../types';
 import { TabsState } from './useTabsState';
-import { RepeaterState } from './useRepeaterState';
+import { ListStateType } from './useListState';
 
 type State = {
   pages: Page[];
@@ -11,8 +11,8 @@ type State = {
   setGlobalBlocks: (globalBlocks: ProjectConfiguration['globalBlocks']) => void;
   tabs: TabsState['tabs'];
   setTabs: (tabs: TabsState['tabs']) => void;
-  selectedRepeaterItem: RepeaterState['selectedRepeaterItem'];
-  setSelectedRepeaterItem: RepeaterState['setSelectedRepeaterItem'];
+  selectedListItem: ListStateType['selectedListItem'];
+  setSelectedListItem: ListStateType['setSelectedListItem'];
 };
 
 export const usePageContentState = create<State>((set) => ({
@@ -22,6 +22,6 @@ export const usePageContentState = create<State>((set) => ({
   setGlobalBlocks: (globalBlocks) => set({ globalBlocks }),
   tabs: [],
   setTabs: (tabs) => set({ tabs }),
-  selectedRepeaterItem: null,
-  setSelectedRepeaterItem: (selectedRepeaterItem) => set({ selectedRepeaterItem }),
+  selectedListItem: null,
+  setSelectedListItem: (selectedListItem) => set({ selectedListItem }),
 }));

@@ -12,6 +12,7 @@ import RadioGroupController from './radio-group-controller';
 import SelectController from './select-controller';
 import { useTabState } from '@/lib/states/useTabsState';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
+import ListController from './list-controller';
 
 export default function RenderController(props: SideEditingProps) {
   const { pages, setPages } = usePagesState();
@@ -82,6 +83,8 @@ export default function RenderController(props: SideEditingProps) {
           placeholder={props.placeholder}
         />
       );
+    case 'list':
+      return <ListController {...props} defaultValue={defaultValue} onChange={debounceChangePropValue} />;
     case 'custom':
       return (
         <props.component {...props.componentProps} defaultValue={defaultValue} onChange={debounceChangePropValue} />

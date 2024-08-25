@@ -11,6 +11,7 @@ export default function RepeaterItem({
   pageBlockId,
   className,
   sideEditingProps,
+  component = 'li',
   ...props
 }: {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ export default function RepeaterItem({
   subRepeatersSchema?: Omit<RepeaterSchema, 'propName'>[];
   sideEditingProps?: Omit<SideEditingProps, 'group'>[];
   key: string;
+  component?: string;
 } & React.HTMLAttributes<HTMLLIElement>) {
   const { pages, globalBlocks, selectedRepeaterItem } = usePageContentState();
   const activePage = pages.find((page) => page.active);
@@ -27,12 +29,38 @@ export default function RepeaterItem({
   const foundBlock = pageBlocks.find((block) => block.id === pageBlockId);
   const globalBlock = globalBlocks.find((block) => block.id === foundBlock?.globalBlockId);
   const projectMode = getProjectMode();
+
+  return React.createElement(component, {
+    ...props,
+    children,
+    onClick: () => {
+      if (globalBlock || projectMode != 'BUILDER') return;
+
+      sendMessageToParent({
+        type: 'setSelectedRepeaterItemSchema',
+        content: JSON.stringify({
+          repeaterItemId: propName,
+          pageBlockId,
+          subRepeatersSchemas:
+            subRepeatersSchema?.map((schema) => ({
+              ...schema,
+              propName: `${propName}.${schema.name}`,
+              pageBlockId,
+            })) || [],
+          sideEditingProps,
+        }),
+      });
+    },
+    className: cn(className, {
+      'visio-cms-outline-blue-400 visio-cms-outline visio-cms-outline-2 -visio-cms-outline-offset-2 visio-cms-w-max':
+        selectedRepeaterItem?.repeaterItemId === propName,
+    }),
+  });
+
   return (
     <li
       {...props}
-      onClick={(e) => {
-        e.stopPropagation();
-
+      onClick={() => {
         if (globalBlock || projectMode != 'BUILDER') return;
 
         sendMessageToParent({

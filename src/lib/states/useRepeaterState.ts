@@ -4,26 +4,26 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type RepeaterSchema = {
   propName: string;
-  name: string;
+  label: string;
   itemCount?: number;
   schema: Record<string, any>;
+  repeaters?: RepeaterSchema[];
+  sideEditingProps?: SideEditingProps[];
+};
+
+type RepeaterItemSchema = {
+  sideEditingProps?: SideEditingProps[];
+  repeaterItemId: string;
+  subRepeatersSchemas: RepeaterSchema[];
 };
 
 export type RepeaterState = {
   repeaterId: string;
   setRepeaterId: (value: string) => void;
-  selectedRepeaterItem: {
-    sideEditingProps?: SideEditingProps[];
-    repeaterItemId: string;
-    subRepeatersSchemas: RepeaterSchema[];
-  } | null;
-  setSelectedRepeaterItem: (
-    value: {
-      repeaterItemId: string;
-      subRepeatersSchemas: RepeaterSchema[];
-      sideEditingProps: SideEditingProps[];
-    } | null,
-  ) => void;
+  selectedRepeaterItem: RepeaterItemSchema | null;
+  setSelectedRepeaterItem: (value: RepeaterItemSchema | null) => void;
+  selectedRepeaterItemParentRepeaterItems: RepeaterItemSchema[];
+  setSelectedRepeaterItemParentRepeaterItems: (value: RepeaterItemSchema[]) => void;
 };
 
 export const useRepeaterState = create(
@@ -33,6 +33,9 @@ export const useRepeaterState = create(
       setRepeaterId: (repeaterId) => set(() => ({ repeaterId })),
       selectedRepeaterItem: null,
       setSelectedRepeaterItem: (selectedRepeaterItem) => set(() => ({ selectedRepeaterItem })),
+      selectedRepeaterItemParentRepeaterItems: [],
+      setSelectedRepeaterItemParentRepeaterItems: (selectedRepeaterItemParentRepeaterItems) =>
+        set(() => ({ selectedRepeaterItemParentRepeaterItems })),
     }),
     {
       name: 'repeater-storage',

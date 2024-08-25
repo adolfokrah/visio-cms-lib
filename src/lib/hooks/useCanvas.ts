@@ -5,9 +5,9 @@ import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
 import useUndoAndRedo from './useUndoAndRedo';
 import { updateValueByPath } from '../utils';
-import { useRepeaterState } from '../states/useRepeaterState';
 import useBlockHistory from './useBlockHistory';
 import { useTabState } from '../states/useTabsState';
+import { useListState } from '../states/useListState';
 
 export default function useCanvas() {
   const { pages, setPages } = usePagesState();
@@ -15,7 +15,7 @@ export default function useCanvas() {
   const { blocks, globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
   const { undo, redo } = useUndoAndRedo();
   const [blockToAddAsGlobalId, setBlockToAddAsGlobalId] = useState<string | null>(null);
-  const { setSelectedRepeaterItem } = useRepeaterState();
+  const { setSelectedListItem } = useListState();
   const { addBlocksToPageHistory, addInputsToGlobalBlockHistory } = useBlockHistory();
   const { tabs, setTabs } = useTabState();
 
@@ -53,7 +53,7 @@ export default function useCanvas() {
 
     const selectBlock = (blockId: string, deselectRepeater = true) => {
       if (deselectRepeater) {
-        setSelectedRepeaterItem(null);
+        setSelectedListItem(null);
       }
 
       const page = activePage;
@@ -182,14 +182,14 @@ export default function useCanvas() {
             addInputsToGlobalBlockHistory(globalBlock?.id || '', blockInputs);
           }
         }
-      } else if (data.type === 'setSelectedRepeaterItemSchema') {
-        const subRepeaterSchema = JSON.parse(data.content);
-        setSelectedRepeaterItem(subRepeaterSchema);
-        if (subRepeaterSchema?.pageBlockId) {
-          selectBlock(subRepeaterSchema.pageBlockId, false);
+      } else if (data.type === 'setSelectedListItem') {
+        const selectedListItem = JSON.parse(data.content);
+        setSelectedListItem(selectedListItem);
+        if (selectedListItem?.pageBlockId) {
+          selectBlock(selectedListItem.pageBlockId, false);
         }
       } else if (data.type === 'remove-selected-repeater') {
-        setSelectedRepeaterItem(null);
+        setSelectedListItem(null);
       } else if (data.type === 'editGlobalBlock') {
         const blockId = data.content;
 
@@ -221,7 +221,7 @@ export default function useCanvas() {
     undo,
     redo,
     globalBlocks,
-    setSelectedRepeaterItem,
+    setSelectedListItem,
     addBlocksToPageHistory,
     setTabs,
     tabs,

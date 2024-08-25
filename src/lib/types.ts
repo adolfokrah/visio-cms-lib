@@ -1,6 +1,5 @@
 import React from 'react';
 import { Page, ResponsiveView } from './states/usePagesState';
-import { RepeaterSchema } from './states/useRepeaterState';
 
 export type Language = {
   language: string;
@@ -103,12 +102,26 @@ type BaseEditingProps = BasePropSchema & {
   type: 'text' | 'color' | 'link' | 'image' | 'number';
 };
 
+type List = {
+  type: 'list';
+  fields: { name: string; defaultValue: any; itemCount?: number }[];
+  subList?: {
+    propName: string;
+    fields: { name: string; defaultValue: any; itemCount?: number }[];
+    sideEditingProps?: SideEditingProps[];
+  }[];
+  sideEditingProps?: SideEditingProps[];
+};
+
+export type ListEditingProps = BasePropSchema & List;
+
 export type SideEditingProps =
   | SwitchEditingProp
   | RadioGroupEditingProp
   | SelectEditingProp
   | BaseEditingProps
-  | CustomEditingProp;
+  | CustomEditingProp
+  | ListEditingProps;
 
 export type BlockSchema<T = Record<string, any>> = {
   name: string;
@@ -116,7 +129,15 @@ export type BlockSchema<T = Record<string, any>> = {
   group?: string;
   defaultPropValues: T;
   sideEditingProps: SideEditingProps[];
-  repeaters?: Omit<RepeaterSchema, 'propName'>[];
+  lists?: ListSchema[];
+};
+
+export type ListSchema = {
+  propName: string;
+  label: string;
+  schema: Record<string, any>;
+  subLists?: ListSchema[];
+  sideEditingProps?: SideEditingProps[];
 };
 
 export type Block<T = Record<string, any>> = React.FC<T> & { Schema: BlockSchema<T> };
