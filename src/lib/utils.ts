@@ -418,8 +418,10 @@ export function moveItemByPathArray(data: NestedObject, path: string[], directio
       parentArray = currentLevel;
       currentLevel = currentLevel[index];
     } else if (typeof currentLevel === 'object' && key in currentLevel) {
-      parentArray = Object.values(currentLevel).filter(Array.isArray)[0] || null;
       currentLevel = currentLevel[key];
+      if (Array.isArray(currentLevel)) {
+        parentArray = currentLevel;
+      }
     } else {
       return null; // Path is invalid
     }
@@ -438,18 +440,18 @@ export function moveItemByPathArray(data: NestedObject, path: string[], directio
       // Insert item at the new position
       parentArray.splice(newIndex, 0, item);
       return dataCopy; // Return the updated copy
+    } else {
+      return null; // Direction out of bounds
     }
   }
 
-  return null; // Target not found or direction out of bounds
+  return null; // Target not found or path is invalid
 }
 
-type Position = 'first' | 'last' | 'firstAndLast' | null;
+type Position = 'first' | 'last' | 'firstAndLast' | 'middle' | null;
 
-// Function to determine if the item is the first, last, or only item in its parent array
 export function getItemPositionByPathArray(data: NestedObject, path: string[]): Position {
   let currentLevel: any = data;
-  let parentArray: any[] | null = null;
   let indexToCheck: number | null = null;
 
   // Traverse to the level before the target item
@@ -458,23 +460,22 @@ export function getItemPositionByPathArray(data: NestedObject, path: string[]): 
     const index = parseInt(key, 10);
 
     if (Array.isArray(currentLevel) && !isNaN(index)) {
-      parentArray = currentLevel;
       currentLevel = currentLevel[index];
     } else if (typeof currentLevel === 'object' && key in currentLevel) {
-      parentArray = Object.values(currentLevel).filter(Array.isArray)[0] || null;
       currentLevel = currentLevel[key];
     } else {
       return null; // Path is invalid
     }
   }
 
+  // The last item in the path is the index to check within the currentLevel array
   indexToCheck = parseInt(path[path.length - 1], 10);
 
   // Ensure we have a valid array to check position
-  if (Array.isArray(parentArray) && !isNaN(indexToCheck) && parentArray[indexToCheck] !== undefined) {
-    const isOnlyItem = parentArray.length === 1;
+  if (Array.isArray(currentLevel) && !isNaN(indexToCheck) && currentLevel[indexToCheck] !== undefined) {
+    const isOnlyItem = currentLevel.length === 1;
     const isFirst = indexToCheck === 0;
-    const isLast = indexToCheck === parentArray.length - 1;
+    const isLast = indexToCheck === currentLevel.length - 1;
 
     if (isOnlyItem) {
       return 'firstAndLast'; // Item is the only one in the array
@@ -483,7 +484,7 @@ export function getItemPositionByPathArray(data: NestedObject, path: string[]): 
     } else if (isLast) {
       return 'last'; // Item is the last item in the array
     } else {
-      return null; // Item is neither at the beginning nor at the end
+      return 'middle'; // Item is neither at the beginning nor at the end
     }
   }
 

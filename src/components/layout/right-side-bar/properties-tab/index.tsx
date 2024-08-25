@@ -47,6 +47,7 @@ export default function PropertiesTab() {
   const moveListItem = (propName: string, direction: 'up' | 'down') => {
     const path = propName.split('.');
     const newData = moveItemByPathArray(pageBlock?.inputs || activeGlobalPinnedBlock?.inputs || {}, path, direction);
+
     updateBlockInputs(newData || {});
 
     let newPath = `${path.slice(0, path.length - 1).join('.')}`;
@@ -88,6 +89,7 @@ export default function PropertiesTab() {
           pageBlock?.inputs || activeGlobalPinnedBlock?.inputs || {},
           listPropName.split('.'),
         );
+
         return (
           <div key={list.propName}>
             <div className="visio-cms-bg-dark-900 visio-cms-p-2  visio-cms-font-bold visio-cms-text-center visio-cms-uppercase">

@@ -1,8 +1,9 @@
 import { Block, Color, MediaFile } from '@/lib/exposed-types';
 import { Repeater, RepeaterItem } from '../exposed-components/repeater';
 import Text from '../exposed-components/text';
-import { cn, getProjectMode } from '@/lib/utils';
+import { cn, getLink, getProjectMode } from '@/lib/utils';
 import Image from '../exposed-components/image';
+import List from '../exposed-components/list';
 type NavbarProps = {
   logo: MediaFile;
   links: {
@@ -48,7 +49,7 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
           propName="logo"
           className="visio-cms-w-14 visio-cms-h-14"
         />
-        <Repeater
+        {/* <Repeater
           pageBlockId={pageBlockId}
           propName="links"
           className="visio-cms-flex visio-cms-gap-4 visio-cms-relative visio-cms-items-center"
@@ -113,39 +114,41 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
               </Repeater>
             </RepeaterItem>
           ))}
-        </Repeater>
+        </Repeater> */}
+
+        <List
+          propName="links"
+          pageBlockId={pageBlockId}
+          defaultPropValues={links}
+          className="visio-cms-flex visio-cms-gap-4 visio-cms-relative visio-cms-items-center"
+          renderComponent={(link, index) => (
+            <a
+              href={getLink(link.url)}
+              key={`${link.title}-${index}`}
+              className="visio-cms-relative visio-cms-p-2 hover:visio-cms-bg-gray-100 visio-cms-cursor-pointer"
+            >
+              {link.title}
+            </a>
+          )}
+        />
       </div>
 
-      <Repeater propName="sideButtons" pageBlockId={pageBlockId} className="visio-cms-flex visio-cms-gap-2">
-        {sideButtons &&
-          sideButtons.map((button, index) => (
-            <RepeaterItem
-              key={button.title}
-              className="visio-cms-px-3.5 visio-cms-py-1.5 hover:visio-cms-bg-indigo-500 visio-cms-cursor-pointer visio-cms-bg-indigo-400 visio-cms-rounded-md visio-cms-text-white"
-              style={{ backgroundColor: button.color.colorHex }}
-              sideEditingProps={[
-                {
-                  propName: `sideButtons.${index}.title`,
-                  label: 'Title',
-                  type: 'text',
-                },
-                {
-                  propName: `sideButtons.${index}.url`,
-                  label: 'URL',
-                  type: 'text',
-                },
-                {
-                  propName: `sideButtons.${index}.color`,
-                  label: 'Color',
-                  type: 'color',
-                },
-              ]}
-            >
-              {/* <Text pageBlockId={pageBlockId} defaultValue={button.title} propName={`sideButtons.${index}.title`} /> */}
-              {button.title}
-            </RepeaterItem>
-          ))}
-      </Repeater>
+      <List
+        propName="sideButtons"
+        pageBlockId={pageBlockId}
+        className="visio-cms-flex visio-cms-gap-2"
+        defaultPropValues={sideButtons}
+        renderComponent={(button, index) => (
+          <a
+            href={getLink(button.url)}
+            key={`${button.title}-${index}`}
+            className="visio-cms-px-3.5 visio-cms-py-1.5 hover:visio-cms-bg-indigo-500 visio-cms-cursor-pointer visio-cms-bg-indigo-400 visio-cms-rounded-md visio-cms-text-white visio-cms-inline-block"
+            style={{ backgroundColor: button.color.colorHex }}
+          >
+            {button.title}
+          </a>
+        )}
+      />
     </nav>
   );
 };
@@ -169,23 +172,60 @@ Navbar.Schema = {
     ],
   },
   group: 'Navigation',
-  repeaters: [
+  lists: [
     {
-      name: 'links',
+      propName: 'links',
+      label: 'Link',
       schema: {
-        title: 'Link',
+        title: 'Home',
         url: '/',
       },
-      itemCount: 10,
+      subLists: [
+        {
+          propName: 'links.subLinks',
+          label: 'Sub Link',
+          schema: {
+            title: 'Sub Link',
+            url: '/sub-link',
+          },
+          subLists: [
+            {
+              propName: 'links.subLinks.subsubLinks',
+              label: 'Sub Sub Link',
+              schema: {
+                title: 'Sub Sub Link',
+                url: '/sub-link',
+              },
+            },
+          ],
+        },
+      ],
     },
     {
-      name: 'sideButtons',
+      propName: 'sideButtons',
+      label: 'Side Buttons',
       schema: {
-        title: 'Login',
-        url: '/',
-        color: { colorHex: '#000000' },
+        title: 'Button',
+        url: '/button',
+        color: { colorHex: '#000000', id: '1', colorName: 'Black' },
       },
-      itemCount: 2,
+      sideEditingProps: [
+        {
+          type: 'text',
+          propName: 'title',
+          label: 'Title',
+        },
+        {
+          type: 'link',
+          propName: 'url',
+          label: 'URL',
+        },
+        {
+          type: 'color',
+          propName: 'color',
+          label: 'Color',
+        },
+      ],
     },
   ],
 };
