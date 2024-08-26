@@ -35,7 +35,7 @@ export default function List<T>({
     return React.createElement(itemComponent, {
       key: `${propName}.${index}`,
       className: cn('visio-cms-list-none', listItemClassName, {
-        'visio-cms-outline viso-cms-outline-1 visio-cms-outline-blue-500':
+        'visio-cms-outline visio-cms-outline-2 -visio-cms-outline-offset-2 visio-cms-outline-blue-500':
           selectedListItem?.propName === `${propName}.${index}`,
       }),
       children: renderComponent(values, index),

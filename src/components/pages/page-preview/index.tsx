@@ -1,7 +1,8 @@
 import { PAGES } from '@/lib/constants';
+import { useAuthState } from '@/lib/states/useAuthState';
 import { usePagesState } from '@/lib/states/usePagesState';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export default function PagePreview() {
@@ -9,6 +10,12 @@ export default function PagePreview() {
   const navigate = useNavigate();
   const { pages } = usePagesState();
   const { blocks, globalBlocks } = useProjectConfigurationState();
+  const { user } = useAuthState();
+  useEffect(() => {
+    if (!user) {
+      navigate(PAGES.LOGIN);
+    }
+  }, [user, navigate]);
 
   const page = pages.find((page) => page.id === id);
   if (!page) navigate(PAGES.PAGE_NOT_FOUND);

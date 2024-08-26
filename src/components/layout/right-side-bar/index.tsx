@@ -6,24 +6,29 @@ import { cn } from '@/lib/utils';
 import ThemeTab from './theme-tab';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import PropertiesTab from './properties-tab';
+import { useTabState } from '@/lib/states/useTabsState';
 
 export default function RightSideBar() {
   const { pages } = usePagesState();
   const { globalBlocks } = useProjectConfigurationState();
+  const { tabs } = useTabState();
   const activePage = useMemo(() => pages.find((page) => page.active), [pages]);
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale];
   const selectedBlock = pageBlocks?.find((block) => block.isSelected);
   const globalBlock = globalBlocks.find((block) => block.id === selectedBlock?.globalBlockId);
+  const activeGlobalPinnedBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
 
   return (
     <div className="visio-cms-h-screen visio-cms-animate-fade-in visio-cms-bg-dark-800 visio-cms-pt-[50px] ">
       <Tabs defaultValue={'properties'} className="visio-cms-w-full">
         <TabsList
           className={cn('visio-cms-grid visio-cms-w-[95%] visio-cms-grid-cols-2 visio-cms-mx-auto', {
-            'visio-cms-grid-cols-3': activePage != null && globalBlock == null,
+            'visio-cms-grid-cols-3': activePage != null && globalBlock == null && selectedBlock,
           })}
         >
-          {!globalBlock && <TabsTrigger value="properties">Properties</TabsTrigger>}
+          {((selectedBlock && !globalBlock) || activeGlobalPinnedBlock) && (
+            <TabsTrigger value="properties">Properties</TabsTrigger>
+          )}
           {activePage && <TabsTrigger value="page">Page</TabsTrigger>}
           <TabsTrigger value="theme">Theme</TabsTrigger>
         </TabsList>
