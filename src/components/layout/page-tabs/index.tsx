@@ -14,7 +14,7 @@ import LanguageControls from '../canvas/components/language-controls';
 import UndoRedoControls from './undo-redo-controls';
 
 export default function PageTabs() {
-  const { hiddenTabs, containerRef, tabs, pages, handleTabClick, tabRefs, handleRemovePage } = usePageTabs();
+  const { hiddenTabs, containerRef, tabs, handleTabClick, tabRefs, handleRemovePage } = usePageTabs();
   const pinnedPages = tabs;
 
   const tabClicked = useCallback(
@@ -70,6 +70,7 @@ export default function PageTabs() {
           </div>
         ))}
       </div>
+
       {hiddenTabs.length ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -78,8 +79,8 @@ export default function PageTabs() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {pages
-              .filter((page) => hiddenTabs.includes(page.name))
+            {pinnedPages
+              .filter((page) => hiddenTabs.includes(page.id))
               .map(({ name, id }) => (
                 <DropdownMenuItem
                   key={name}

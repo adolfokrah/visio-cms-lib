@@ -11,11 +11,12 @@ import {
   PageTreeItem,
   SideEditingProps,
 } from './types';
-import { Page, usePagesState } from './states/usePagesState';
+import { Page } from './states/usePagesState';
 import * as jose from 'jose';
 import { JSON_WEB_SECRET, PAGES } from './constants';
 import { useDbState } from './states/usedbState';
 import { useProjectConfigurationState } from './states/useProjectConfigState';
+import { usePageContentState } from './states/usePageContentState';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -326,7 +327,7 @@ export function groupSideEditingProps(items: SideEditingProps[]): { group: strin
 }
 
 export function getLink(link: string) {
-  const { pages } = usePagesState.getState();
+  const { pages } = usePageContentState.getState();
   const page = pages.find((page) => page.id === link)?.slug || link;
   return page;
 }
