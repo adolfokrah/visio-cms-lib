@@ -1,6 +1,6 @@
 import { Block } from '@/lib/exposed-types';
 import Text from '../exposed-components/text';
-import { Repeater, RepeaterItem } from '../exposed-components/repeater';
+import List from '../exposed-components/list';
 
 const navigation = {
   solutions: [
@@ -132,50 +132,45 @@ const Footer: Block<NavigationItem> = ({
                     propName="solutionsHeader"
                   />
                 </h3>
-                <Repeater pageBlockId={pageBlockId} propName="solutions" className="visio-cms-mt-6 visio-cms-space-y-4">
-                  {solutions.map((solution, index) => (
-                    <RepeaterItem
-                      key={solution.itemKey}
-                      className="visio-cms-text-sm visio-cms-leading-6 visio-cms-text-gray-300 hover:visio-cms-text-white"
-                      subRepeatersSchema={[
-                        {
-                          name: 'subSolutions',
-                          schema: { name: 'Sub Solution', href: '/sub-solution' },
-                          itemCount: 10,
-                        },
-                      ]}
-                    >
-                      <a href={solution.href}>
+
+                <List
+                  propName="solutions"
+                  pageBlockId={pageBlockId}
+                  defaultPropValues={solutions}
+                  className="visio-cms-mt-6 visio-cms-space-y-4"
+                  renderComponent={(solution, index) => (
+                    <>
+                      <a
+                        href={solution.href}
+                        className="visio-cms-text-sm visio-cms-leading-6 visio-cms-text-gray-300 hover:visio-cms-text-white"
+                      >
                         <Text
                           pageBlockId={pageBlockId}
                           propName={`solutions.${index}.name`}
                           defaultValue={solution.name}
                         />
                       </a>
-
-                      <Repeater
-                        pageBlockId={pageBlockId}
+                      <List
                         propName={`solutions.${index}.subSolutions`}
-                        className="visio-cms-mt-2 visio-cms-space-y-2 visio-cms-pl-2"
-                      >
-                        {solution.subSolutions?.map((subSolution, subIndex) => (
-                          <RepeaterItem
-                            key={subSolution.itemKey}
+                        pageBlockId={pageBlockId}
+                        defaultPropValues={solution.subSolutions}
+                        className="visio-cms-mt-6 visio-cms-space-y-4 visio-cms-pl-4 visio-cms-text-xs"
+                        renderComponent={(subSolution, subIndex) => (
+                          <a
+                            href={subSolution.href}
                             className="visio-cms-text-xs visio-cms-leading-6 visio-cms-text-gray-300 hover:visio-cms-text-white"
                           >
-                            <a href={subSolution.href}>
-                              <Text
-                                pageBlockId={pageBlockId}
-                                propName={`solutions.${index}.subSolutions.${subIndex}.name`}
-                                defaultValue={subSolution.name}
-                              />
-                            </a>
-                          </RepeaterItem>
-                        ))}
-                      </Repeater>
-                    </RepeaterItem>
-                  ))}
-                </Repeater>
+                            <Text
+                              pageBlockId={pageBlockId}
+                              propName={`solutions.${index}.subSolutions.${subIndex}.name`}
+                              defaultValue={subSolution.name}
+                            />
+                          </a>
+                        )}
+                      />
+                    </>
+                  )}
+                />
               </div>
               <div className="visio-cms-mt-10 md:visio-cms-mt-0">
                 <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
@@ -307,14 +302,24 @@ Footer.Schema = {
     subscriptionHeader: 'Subscribe to our newsletter',
     solutions: navigation.solutions,
   },
-  repeaters: [
+  lists: [
     {
-      name: 'solutions',
-      itemCount: 4,
+      label: 'Solutions',
+      propName: 'solutions',
       schema: {
         name: 'Solutions',
         href: '/solutions',
       },
+      subLists: [
+        {
+          label: 'Sub Solutions',
+          propName: 'solutions.subSolutions',
+          schema: {
+            name: 'Sub Solutions',
+            href: '/sub-solutions',
+          },
+        },
+      ],
     },
   ],
   group: 'Navigation',

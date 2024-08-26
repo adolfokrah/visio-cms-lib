@@ -26,13 +26,9 @@
       "import": "./dist/components/exposed-components/rich-text-editor/index.es.js",
       "types": "./dist/components/exposed-components/rich-text-editor/index.d.ts"
     },
-    "./Repeater": {
-      "import": "./dist/components/exposed-components/repeater/repeater.es.js",
-      "types": "./dist/components/exposed-components/repeater/repeater.d.ts"
-    },
-    "./RepeaterItem": {
-      "import": "./dist/components/exposed-components/repeater/repeater-item/index.es.js",
-      "types": "./dist/components/exposed-components/repeater/repeater-item/index.d.ts"
+    "./List": {
+      "import": "./dist/components/exposed-components/list/index.es.js",
+      "types": "./dist/components/exposed-components/list/index.d.ts"
     },
     "./utils": {
       "import": "./dist/libs/exposed-functions.es.js",

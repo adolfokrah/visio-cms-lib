@@ -15,8 +15,8 @@ type ListProps<T> = {
 
 export default function List<T>({
   pageBlockId = '',
-  component = 'li',
-  itemComponent = 'ul',
+  component = 'ul',
+  itemComponent = 'li',
   propName = '',
   className = '',
   renderComponent,

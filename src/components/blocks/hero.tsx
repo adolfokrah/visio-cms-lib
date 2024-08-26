@@ -1,7 +1,7 @@
 import { Block, MediaFile } from '@/lib/exposed-types';
 import Text from '../exposed-components/text';
 import Image from '../exposed-components/image';
-import { Repeater, RepeaterItem } from '../exposed-components/repeater';
+import List from '../exposed-components/list';
 
 export type HeroProps = {
   mainHeader: string;
@@ -61,10 +61,15 @@ const Hero: Block<HeroProps> = ({
             />
           </div>
           <div className="visio-cms-mt-10 visio-cms-flex visio-cms-items-center visio-cms-justify-center visio-cms-gap-x-6">
-            <Repeater propName="getStartedButton" pageBlockId={pageBlockId}>
-              {getStartedButton.map((button, index) => (
-                <RepeaterItem
-                  key={button.itemKey}
+            <List
+              propName="getStartedButton"
+              pageBlockId={pageBlockId}
+              defaultPropValues={getStartedButton}
+              component=""
+              renderComponent={(button, index) => (
+                <a
+                  href={button.url}
+                  key={`${button.itemKey}-${index}`}
                   className="visio-cms-rounded-md visio-cms-bg-indigo-600 visio-cms-px-3.5 visio-cms-py-2.5 visio-cms-text-sm visio-cms-font-semibold visio-cms-text-white visio-cms-shadow-sm hover:visio-cms-bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 visio-cms-inline-block"
                 >
                   <Text
@@ -73,9 +78,9 @@ const Hero: Block<HeroProps> = ({
                     propName={`getStartedButton.${index}.name`}
                     pageBlockId={pageBlockId}
                   />
-                </RepeaterItem>
-              ))}
-            </Repeater>
+                </a>
+              )}
+            />
 
             <a
               href="#"
@@ -122,10 +127,10 @@ Hero.Schema = {
     },
     getStartedButton: [],
   },
-  repeaters: [
+  lists: [
     {
-      name: 'getStartedButton',
-      itemCount: 1,
+      propName: 'getStartedButton',
+      label: 'Get Started Button',
       schema: {
         name: 'Get started button',
         url: '/get-started',
