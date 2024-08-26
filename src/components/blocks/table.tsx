@@ -1,5 +1,7 @@
 import { Block, Color } from '@/lib/exposed-types';
 import List from '../exposed-components/list';
+import { cn } from '@/lib/utils';
+import Text from '../exposed-components/text';
 
 type TableProps = {
   pageBlockId?: string;
@@ -26,8 +28,24 @@ const Table: Block<TableProps> = ({ rows, pageBlockId = '', backgroundColor }) =
             propName={`rows.${index}.cells`}
             pageBlockId={pageBlockId}
             itemComponent="td"
-            listItemClassName="visio-cms-p-3 visio-cms-text-white"
-            renderComponent={(cell) => <>{cell.data}</>}
+            listItemClassName={cn('visio-cms-p-3 visio-cms-text-white', {
+              'visio-cms-font-semibold visio-cms-bg-dark-700 !visio-cms-bg-dark-700': index === 0,
+              'visio-cms-text-sm': index > 0,
+              'visio-cms-bg-dark-800': index % 2 == 0,
+            })}
+            renderComponent={(cell, cellIndex) => (
+              <>
+                {cellIndex > 0 ? (
+                  <Text
+                    pageBlockId={pageBlockId}
+                    propName={`rows.${index}.cells.${cellIndex}.data`}
+                    defaultValue={cell.data}
+                  />
+                ) : (
+                  <>{index < 1 ? 'Id' : index}</>
+                )}
+              </>
+            )}
           />
         )}
       />
@@ -65,13 +83,7 @@ Table.Schema = {
           propName: 'rows.cells',
           label: 'Cell',
           schema: { data: '1' },
-          sideEditingProps: [
-            {
-              type: 'text',
-              propName: 'data',
-              label: 'Data',
-            },
-          ],
+          sideEditingProps: [],
         },
       ],
     },

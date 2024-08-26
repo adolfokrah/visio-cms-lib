@@ -36,7 +36,7 @@ export default function List<T>({
       key: `${propName}.${index}`,
       className: cn('visio-cms-list-none', listItemClassName, {
         'visio-cms-outline visio-cms-outline-2 -visio-cms-outline-offset-2 visio-cms-outline-blue-500':
-          selectedListItem?.propName === `${propName}.${index}`,
+          selectedListItem?.propName === `${propName}.${index}` && !globalBlock,
       }),
       children: renderComponent(values, index),
       onClick: (e: MouseEvent) => {

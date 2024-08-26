@@ -10,15 +10,22 @@ export default function PagePreview() {
   const navigate = useNavigate();
   const { pages } = usePagesState();
   const { blocks, globalBlocks } = useProjectConfigurationState();
-  const { user } = useAuthState();
+  const { user, fetchingUser, fetchUser } = useAuthState();
   useEffect(() => {
-    if (!user) {
+    if (fetchingUser) {
+      fetchUser();
+      return;
+    }
+    if (!fetchingUser && !user) {
       navigate(PAGES.LOGIN);
     }
-  }, [user, navigate]);
+  }, [fetchUser, fetchingUser, user, navigate]);
 
   const page = pages.find((page) => page.id === id);
   if (!page) navigate(PAGES.PAGE_NOT_FOUND);
+
+  if (fetchingUser) return null;
+
   return (
     <>
       {page?.blocks?.[page.activeLanguageLocale]?.map((pageBlock, index) => {
