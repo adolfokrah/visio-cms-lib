@@ -69,61 +69,62 @@ export interface InvitedUser {
   photo: string | null;
 }
 
-type BasePropSchema = {
+type BasePropSchema<T = Record<string, any>> = {
   propName: string;
   label: string;
   group?: string;
+  hide?: (inputs: T) => boolean;
 };
 
-type SwitchEditingProp = BasePropSchema & {
+type SwitchEditingProp<T = Record<string, any>> = BasePropSchema<T> & {
   type: 'switch';
   onLabel?: string;
   offLabel?: string;
 };
 
-type RadioGroupEditingProp = BasePropSchema & {
+type RadioGroupEditingProp<T = Record<string, any>> = BasePropSchema<T> & {
   type: 'radio-group';
   options: { label: string; value: string }[];
 };
 
-type SelectEditingProp = BasePropSchema & {
+type SelectEditingProp<T = Record<string, any>> = BasePropSchema<T> & {
   type: 'select';
   options: { label: string; value: string }[];
   placeholder?: string;
 };
 
-type CustomEditingProp = BasePropSchema & {
+type CustomEditingProp<T = Record<string, any>> = BasePropSchema<T> & {
   type: 'custom';
   component: React.FC<any>;
   componentProps?: Record<string, any>;
 };
 
-type BaseEditingProps = BasePropSchema & {
+type BaseEditingProps<T = Record<string, any>> = BasePropSchema<T> & {
   type: 'text' | 'color' | 'link' | 'image' | 'number';
 };
 
-export type SideEditingProps =
-  | SwitchEditingProp
-  | RadioGroupEditingProp
-  | SelectEditingProp
-  | BaseEditingProps
-  | CustomEditingProp;
+export type SideEditingProps<T = Record<string, any>> =
+  | SwitchEditingProp<T>
+  | RadioGroupEditingProp<T>
+  | SelectEditingProp<T>
+  | BaseEditingProps<T>
+  | CustomEditingProp<T>;
 
 export type BlockSchema<T = Record<string, any>> = {
   name: string;
   id: string;
   group?: string;
   defaultPropValues: T;
-  sideEditingProps: SideEditingProps[];
-  lists?: ListSchema[];
+  sideEditingProps: SideEditingProps<T>[];
+  lists?: ListSchema<T>[];
 };
 
-export type ListSchema = {
+export type ListSchema<T = Record<string, any>> = {
   propName: string;
   label: string;
   schema: Record<string, any>;
-  subLists?: ListSchema[];
-  sideEditingProps?: SideEditingProps[];
+  subLists?: ListSchema<T>[];
+  sideEditingProps?: SideEditingProps<T>[];
   maxCount?: number;
 };
 

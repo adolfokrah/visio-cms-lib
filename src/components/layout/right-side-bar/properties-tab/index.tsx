@@ -76,7 +76,16 @@ export default function PropertiesTab() {
     setSelectedListItem(null);
   };
 
-  const groupedSideEditingProps = groupSideEditingProps(selectedBlock?.sideEditingProps || []);
+  const groupedSideEditingProps = () => {
+    const newSideEditingProps = selectedBlock?.sideEditingProps.filter((sideEditingProp) => {
+      if (sideEditingProp?.hide) {
+        return sideEditingProp.hide(pageBlock?.inputs || activeGlobalPinnedBlock?.inputs || {}) == true ? false : true;
+      }
+      return true;
+    });
+
+    return groupSideEditingProps(newSideEditingProps || []);
+  };
 
   return (
     <div className="visio-cms-overflow-auto visio-cms-h-[calc(100vh-100px)] scrollbar-custom  visio-cms-px-1">
@@ -167,20 +176,30 @@ export default function PropertiesTab() {
                     <AccordionTrigger>Editing props</AccordionTrigger>
                     <AccordionContent>
                       <div>
-                        {list.sideEditingProps?.map((sideEditingProp, index) => (
-                          <div
-                            key={`${sideEditingProp.propName}.${index}`}
-                            className="visio-cms-mt-3 visio-cms-space-y-2"
-                          >
-                            <div>
-                              <Label>{sideEditingProp.label}</Label>
+                        {list.sideEditingProps
+                          ?.filter((sideEditingProp) => {
+                            if (sideEditingProp?.hide) {
+                              return sideEditingProp.hide(pageBlock?.inputs || activeGlobalPinnedBlock?.inputs || {}) ==
+                                true
+                                ? false
+                                : true;
+                            }
+                            return true;
+                          })
+                          .map((sideEditingProp, index) => (
+                            <div
+                              key={`${sideEditingProp.propName}.${index}`}
+                              className="visio-cms-mt-3 visio-cms-space-y-2"
+                            >
+                              <div>
+                                <Label>{sideEditingProp.label}</Label>
+                              </div>
+                              <RenderController
+                                {...sideEditingProp}
+                                propName={`${listPropName}.${sideEditingProp.propName}`}
+                              />
                             </div>
-                            <RenderController
-                              {...sideEditingProp}
-                              propName={`${listPropName}.${sideEditingProp.propName}`}
-                            />
-                          </div>
-                        ))}
+                          ))}
                       </div>
                     </AccordionContent>
                   </AccordionItem>
@@ -233,7 +252,7 @@ export default function PropertiesTab() {
           {selectedBlock?.sideEditingProps && selectedBlock.sideEditingProps?.length > 0 && (
             <div className="visio-cms-px-2">
               <Accordion type="multiple">
-                {groupedSideEditingProps
+                {groupedSideEditingProps()
                   .filter((group) => group.group != 'default')
                   .map((group) => (
                     <AccordionItem key={group.group} value={group.group}>
@@ -256,7 +275,7 @@ export default function PropertiesTab() {
                     </AccordionItem>
                   ))}
               </Accordion>
-              {groupedSideEditingProps
+              {groupedSideEditingProps()
                 .filter((group) => group.group == 'default')
                 .map((group) => (
                   <div key={group.group}>

@@ -138,7 +138,16 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
 Navbar.Schema = {
   name: 'Navbar',
   id: 'navbar',
-  sideEditingProps: [],
+  sideEditingProps: [
+    {
+      type: 'image',
+      propName: 'logo',
+      label: 'Logo',
+      hide: ({ sideButtons }) => {
+        return sideButtons.length > 0;
+      },
+    },
+  ],
   defaultPropValues: {
     sideButtons: [],
     logo: {
@@ -216,6 +225,9 @@ Navbar.Schema = {
           type: 'color',
           propName: 'color',
           label: 'Color',
+          hide: (data) => {
+            return data?.sideButtons?.[0]?.title.length < 1;
+          },
         },
       ],
     },
