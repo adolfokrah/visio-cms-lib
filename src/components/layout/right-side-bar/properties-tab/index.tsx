@@ -79,7 +79,7 @@ export default function PropertiesTab() {
   const groupedSideEditingProps = groupSideEditingProps(selectedBlock?.sideEditingProps || []);
 
   return (
-    <>
+   <div className="visio-cms-overflow-auto visio-cms-h-[calc(100vh-100px)] scrollbar-custom  visio-cms-px-1">
       {foundLists?.map((list, listIndex) => {
         const listPropName = convertStringToArray(selectedListItem?.propName || '')
           .splice(0, listIndex + 1)
@@ -272,6 +272,6 @@ export default function PropertiesTab() {
           )}
         </>
       )}
-    </>
+    </div>
   );
 }
