@@ -11,7 +11,7 @@ import {
   PageTreeItem,
   SideEditingProps,
 } from './types';
-import { Page } from './states/usePagesState';
+import { Page, usePagesState } from './states/usePagesState';
 import * as jose from 'jose';
 import { JSON_WEB_SECRET, PAGES } from './constants';
 import { useDbState } from './states/usedbState';
@@ -327,9 +327,18 @@ export function groupSideEditingProps(items: SideEditingProps[]): { group: strin
 }
 
 export function getLink(link: string) {
+  const projectMode = getProjectMode();
+  let href = link;
   const { pages } = usePageContentState.getState();
-  const page = pages.find((page) => page.id === link)?.slug || link;
-  return page;
+  const { pages: newPages } = usePagesState.getState();
+
+  const page = pages.find((page) => page.id === link) || newPages.find((page) => page.id === link);
+  if (page) {
+    href =
+      projectMode === 'BUILDER' ? `#` : projectMode === 'PREVIEW' ? `${PAGES.PREVIEW_PAGE}/${page.id}` : `${page.slug}`;
+  }
+
+  return href;
 }
 
 export function getImageUrl(image: MediaFile): string {

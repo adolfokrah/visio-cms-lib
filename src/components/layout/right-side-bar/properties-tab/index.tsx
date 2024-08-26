@@ -79,7 +79,7 @@ export default function PropertiesTab() {
   const groupedSideEditingProps = groupSideEditingProps(selectedBlock?.sideEditingProps || []);
 
   return (
-   <div className="visio-cms-overflow-auto visio-cms-h-[calc(100vh-100px)] scrollbar-custom  visio-cms-px-1">
+    <div className="visio-cms-overflow-auto visio-cms-h-[calc(100vh-100px)] scrollbar-custom  visio-cms-px-1">
       {foundLists?.map((list, listIndex) => {
         const listPropName = convertStringToArray(selectedListItem?.propName || '')
           .splice(0, listIndex + 1)
@@ -135,9 +135,11 @@ export default function PropertiesTab() {
                       <div>
                         {list.subLists?.map((subList, index) => {
                           const path = subList.propName.split('.');
-                          const listPropPath = listPropName.split('.');
-                          const p = listPropPath.slice(0, listPropPath.length - 1);
-                          const value = getValueByPath(pageBlock?.inputs || activeGlobalPinnedBlock?.inputs, p);
+                          const p = `${listPropName}.${path[path.length - 1]}`;
+                          const value = getValueByPath(
+                            pageBlock?.inputs || activeGlobalPinnedBlock?.inputs,
+                            p.split('.'),
+                          );
                           return (
                             <Button
                               key={`${subList.propName}-${index}`}

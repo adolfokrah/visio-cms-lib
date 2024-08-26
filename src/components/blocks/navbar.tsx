@@ -3,6 +3,7 @@ import Text from '../exposed-components/text';
 import { cn, getLink, getProjectMode } from '@/lib/utils';
 import Image from '../exposed-components/image';
 import List from '../exposed-components/list';
+import { Link } from 'react-router-dom';
 type NavbarProps = {
   logo: MediaFile;
   links: {
@@ -57,26 +58,26 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
           listItemClassName="visio-cms-group visio-cms-relative"
           renderComponent={(link, index) => (
             <>
-              <a
-                href={getLink(link.url)}
+              <Link
+                to={getLink(link.url)}
                 key={`${link.title}-${index}`}
                 className="visio-cms-relative visio-cms-p-2 hover:visio-cms-bg-gray-100 visio-cms-cursor-pointer visio-cms-inline-block "
               >
                 <Text pageBlockId={pageBlockId} defaultValue={link.title} propName={`links.${index}.title`} />
-              </a>
+              </Link>
 
               <List
                 propName={`links.${index}.subLinks`}
                 pageBlockId={pageBlockId}
                 defaultPropValues={link.subLinks}
                 className="visio-cms-absolute visio-cms-left-0 visio-cms-top-[100%] visio-cms-hidden group-hover:visio-cms-block hover:visio-cms-block visio-cms-w-max visio-cms-min-w-[200px] visio-cms-bg-white visio-cms-shadow-md visio-cms-rounded-md visio-cms-z-10"
-                listItemClassName="visio-cms-relative"
+                listItemClassName="visio-cms-relative visio-cms-group/item"
                 renderComponent={(subLink, subIndex) => (
                   <>
                     <a
                       href={getLink(subLink.url)}
                       key={`${subLink.title}-${subIndex}`}
-                      className="visio-cms-relative visio-cms-p-2 hover:visio-cms-bg-gray-100 visio-cms-cursor-pointer visio-cms-inline-block"
+                      className="visio-cms-relative visio-cms-p-2  visio-cms-w-full hover:visio-cms-bg-gray-100 visio-cms-cursor-pointer visio-cms-inline-block"
                     >
                       <Text
                         pageBlockId={pageBlockId}
@@ -89,13 +90,13 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
                       propName={`links.${index}.subLinks.${subIndex}.subsubLinks`}
                       pageBlockId={pageBlockId}
                       defaultPropValues={subLink.subsubLinks}
-                      className="visio-cms-absolute visio-cms-left-[100%] visio-cms-top-0 visio-cms-bg-white visio-cms-shadow-md visio-cms-rounded-md visio-cms-z-10 visio-cms-w-[200px]"
+                      className="visio-cms-absolute visio-cms-left-[100%] group-hover/item:visio-cms-block visio-cms-hidden visio-cms-top-0 visio-cms-bg-white visio-cms-shadow-md visio-cms-rounded-md visio-cms-z-10 visio-cms-w-[200px]"
                       renderComponent={(subsubLink, subSubIndex) => (
                         <>
                           <a
                             href={getLink(subsubLink.url)}
                             key={`${subsubLink.title}-${subSubIndex}`}
-                            className="visio-cms-relative visio-cms-p-2 hover:visio-cms-bg-gray-100 visio-cms-cursor-pointer visio-cms-inline-block"
+                            className="visio-cms-relative visio-cms-p-2 visio-cms-w-full  hover:visio-cms-bg-gray-100 visio-cms-cursor-pointer visio-cms-inline-block"
                           >
                             <Text
                               pageBlockId={pageBlockId}
@@ -161,6 +162,13 @@ Navbar.Schema = {
         title: 'Home',
         url: '/',
       },
+      sideEditingProps: [
+        {
+          type: 'link',
+          propName: 'url',
+          label: 'URL',
+        },
+      ],
       maxCount: 5,
       subLists: [
         {
@@ -179,6 +187,7 @@ Navbar.Schema = {
                 title: 'Sub Sub Link',
                 url: '/sub-link',
               },
+              maxCount: 2,
             },
           ],
         },
