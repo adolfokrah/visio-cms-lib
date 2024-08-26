@@ -4,7 +4,7 @@ import useBlockHistory from '@/lib/hooks/useBlockHistory';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { useTabState } from '../states/useTabsState';
 
-export default function useRepeaterController() {
+export default function useListController() {
   const { pages, setPages } = usePagesState();
   const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
   const { addBlocksToPageHistory, addInputsToGlobalBlockHistory } = useBlockHistory();

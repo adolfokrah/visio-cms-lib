@@ -161,6 +161,7 @@ Navbar.Schema = {
         title: 'Home',
         url: '/',
       },
+      maxCount: 5,
       subLists: [
         {
           propName: 'links.subLinks',
@@ -169,6 +170,7 @@ Navbar.Schema = {
             title: 'Sub Link',
             url: '/sub-link',
           },
+          maxCount: 2,
           subLists: [
             {
               propName: 'links.subLinks.subsubLinks',

@@ -102,26 +102,12 @@ type BaseEditingProps = BasePropSchema & {
   type: 'text' | 'color' | 'link' | 'image' | 'number';
 };
 
-type List = {
-  type: 'list';
-  fields: { name: string; defaultValue: any; itemCount?: number }[];
-  subList?: {
-    propName: string;
-    fields: { name: string; defaultValue: any; itemCount?: number }[];
-    sideEditingProps?: SideEditingProps[];
-  }[];
-  sideEditingProps?: SideEditingProps[];
-};
-
-export type ListEditingProps = BasePropSchema & List;
-
 export type SideEditingProps =
   | SwitchEditingProp
   | RadioGroupEditingProp
   | SelectEditingProp
   | BaseEditingProps
-  | CustomEditingProp
-  | ListEditingProps;
+  | CustomEditingProp;
 
 export type BlockSchema<T = Record<string, any>> = {
   name: string;
@@ -138,6 +124,7 @@ export type ListSchema = {
   schema: Record<string, any>;
   subLists?: ListSchema[];
   sideEditingProps?: SideEditingProps[];
+  maxCount?: number;
 };
 
 export type Block<T = Record<string, any>> = React.FC<T> & { Schema: BlockSchema<T> };

@@ -10,7 +10,7 @@ import {
   moveItemByPathArray,
 } from '@/lib/utils';
 import { ArrowDown, ArrowUp } from 'lucide-react';
-import useRepeaterController from '@/lib/hooks/useRepeaterController';
+import useListController from '@/lib/hooks/useListController';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import { Label } from '@/components/ui/label';
 import RenderController from './controllers';
@@ -20,7 +20,7 @@ import { useListState } from '@/lib/states/useListState';
 import { usePagesState } from '@/lib/states/usePagesState';
 
 export default function PropertiesTab() {
-  const { updateBlockValue, globalBlocks, updateBlockInputs } = useRepeaterController();
+  const { updateBlockValue, globalBlocks, updateBlockInputs } = useListController();
   const { selectedListItem, setSelectedListItem } = useListState();
   const { blocks } = useProjectConfigurationState();
   const { pages } = usePagesState();
@@ -135,7 +135,9 @@ export default function PropertiesTab() {
                       <div>
                         {list.subLists?.map((subList, index) => {
                           const path = subList.propName.split('.');
-
+                          const listPropPath = listPropName.split('.');
+                          const p = listPropPath.slice(0, listPropPath.length - 1);
+                          const value = getValueByPath(pageBlock?.inputs || activeGlobalPinnedBlock?.inputs, p);
                           return (
                             <Button
                               key={`${subList.propName}-${index}`}
@@ -144,6 +146,7 @@ export default function PropertiesTab() {
                               onClick={() => {
                                 addItem(`${listPropName}.${path[path.length - 1]}`, subList.schema);
                               }}
+                              disabled={list.maxCount ? value?.length >= list.maxCount : false}
                             >
                               Add {convertToTitleCase(subList.label)}
                             </Button>
@@ -200,6 +203,10 @@ export default function PropertiesTab() {
                   <AccordionContent>
                     <div>
                       {selectedBlock.lists?.map((list, index) => {
+                        const value = getValueByPath(
+                          pageBlock?.inputs || activeGlobalPinnedBlock?.inputs,
+                          list.propName.split('.'),
+                        );
                         return (
                           <Button
                             key={`${list.propName}-${index}`}
@@ -208,6 +215,7 @@ export default function PropertiesTab() {
                             onClick={() => {
                               addItem(list.propName, list.schema);
                             }}
+                            disabled={list.maxCount ? value?.length >= list.maxCount : false}
                           >
                             Add {convertToTitleCase(list.label)}
                           </Button>
