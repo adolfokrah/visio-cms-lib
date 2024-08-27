@@ -226,7 +226,7 @@ Navbar.Schema = {
           propName: 'color',
           label: 'Color',
           hide: (data) => {
-            return data?.sideButtons?.[0]?.title.length < 1;
+            return data?.sideButtons[0]?.title.length < 1;
           },
         },
       ],

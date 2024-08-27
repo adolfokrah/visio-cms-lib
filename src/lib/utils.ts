@@ -336,6 +336,8 @@ export function getLink(link: string) {
   if (page) {
     href =
       projectMode === 'BUILDER' ? `#` : projectMode === 'PREVIEW' ? `${PAGES.PREVIEW_PAGE}/${page.id}` : `${page.slug}`;
+  } else {
+    href = projectMode === 'BUILDER' ? `#` : href;
   }
 
   return href;

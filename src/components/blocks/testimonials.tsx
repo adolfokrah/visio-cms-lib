@@ -106,6 +106,7 @@ Testimonial.Schema = {
       propName: 'backgroundColor',
       label: 'Background Color',
       type: 'color',
+      hide: ({ backgroundImage }) => backgroundImage?.mediaHash != null,
     },
     {
       propName: 'title',
@@ -136,6 +137,7 @@ Testimonial.Schema = {
       label: 'Current Counter Number',
       type: 'number',
       group: 'Content',
+      hide: ({ showCounter }) => !showCounter,
     },
     {
       propName: 'showCounter',
