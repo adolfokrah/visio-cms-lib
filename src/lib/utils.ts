@@ -292,9 +292,16 @@ export function updateColorById(
     for (const key in newObj) {
       if (Object.prototype.hasOwnProperty.call(newObj, key)) {
         const value = newObj[key];
-        // If the value is an object or array, recurse and update it
-        if (typeof value === 'object' && value !== null) {
-          newObj[key] = Array.isArray(value) ? value.map(traverseAndUpdate) : traverseAndUpdate(value);
+
+        // If the value is an array of objects, recurse and update it
+        if (Array.isArray(value)) {
+          newObj[key] = value.map((item) =>
+            typeof item === 'object' && item !== null ? traverseAndUpdate(item) : item,
+          );
+        }
+        // If the value is an object, recurse and update it
+        else if (typeof value === 'object' && value !== null) {
+          newObj[key] = traverseAndUpdate(value);
         }
       }
     }

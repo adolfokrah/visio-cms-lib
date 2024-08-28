@@ -106,7 +106,8 @@ const Tiptap = ({
   const { tabs } = usePageContentState();
   const activeTab = tabs.find((tab) => tab.active)?.id;
   const [isFocused, setIsFocused] = useState(false);
-  const value = defaultValue?.includes('<p>') ? defaultValue : `<p>${defaultValue}</p>`;
+  const value =
+    typeof defaultValue == 'string' ? (defaultValue?.includes('<p>') ? defaultValue : `<p>${defaultValue}</p>`) : '';
 
   const editor = useEditor({
     extensions: [...extensions, PreventNewLine.configure({ allowNewLines })],

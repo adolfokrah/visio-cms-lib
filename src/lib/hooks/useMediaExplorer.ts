@@ -58,7 +58,7 @@ export default function useMediaExplorer({
     try {
       setLoading(true);
       setError(null);
-      const { data, error } = await db.from('uploaded_files').select('*');
+      const { data, error } = await db.from('uploaded_files').select('*').order('id', { ascending: false });
       if (error) {
         throw new Error(error.message);
       }

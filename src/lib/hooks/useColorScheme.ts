@@ -21,7 +21,7 @@ export default function useColorScheme() {
   }, 300);
 
   const addNewColor = () => {
-    const id = `${uuidv4()}__${btoa(String(colorScheme.length + 1))}`;
+    const id = `color_${uuidv4()}__${btoa(String(colorScheme.length + 1))}`;
     setTheme({
       theme: {
         colorScheme: [{ colorHex: '#ffffff', colorName: '', id }, ...colorScheme],
