@@ -1,5 +1,5 @@
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import { supabase } from '@/lib/utils';
+import { isValidURL, supabase } from '@/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { MediaFile } from '../types';
 import { usePageContentState } from '../states/usePageContentState';
@@ -7,9 +7,7 @@ export default function useImage({ defaultValue, pageBlockId }: { defaultValue: 
   const db = supabase();
   const { bucketName, allowImageTransformation } = useProjectConfigurationState();
   const [openMediaExplorer, setOpenMediaExplorer] = useState(false);
-  const [imagePublicUrl, setImagePublicUrl] = useState<string>(
-    defaultValue?.mediaHash || 'https://placehold.co/600x400',
-  );
+  const [imagePublicUrl, setImagePublicUrl] = useState<string>('https://placehold.co/600x400');
   const { pages, globalBlocks } = usePageContentState();
   const activePage = pages.find((page) => page.active);
 
@@ -37,10 +35,10 @@ export default function useImage({ defaultValue, pageBlockId }: { defaultValue: 
 
       setImagePublicUrl(publicUrl);
     };
-    if (defaultValue?.mediaHash) {
+    if (defaultValue?.mediaHash && !isValidURL(defaultValue?.mediaHash)) {
       getImagePublicUrl(defaultValue?.mediaHash, defaultValue.width, defaultValue.height);
     } else {
-      setImagePublicUrl('https://placehold.co/600x400');
+      setImagePublicUrl(defaultValue?.mediaHash || 'https://placehold.co/600x400');
     }
   }, [
     bucketName,

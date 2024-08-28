@@ -306,7 +306,7 @@ Footer.Schema = {
     {
       label: 'Solutions',
       propName: 'solutions',
-      schema: {
+      defaultValue: {
         name: 'Solutions',
         href: '/solutions',
       },
@@ -314,7 +314,7 @@ Footer.Schema = {
         {
           label: 'Sub Solutions',
           propName: 'solutions.subSolutions',
-          schema: {
+          defaultValue: {
             name: 'Sub Solutions',
             href: '/sub-solutions',
           },

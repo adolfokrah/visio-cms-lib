@@ -77,12 +77,12 @@ Table.Schema = {
     {
       propName: 'rows',
       label: 'Row',
-      schema: { cells: [{ data: '1' }, { data: '2' }] },
+      defaultValue: { cells: [{ data: '1' }, { data: '2' }] },
       subLists: [
         {
           propName: 'rows.cells',
           label: 'Cell',
-          schema: { data: '1' },
+          defaultValue: { data: '1' },
           sideEditingProps: [],
         },
       ],

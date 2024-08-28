@@ -100,8 +100,14 @@ const Hero: Block<HeroProps> = ({
         <Image
           defaultValue={image}
           propName="image"
-          className="visio-cms-mt-12 visio-cms-rounded-lg visio-cms-mx-auto"
           pageBlockId={pageBlockId}
+          renderImage={({ imagePublicUrl, altText }) => (
+            <img
+              src={imagePublicUrl}
+              alt={altText}
+              className="visio-cms-mt-12 visio-cms-w-full visio-cms-rounded-lg visio-cms-shadow-lg"
+            />
+          )}
         />
       </div>
     </div>
@@ -131,7 +137,7 @@ Hero.Schema = {
     {
       propName: 'getStartedButton',
       label: 'Get Started Button',
-      schema: {
+      defaultValue: {
         name: 'Get started button',
         url: '/get-started',
       },

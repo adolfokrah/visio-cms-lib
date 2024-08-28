@@ -1,13 +1,5 @@
 import { Button } from '../button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { useEffect, useRef, useState } from 'react';
 import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
 import lodash from 'lodash';
@@ -97,7 +89,7 @@ export default function EditImageView({ image, onImageSaved }: { image: Media; o
       <DialogContent className="!visio-cms-max-w-4xl visio-cms-z-[999999] ">
         <DialogHeader>
           <DialogTitle>Edit image</DialogTitle>
-          <DialogDescription className="visio-cms-max-h-[700px] visio-cms-overflow-auto scrollbar-custom visio-cms-w-full  visio-cms-relative visio-cms-grid visio-cms-items-center visio-cms-min-h-[400px]  visio-cms-rounded-md ">
+          <div className="visio-cms-max-h-[700px] visio-cms-overflow-auto scrollbar-custom visio-cms-w-full  visio-cms-relative visio-cms-grid visio-cms-items-center visio-cms-min-h-[400px]  visio-cms-rounded-md ">
             <div
               style={{
                 width: imgRef.current?.width,
@@ -127,7 +119,7 @@ export default function EditImageView({ image, onImageSaved }: { image: Media; o
                 />
               </ReactCrop>
             </div>
-          </DialogDescription>
+          </div>
         </DialogHeader>
 
         <DialogFooter className="visio-cms-border-t visio-cms-border-dark-700 visio-cms-pt-2">

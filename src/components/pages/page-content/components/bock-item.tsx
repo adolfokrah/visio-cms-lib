@@ -23,7 +23,7 @@ export default function BlockItem({
   const { globalBlocks } = usePageContentState();
   const globalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
   const { setRepeaterId } = useRepeaterState();
-  const blockInputs = globalBlock?.inputs || pageBlock.inputs || block.Schema.defaultPropValues;
+  const blockInputs = { ...block.Schema.defaultPropValues, ...globalBlock?.inputs, ...pageBlock.inputs };
   return (
     <div
       onClick={(e) => {
@@ -50,12 +50,14 @@ export default function BlockItem({
     >
       <Popover open={pageBlock?.isSelected}>
         <PopoverTrigger asChild>
-          <div>
-            {React.createElement(block, {
-              key: block.Schema.id,
-              ...blockInputs,
-              pageBlockId: pageBlock.id,
-            })}
+          <div className="visio-cms-relative">
+            <div className="visio-cms-relative visio-cms-z-0">
+              {React.createElement(block, {
+                key: block.Schema.id,
+                ...blockInputs,
+                pageBlockId: pageBlock.id,
+              })}
+            </div>
             <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} />
             <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} />
             <div

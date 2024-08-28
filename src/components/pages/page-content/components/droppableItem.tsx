@@ -17,7 +17,7 @@ export default function DroppableItem({
     <Tooltip open={showPlaceHolder}>
       <TooltipTrigger asChild disabled>
         <div
-          className={cn('visio-cms-h-[5px] visio-cms-w-full visio-cms-absolute', {
+          className={cn('visio-cms-h-[5px] visio-cms-w-full visio-cms-absolute visio-cms-z-[200]', {
             '!visio-cms-bg-blue-500': isDraggingOver,
             'visio-cms-top-0': position === 'top',
             'visio-cms-bottom-0': position === 'bottom',

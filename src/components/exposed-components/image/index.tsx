@@ -6,14 +6,26 @@ import { cn, getProjectMode, sendMessageToParent } from '@/lib/utils';
 export default function Image({
   defaultValue,
   propName,
-  className,
   pageBlockId,
+  renderImage,
+  wrapperClassName,
 }: {
   defaultValue: MediaFile;
   propName: string;
-  className?: string;
+  wrapperClassName?: string;
   pageBlockId: string;
   allowTransformation?: boolean;
+  renderImage: ({
+    imagePublicUrl,
+    altText,
+    width,
+    height,
+  }: {
+    imagePublicUrl: string;
+    width: number;
+    height: number;
+    altText: string;
+  }) => JSX.Element;
 }) {
   const { openMediaExplorer, setOpenMediaExplorer, imagePublicUrl, isBlockGlobal } = useImage({
     defaultValue,
@@ -23,15 +35,18 @@ export default function Image({
   const projectMode = getProjectMode();
   if (projectMode === 'BUILDER')
     return (
-      <div>
-        <img
-          src={`${imagePublicUrl}?t=${new Date().getTime()}`}
-          alt={defaultValue?.altText || ''}
-          className={cn(className, {
-            'visio-cms-cursor-pointer': !isBlockGlobal,
+      <>
+        <div
+          className={cn('visio-cms-inline-block visio-cms-cursor-pointer', wrapperClassName)}
+          onDoubleClick={() => setOpenMediaExplorer(true)}
+        >
+          {renderImage({
+            imagePublicUrl: `${imagePublicUrl}`,
+            altText: defaultValue?.altText || '',
+            width: defaultValue?.width || 0,
+            height: defaultValue?.height || 0,
           })}
-          onClick={() => setOpenMediaExplorer(true)}
-        />
+        </div>
         {!isBlockGlobal && (
           <MediaExplorer
             open={openMediaExplorer}
@@ -46,14 +61,17 @@ export default function Image({
             chosenImage={defaultValue?.mediaHash ? defaultValue : undefined}
           />
         )}
-      </div>
+      </>
     );
   else
     return (
-      <img
-        src={`${imagePublicUrl}?t=${new Date().getTime()}`}
-        alt={defaultValue?.altText || ''}
-        className={className}
-      />
+      <div className={cn('visio-cms-inline-block', wrapperClassName)}>
+        {renderImage({
+          imagePublicUrl: `${imagePublicUrl}`,
+          altText: defaultValue?.altText || '',
+          width: defaultValue?.width || 0,
+          height: defaultValue?.height || 0,
+        })}
+      </div>
     );
 }

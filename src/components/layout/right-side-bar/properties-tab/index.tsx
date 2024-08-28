@@ -155,7 +155,7 @@ export default function PropertiesTab() {
                               variant={'outline'}
                               className="visio-cms-mt-2 visio-cms-w-full hover:!visio-cms-bg-dark-700"
                               onClick={() => {
-                                addItem(`${listPropName}.${path[path.length - 1]}`, subList.schema);
+                                addItem(`${listPropName}.${path[path.length - 1]}`, subList.defaultValue);
                               }}
                               disabled={list.maxCount ? value?.length >= list.maxCount : false}
                             >
@@ -234,7 +234,7 @@ export default function PropertiesTab() {
                             variant={'outline'}
                             className="visio-cms-mt-2 visio-cms-w-full hover:!visio-cms-bg-dark-700"
                             onClick={() => {
-                              addItem(list.propName, list.schema);
+                              addItem(list.propName, list.defaultValue);
                             }}
                             disabled={list.maxCount ? value?.length >= list.maxCount : false}
                           >

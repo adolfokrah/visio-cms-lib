@@ -122,7 +122,7 @@ export type BlockSchema<T = Record<string, any>> = {
 export type ListSchema<T = Record<string, any>> = {
   propName: string;
   label: string;
-  schema: Record<string, any>;
+  defaultValue: any;
   subLists?: ListSchema<T>[];
   sideEditingProps?: SideEditingProps<T>[];
   maxCount?: number;

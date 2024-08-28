@@ -47,7 +47,11 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
           pageBlockId={pageBlockId}
           defaultValue={logo}
           propName="logo"
-          className="visio-cms-w-14 visio-cms-h-14"
+          renderImage={({ imagePublicUrl, altText, width, height }) => (
+            <a href="#">
+              <img src={imagePublicUrl} alt={altText} width={width} height={height} />
+            </a>
+          )}
         />
 
         <List
@@ -167,7 +171,7 @@ Navbar.Schema = {
     {
       propName: 'links',
       label: 'Link',
-      schema: {
+      defaultValue: {
         title: 'Home',
         url: '/',
       },
@@ -183,7 +187,7 @@ Navbar.Schema = {
         {
           propName: 'links.subLinks',
           label: 'Sub Link',
-          schema: {
+          defaultValue: {
             title: 'Sub Link',
             url: '/sub-link',
           },
@@ -192,7 +196,7 @@ Navbar.Schema = {
             {
               propName: 'links.subLinks.subsubLinks',
               label: 'Sub Sub Link',
-              schema: {
+              defaultValue: {
                 title: 'Sub Sub Link',
                 url: '/sub-link',
               },
@@ -205,7 +209,7 @@ Navbar.Schema = {
     {
       propName: 'sideButtons',
       label: 'Side Buttons',
-      schema: {
+      defaultValue: {
         title: 'Button',
         url: '/button',
         color: { colorHex: '#000000', id: '1', colorName: 'Black' },

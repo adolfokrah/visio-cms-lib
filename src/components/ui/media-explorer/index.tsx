@@ -35,7 +35,7 @@ export default function MediaExplorer({
   chosenImage,
 }: {
   open: boolean;
-  onImageChosen: (chosenMediaFile: MediaFile  | null) => void;
+  onImageChosen: (chosenMediaFile: MediaFile | null) => void;
   onCloseModal: () => void;
   chosenImage?: MediaFile;
 }) {

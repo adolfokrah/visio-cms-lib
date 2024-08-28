@@ -12,7 +12,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import Highlight from '@tiptap/extension-highlight';
 import { PreventNewLine } from './custom-extensions/prevent-new-line';
 import { EditorControlTypes } from '@/lib/types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import TextAlign from '@tiptap/extension-text-align';
 import { usePageContentState } from '@/lib/states/usePageContentState';
 
@@ -105,12 +105,15 @@ const Tiptap = ({
 }) => {
   const { tabs } = usePageContentState();
   const activeTab = tabs.find((tab) => tab.active)?.id;
+  const [isFocused, setIsFocused] = useState(false);
   const value = defaultValue?.includes('<p>') ? defaultValue : `<p>${defaultValue}</p>`;
 
   const editor = useEditor({
     extensions: [...extensions, PreventNewLine.configure({ allowNewLines })],
     editable: isEditable,
     content: value,
+    onFocus: () => setIsFocused(true),
+    onBlur: () => setIsFocused(false),
     onUpdate: ({ editor }) => {
       if (editor.getHTML() == value) {
         return;
@@ -120,10 +123,10 @@ const Tiptap = ({
   });
 
   useEffect(() => {
-    if (activeTab && editor && value) {
+    if (activeTab && editor && value && !isFocused) {
       editor.commands.setContent(value || '');
     }
-  }, [activeTab, editor, value]);
+  }, [activeTab, editor, value, isFocused]);
 
   useEffect(() => {
     if (editor) {
