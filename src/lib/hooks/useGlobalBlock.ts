@@ -7,6 +7,7 @@ import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
 import { ResponsiveView, usePagesState } from '../states/usePagesState';
 import { toast } from 'sonner';
+import { updateOrInsertProjectConfig } from '../utils';
 
 export default function useGlobalBlock(onClose?: () => void) {
   const [loading, setLoading] = useState(false);
@@ -52,6 +53,7 @@ export default function useGlobalBlock(onClose?: () => void) {
           selectedView: 'Desktop' as ResponsiveView,
         },
       ];
+      await updateOrInsertProjectConfig({ global_blocks: newGlobalBlocks });
       setGlobalBlocks(newGlobalBlocks);
       addGlobalBlockForm.reset();
       pageBlock.isGlobalBlock = true;

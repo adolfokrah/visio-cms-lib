@@ -516,3 +516,24 @@ export function getColor(color: Color): string {
   const foundColor = theme.colorScheme.find((c) => c.id === color.id)?.colorHex || color.colorHex;
   return foundColor;
 }
+
+export async function updateOrInsertProjectConfig(configData: object) {
+  const db = supabase();
+  const { data } = await db.from('project_configuration').select().limit(1);
+  if (data && data.length) {
+    const { error } = await db.from('project_configuration').update(configData).eq('id', data[0].id);
+    if (error) throw error;
+  } else {
+    const { error } = await db.from('project_configuration').insert(configData);
+    if (error) throw error;
+  }
+}
+
+export async function fetchProjectConfig() {
+  const db = supabase();
+  const { setTheme, setGlobalBlocks } = useProjectConfigurationState.getState();
+  const { data, error } = await db.from('project_configuration').select().limit(1);
+  if (error) throw error;
+  setTheme(data[0]?.theme || {});
+  setGlobalBlocks(data[0]?.global_blocks || []);
+}

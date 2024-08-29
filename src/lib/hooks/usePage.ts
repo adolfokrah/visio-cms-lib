@@ -5,11 +5,12 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { Page, usePagesState } from '../states/usePagesState';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
-import { formatStringToSlug } from '../utils';
+import { formatStringToSlug, supabase } from '../utils';
 import { useAuthState } from '../states/useAuthState';
 import { useTreeView } from '../states/useTreeView';
 import { PageTreeItem } from '../types';
 import { useTabState } from '../states/useTabsState';
+import { toast } from 'sonner';
 
 export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
   const { pages, setPages } = usePagesState();
@@ -19,6 +20,7 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
   const { user } = useAuthState();
   const [error, setError] = useState<string>('');
   const { items, setItems } = useTreeView();
+  const db = supabase();
   const addPageForm = useForm<z.infer<typeof addNewPageFormSchema>>({
     resolver: zodResolver(addNewPageFormSchema),
     defaultValues: {
@@ -27,9 +29,9 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
     },
   });
 
-  const onAddPage = (data: z.infer<typeof addNewPageFormSchema> & { folderId: string }) => {
+  const onAddPage = async (data: z.infer<typeof addNewPageFormSchema> & { folderId: string }) => {
     setLoading(true);
-    setTimeout(() => {
+    try {
       const pageWithSlugExists = pages.find((page) => page.slug == `/${formatStringToSlug(data.slug)}`);
       if (pageWithSlugExists) {
         setError('Slug already exists');
@@ -61,6 +63,23 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
         folderId: data.folderId,
       };
 
+      const { error, data: pageData } = await db
+        .from('pages')
+        .insert({
+          name: newPage.name,
+          slug: newPage.slug,
+          status: newPage.status,
+          author: user?.user_metadata.id,
+          tags: '',
+          seo: {},
+          blocks: [],
+          folder_id: newPage.folderId,
+        })
+        .select();
+
+      if (error) throw error;
+      newPage.id = pageData?.[0].id;
+
       setPages([
         newPage,
         ...pages.map((page) => ({
@@ -71,52 +90,96 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
       setLoading(false);
       if (onPageAdded) onPageAdded();
       addPageForm.reset();
-    }, 1000);
+    } catch (error) {
+      setError('Failed to add page');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deletePage = (page: PageTreeItem, withPages: boolean) => {
+  const deletePage = async (page: PageTreeItem, withPages: boolean) => {
     setLoading(true);
-    setTimeout(() => {
+    try {
+      if (page.type == 'Folder') {
+        if (withPages) {
+          const { error } = await db.from('pages').delete().eq('folder_id', page.id);
+          if (error) throw error;
+        } else {
+          const { error } = await db.from('pages').update({ folder_id: null }).eq('folder_id', page.id);
+          if (error) throw error;
+        }
+        const { error } = await db.from('folders').delete().eq('id', page.id);
+        if (error) throw error;
+      } else {
+        const { error } = await db.from('pages').delete().eq('id', page.id);
+        if (error) throw error;
+      }
       const pagesInFolder = pages.filter((fPage) => fPage.folderId == page.id).map((page) => page.id);
 
       const newPages = pages.filter((fPage) => (withPages ? fPage.folderId != page.id : fPage.id != page.id));
       setPages(newPages);
 
       const newTabs = [...tabs.filter((tab) => (withPages ? !pagesInFolder.includes(tab.id) : tab.id != page.id))];
-
+      const newItems = items.filter((item) => item.id != page.id);
+      setItems(newItems);
       setTabs(newTabs);
-      if (page.type == 'Folder') setItems(items.filter((item) => item.id != page.id));
+    } catch (error) {
+      toast.error(`Failed to delete ${page.type === 'Folder' ? 'folder' : 'page'}`);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
-  const duplicatePage = ({ page }: { page: Page }) => {
+  const duplicatePage = async ({ page }: { page: Page }) => {
     setLoading(true);
-    setTimeout(() => {
+    try {
       const foundPage = pages.find((fPage) => fPage.id == page.id);
 
       if (foundPage) {
         const id = `${pages.length + 1}`;
         const slug = `${foundPage.slug}-${id}`;
+        const newPage = {
+          ...foundPage,
+          id,
+          slug: slug,
+          name: `${foundPage.name}-${id}`,
+        };
+
+        const { error, data } = await db
+          .from('pages')
+          .insert({
+            name: newPage.name,
+            slug: newPage.slug,
+            status: newPage.status,
+            author: user?.user_metadata.id,
+            tags: newPage.tags,
+            seo: newPage.seo,
+            blocks: newPage.blocks,
+            folder_id: newPage.folderId,
+          })
+          .select();
+
+        if (error) throw error;
+        newPage.id = data?.[0].id;
 
         setPages([
           ...pages.map((page) => ({ ...page, active: false })),
           {
-            ...foundPage,
-            id,
-            slug: slug,
-            name: `${foundPage.name}-${id}`,
+            ...newPage,
             pinned: true,
             active: true,
           },
         ]);
         setTabs([
           ...tabs.map((tab) => ({ ...tab, active: false })),
-          { name: `${foundPage.name}-${id}`, type: 'page', id, active: true },
+          { name: newPage.name, type: 'page', id: newPage.id, active: true },
         ]);
       }
+    } catch (error) {
+      setError('Failed to duplicate page');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return { addPageForm, loading, onAddPage, deletePage, duplicatePage, error, setError };

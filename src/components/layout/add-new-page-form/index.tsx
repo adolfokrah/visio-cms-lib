@@ -37,7 +37,7 @@ export default function AddNewPageForm({
                   <FormItem className=" visio-cms-flex visio-cms-flex-col visio-cms-gap-[6px]">
                     <FormLabel className="visio-cms-ml-[2px]">Page name</FormLabel>
                     <FormControl>
-                      <Input type="name" placeholder="Enter page name" {...field} />
+                      <Input type="name" className="visio-cms-text-white" placeholder="Enter page name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -51,7 +51,7 @@ export default function AddNewPageForm({
                   <FormItem className=" visio-cms-flex visio-cms-flex-col visio-cms-gap-[6px]">
                     <FormLabel className="visio-cms-ml-[2px]">Slug</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Enter slug" {...field} />
+                      <Input type="text" className="visio-cms-text-white" placeholder="Enter slug" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

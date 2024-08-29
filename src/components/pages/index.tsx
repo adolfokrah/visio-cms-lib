@@ -15,6 +15,7 @@ import PageContent from './page-content';
 import { TooltipProvider } from '../ui/tooltip';
 import GlobalEditContent from './global-edit-content';
 import PagePreview from './page-preview';
+import { fetchProjectConfig } from '@/lib/utils';
 
 const router = createBrowserRouter([
   {
@@ -76,7 +77,10 @@ export default function Auth(
   const { fetchUser, fetchingUser } = useAuthState();
   useEffect(() => {
     if (projectConfiguration) setConfiguration(projectConfiguration);
-    fetchUser();
+    (async () => {
+      fetchProjectConfig();
+      fetchUser();
+    })();
   }, [projectConfiguration, setConfiguration, fetchUser]);
 
   if (!supabaseProjectUrl.length && !supabaseAnonKey.length && !projectId) return null;

@@ -17,6 +17,7 @@ import {
 import { toast } from 'sonner';
 import { useTabState } from '@/lib/states/useTabsState';
 import { usePagesState } from '@/lib/states/usePagesState';
+import { updateOrInsertProjectConfig } from '@/lib/utils';
 
 export default function GlobalBlocks() {
   const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
@@ -25,10 +26,16 @@ export default function GlobalBlocks() {
   const { tabs, setTabs } = useTabState();
   const { pages, setPages } = usePagesState();
 
-  const deleteGlobalBlock = (id: string) => {
-    setTabs([...tabs.filter((tab) => tab.id !== id)]);
-    setGlobalBlocks(globalBlocks.filter((block) => block.id !== id));
-    setBlockToDelete(null);
+  const deleteGlobalBlock = async (id: string) => {
+    try {
+      const newGlobalBlocks = globalBlocks.filter((block) => block.id !== id);
+      await updateOrInsertProjectConfig({ global_blocks: newGlobalBlocks });
+      setTabs([...tabs.filter((tab) => tab.id !== id)]);
+      setGlobalBlocks(newGlobalBlocks);
+      setBlockToDelete(null);
+    } catch (error) {
+      toast.error('Failed to delete global block');
+    }
   };
 
   return (
@@ -119,16 +126,24 @@ const GlobalBlockName = ({ name, id }: { name: string; id: string }) => {
   const [isEditing, setIsEditing] = useState(false);
   const { tabs, setTabs } = useTabState();
   const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
-  const updateBlockName = (name: string) => {
-    const block = globalBlocks.find((block) => block.name.toLowerCase() === name.toLowerCase() && block.id !== id);
-    setTabs(tabs.map((tab) => (tab.id === id ? { ...tab, name } : tab)));
-    if (block) {
-      toast.error('Block with the same name already exists');
-      return;
+  const updateBlockName = async (name: string) => {
+    try {
+      const block = globalBlocks.find((block) => block.name.toLowerCase() === name.toLowerCase() && block.id !== id);
+
+      if (block) {
+        toast.error('Block with the same name already exists');
+        return;
+      }
+      const newGlobalBlocks = globalBlocks.map((block) => (block.id === id ? { ...block, name } : block));
+
+      await updateOrInsertProjectConfig({ global_blocks: newGlobalBlocks });
+      setTabs(tabs.map((tab) => (tab.id === id ? { ...tab, name } : tab)));
+      setGlobalBlocks(newGlobalBlocks);
+      toast.success('Block name updated');
+      setIsEditing(false);
+    } catch (error) {
+      toast.error('Failed to update block name');
     }
-    setGlobalBlocks(globalBlocks.map((block) => (block.id === id ? { ...block, name } : block)));
-    toast.success('Block name updated');
-    setIsEditing(false);
   };
 
   return (

@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input';
 import { Page, usePagesState } from '@/lib/states/usePagesState';
 import { useTreeView } from '@/lib/states/useTreeView';
 import { PageTreeItem } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { cn, supabase } from '@/lib/utils';
 import { Circle, Folder, FolderOpen, MoreVerticalIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import {
@@ -20,6 +20,7 @@ import usePage from '@/lib/hooks/usePage';
 import DeletePageAction from './delete-page-action';
 import AddNewPageForm from '../../add-new-page-form';
 import { useTabState } from '@/lib/states/useTabsState';
+import { toast } from 'sonner';
 
 export default function PageTree({ items }: { items: PageTreeItem[] }) {
   return (
@@ -66,33 +67,47 @@ function FolderItem({ item }: { item: PageTreeItem }) {
   }, [items, setItems, item]);
 
   const updateFolderName = useCallback(
-    (name: string) => {
-      const newItems = items.map((i) => {
-        if (i.id === item.id) {
-          i.name = name;
-        }
-        return i;
-      });
-      setItems(newItems);
+    async (name: string) => {
+      const db = supabase();
+      try {
+        const newItems = items.map((i) => {
+          if (i.id === item.id) {
+            i.name = name;
+          }
+          return i;
+        });
+        const { error } = await db.from('folders').update({ name, updated_at: new Date() }).eq('id', item.id);
+        if (error) throw error;
+        setItems(newItems);
+      } catch (error) {
+        toast.error('Failed to update folder name');
+      }
     },
     [items, setItems, item],
   );
 
   const addFileToChildren = useCallback(
-    (pageId: string) => {
-      const foundPage = pages.find((page) => page.id == pageId);
-      if (foundPage) {
-        const newItems = items.map((i) => {
-          if (i.id === item.id && i.type == 'Folder') {
-            i.children.push({
-              ...foundPage,
-              type: 'Page',
-            });
-          }
-          return i;
-        });
-        setItems(newItems);
-        setPages(pages.map((page) => ({ ...page, folderId: page.id === foundPage.id ? item.id : page.folderId })));
+    async (pageId: string) => {
+      const db = supabase();
+      try {
+        const foundPage = pages.find((page) => page.id == pageId);
+        if (foundPage) {
+          const newItems = items.map((i) => {
+            if (i.id === item.id && i.type == 'Folder') {
+              i.children.push({
+                ...foundPage,
+                type: 'Page',
+              });
+            }
+            return i;
+          });
+          const { error } = await db.from('pages').update({ folder_id: item.id }).eq('id', foundPage.id);
+          if (error) throw error;
+          setItems(newItems);
+          setPages(pages.map((page) => ({ ...page, folderId: page.id === foundPage.id ? item.id : page.folderId })));
+        }
+      } catch (e) {
+        toast.error('Failed to add page to folder');
       }
     },
     [items, item, setItems, pages, setPages],

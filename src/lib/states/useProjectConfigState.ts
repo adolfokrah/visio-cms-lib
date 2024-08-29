@@ -47,7 +47,7 @@ export const useProjectConfigurationState = create(
       theme: {
         colorScheme: [],
       },
-      setTheme: (data) => set(() => data),
+      setTheme: (theme) => set(() => ({ ...theme })),
       setGlobalBlocks: (globalBlocks) => set(() => ({ globalBlocks })),
     }),
     {
