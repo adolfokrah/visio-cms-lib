@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import {
   BlockList,
+  Color,
   Folder,
   GroupedBlock,
   ListSchema,
@@ -508,4 +509,10 @@ export function getItemPositionByPathArray(data: NestedObject, path: string[]): 
   }
 
   return null; // Path is invalid or item not found
+}
+
+export function getColor(color: Color): string {
+  const { theme } = usePageContentState.getState();
+  const foundColor = theme.colorScheme.find((c) => c.id === color.id)?.colorHex || color.colorHex;
+  return foundColor;
 }

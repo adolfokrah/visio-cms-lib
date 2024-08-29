@@ -1,6 +1,6 @@
 import { Block, Color, MediaFile } from '@/lib/exposed-types';
 import Text from '../exposed-components/text';
-import { cn, getLink, getProjectMode } from '@/lib/utils';
+import { cn, getColor, getLink, getProjectMode } from '@/lib/utils';
 import Image from '../exposed-components/image';
 import List from '../exposed-components/list';
 import { Link } from 'react-router-dom';
@@ -129,7 +129,7 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
             href={getLink(button.url)}
             key={`${button.title}-${index}`}
             className="visio-cms-px-3.5 visio-cms-py-1.5 hover:visio-cms-bg-indigo-500 visio-cms-cursor-pointer visio-cms-bg-indigo-400 visio-cms-rounded-md visio-cms-text-white visio-cms-inline-block"
-            style={{ backgroundColor: button.color.colorHex }}
+            style={{ backgroundColor: getColor(button.color) }}
           >
             {button.title}
           </a>

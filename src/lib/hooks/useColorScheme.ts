@@ -1,13 +1,9 @@
 import { useState } from 'react';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
-import { Color, GlobalBlock } from '../types';
-import { updateColorById } from '../utils';
-import { PageBlock, usePagesState } from '../states/usePagesState';
 import lodash from 'lodash';
 export default function useColorScheme() {
-  const { theme, setTheme, globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
-  const { pages, setPages } = usePagesState();
+  const { theme, setTheme } = useProjectConfigurationState();
   const [isEditing, setIsEditing] = useState(false);
   const { colorScheme } = theme;
 
@@ -17,7 +13,6 @@ export default function useColorScheme() {
         colorScheme: [...colorScheme.slice(0, index), { colorHex, colorName, id }, ...colorScheme.slice(index + 1)],
       },
     });
-    updateAllInstancesOfColor({ colorHex, colorName, id });
   }, 300);
 
   const addNewColor = () => {
@@ -35,31 +30,6 @@ export default function useColorScheme() {
         colorScheme: [...colorScheme.slice(0, index), ...colorScheme.slice(index + 1)],
       },
     });
-  };
-
-  const updateAllInstancesOfColor = (color: Color) => {
-    const page = pages.find((page) => page.active);
-    if (page) {
-      if (page?.blocks) {
-        const blocks = Object.keys(page?.blocks);
-        blocks.forEach((locale) => {
-          const newPageBlocks = updateColorById(
-            page.blocks?.[locale] || [],
-            color.id,
-            color.colorHex,
-            color.colorName,
-          ) as PageBlock[];
-          page.blocks = {
-            ...page.blocks,
-            [locale]: newPageBlocks,
-          };
-        });
-      }
-
-      setPages(pages.map((p) => (p.active ? page : p)));
-    }
-    const newGlobalblocks = updateColorById(globalBlocks, color.id, color.colorHex, color.colorName) as GlobalBlock[];
-    setGlobalBlocks(newGlobalblocks);
   };
 
   return { theme, isEditing, colorScheme, setIsEditing, updateColor, addNewColor, deleteColor };

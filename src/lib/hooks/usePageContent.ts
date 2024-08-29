@@ -4,7 +4,7 @@ import { sendMessageToParent } from '../utils';
 import { usePageContentState } from '../states/usePageContentState';
 
 export default function usePageContent() {
-  const { pages, setPages, setGlobalBlocks, setTabs, setSelectedListItem } = usePageContentState();
+  const { pages, setPages, setGlobalBlocks, setTabs, setSelectedListItem, setTheme } = usePageContentState();
   const activePage = pages.find((page) => page.active);
 
   useEffect(() => {
@@ -18,6 +18,7 @@ export default function usePageContent() {
       }
       if (projectConfiguration.state.globalBlocks) {
         setGlobalBlocks(projectConfiguration.state.globalBlocks);
+        setTheme(projectConfiguration.state.theme);
       }
       if (tabs.state.tabs) {
         setTabs(tabs.state.tabs);

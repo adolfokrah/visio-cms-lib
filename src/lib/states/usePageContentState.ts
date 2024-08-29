@@ -13,6 +13,8 @@ type State = {
   setTabs: (tabs: TabsState['tabs']) => void;
   selectedListItem: ListStateType['selectedListItem'];
   setSelectedListItem: ListStateType['setSelectedListItem'];
+  theme: ProjectConfiguration['theme'];
+  setTheme: (theme: ProjectConfiguration['theme']) => void;
 };
 
 export const usePageContentState = create<State>((set) => ({
@@ -24,4 +26,8 @@ export const usePageContentState = create<State>((set) => ({
   setTabs: (tabs) => set({ tabs }),
   selectedListItem: null,
   setSelectedListItem: (selectedListItem) => set({ selectedListItem }),
+  theme: {
+    colorScheme: [],
+  },
+  setTheme: (theme) => set({ theme }),
 }));

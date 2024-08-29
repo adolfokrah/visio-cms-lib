@@ -254,7 +254,7 @@ function UploadButton({ uploadFiles }: { uploadFiles: (mediaFiles: Media[]) => v
             const mediaFiles = Object.keys(files).map((fileKey: any) => {
               const file = files[fileKey];
               return {
-                id: uuidv4(),
+                id: `visio-cms-media-${uuidv4()}`,
                 file,
                 uploadProgress: 0,
               };
