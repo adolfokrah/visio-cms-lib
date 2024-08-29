@@ -114,6 +114,14 @@ const Tiptap = ({
     editable: isEditable,
     content: value,
     onFocus: () => setIsFocused(true),
+    onBlur: ({ editor }) => {
+      const { view } = editor;
+      const { selection } = view.state;
+      if (selection.empty) {
+        setIsFocused(false);
+      }
+      setIsFocused(false);
+    },
     onUpdate: ({ editor }) => {
       if (editor.getHTML() == value) {
         return;
