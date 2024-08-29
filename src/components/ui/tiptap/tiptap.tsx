@@ -120,7 +120,6 @@ const Tiptap = ({
       if (selection.empty) {
         setIsFocused(false);
       }
-      setIsFocused(false);
     },
     onUpdate: ({ editor }) => {
       if (editor.getHTML() == value) {

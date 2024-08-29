@@ -17,6 +17,7 @@ export const useAuthState = create<State & Actions>((set) => ({
   fetchingUser: true,
   clearUser: () => {
     set({ user: null });
+    localStorage.clear();
   },
   fetchUser: async () => {
     try {
