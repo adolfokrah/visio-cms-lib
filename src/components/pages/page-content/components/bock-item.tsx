@@ -23,7 +23,7 @@ export default function BlockItem({
   const { globalBlocks } = usePageContentState();
   const globalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
   const { setRepeaterId } = useRepeaterState();
-  const blockInputs = { ...block.Schema.defaultPropValues, ...globalBlock?.inputs, ...pageBlock.inputs };
+  const blockInputs = { ...block.Schema.defaultPropValues, ...pageBlock.inputs, ...globalBlock?.inputs };
   return (
     <div
       onClick={(e) => {
