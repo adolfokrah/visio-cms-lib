@@ -51,7 +51,7 @@ export default function BlockItem({
       <Popover open={pageBlock?.isSelected}>
         <PopoverTrigger asChild>
           <div className="visio-cms-relative">
-            <div className="visio-cms-relative visio-cms-z-0">
+            <div>
               {React.createElement(block, {
                 key: block.Schema.id,
                 ...blockInputs,

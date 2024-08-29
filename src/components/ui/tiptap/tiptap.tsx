@@ -114,7 +114,6 @@ const Tiptap = ({
     editable: isEditable,
     content: value,
     onFocus: () => setIsFocused(true),
-    onBlur: () => setIsFocused(false),
     onUpdate: ({ editor }) => {
       if (editor.getHTML() == value) {
         return;
@@ -143,7 +142,7 @@ const Tiptap = ({
       {allowedControls && allowedControls.length > 0 && (
         <BubbleMenu
           editor={editor}
-          className="visio-cms-max-w-[330px] !visio-cms-text-xs visio-cms-w-max visio-cms-flex visio-cms-gap-1 visio-cms-flex-wrap visio-cms-bg-dark-900 visio-cms-rounded-md visio-cms-border visio-cms-border-dark-800 visio-cms-text-white visio-cms-p-1"
+          className="visio-cms-max-w-[330px]  !visio-cms-text-xs visio-cms-w-max visio-cms-flex visio-cms-gap-1 visio-cms-flex-wrap visio-cms-bg-dark-900 visio-cms-rounded-md visio-cms-border visio-cms-border-dark-800 visio-cms-text-white visio-cms-p-1"
         >
           <CustomBubbleMenu
             editor={editor}
