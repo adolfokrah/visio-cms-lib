@@ -1,1 +1,1 @@
-export { getProjectMode, getImageUrl, getLink } from './utils';
+export { getProjectMode, getImageUrl, getLink, getColor } from './utils';
