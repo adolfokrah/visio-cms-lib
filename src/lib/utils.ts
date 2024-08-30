@@ -345,10 +345,15 @@ export function getLink(link: string) {
   const { pages } = usePageContentState.getState();
   const { pages: newPages } = usePagesState.getState();
 
+  const { locale } = getParams<{ locale: string }>();
   const page = pages.find((page) => page.id === link) || newPages.find((page) => page.id === link);
   if (page) {
     href =
-      projectMode === 'BUILDER' ? `#` : projectMode === 'PREVIEW' ? `${PAGES.PREVIEW_PAGE}/${page.id}` : `${page.slug}`;
+      projectMode === 'BUILDER'
+        ? `#`
+        : projectMode === 'PREVIEW'
+          ? `${PAGES.PREVIEW_PAGE}/${page.id}`
+          : `/${locale}${page.slug}`;
   } else {
     href = projectMode === 'BUILDER' ? `#` : href;
   }
@@ -649,7 +654,7 @@ export async function getPageBlocks(
   }
 }
 
-export function getParams<T>(): T | undefined {
+export function getParams<T>(): T {
   const { params } = useParamState.getState();
   return params as T;
 }
