@@ -3,6 +3,7 @@ import useTextEditor from '@/lib/hooks/useTextEditor';
 import { EditorControlTypes } from '@/lib/types';
 import { getProjectMode } from '@/lib/utils';
 const Tiptap = React.lazy(() => import('@/components/ui/tiptap/tiptap'));
+import parse from 'html-react-parser';
 
 export type TextEditorControls = Exclude<
   EditorControlTypes,
@@ -41,5 +42,5 @@ export default function Text({
         />
       </React.Suspense>
     );
-  else return <div dangerouslySetInnerHTML={{ __html: html || '' }} />;
+  else return <>{parse(html)}</>;
 }

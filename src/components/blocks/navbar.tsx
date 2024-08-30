@@ -1,6 +1,6 @@
 import { Block, Color, MediaFile } from '@/lib/exposed-types';
 import Text from '../exposed-components/text';
-import { cn, getColor, getLink, getProjectMode } from '@/lib/utils';
+import { cn, getColor, getLink, getParams, getProjectMode } from '@/lib/utils';
 import Image from '../exposed-components/image';
 import List from '../exposed-components/list';
 type NavbarProps = {
@@ -31,6 +31,7 @@ type NavbarProps = {
 
 const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons }) => {
   const projectMode = getProjectMode();
+  const params = getParams<{ locale: string; id: string; details: string }>();
 
   return (
     <nav
@@ -42,6 +43,7 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
       )}
     >
       <div className="visio-cms-flex visio-cms-gap-2 visio-cms-items-center">
+        {JSON.stringify(params)}
         <Image
           pageBlockId={pageBlockId}
           defaultValue={logo}

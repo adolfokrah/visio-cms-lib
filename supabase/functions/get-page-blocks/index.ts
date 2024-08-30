@@ -11,7 +11,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { slug, locale } = await req.json();
 
     const supabaseClient = createClient(Deno.env.get('URL') ?? '', Deno.env.get('SERVICE_ROLE') ?? '');
-    const { error, data } = await supabaseClient.from('pages').select('slug, id, name');
+    const { error, data } = await supabaseClient.from('pages').select('slug, id, name').eq('status', 'Publish');
     if (error) {
       throw error;
     }
@@ -19,8 +19,16 @@ const handler = async (req: Request): Promise<Response> => {
     const { error: pageError, data: pageData } = await supabaseClient
       .from('pages')
       .select('*')
-      .eq('slug', foundPage?.slug)
+      .eq('slug', foundPage?.page?.slug)
       .limit(1);
+
+    if (pageData.length === 0) {
+      return new Response(null, {
+        status: 404,
+        statusText: 'Not Found',
+        headers: corsHeaders,
+      });
+    }
 
     if (error) throw pageError;
 
@@ -34,7 +42,14 @@ const handler = async (req: Request): Promise<Response> => {
     if (configurationError) throw configurationError;
 
     return new Response(
-      JSON.stringify({ pageBlocks: [...pageBlocks], projectConfiguration: projectConfiguration[0] }),
+      JSON.stringify({
+        pageBlocks: [...pageBlocks],
+        projectConfiguration: {
+          globalBlocks: projectConfiguration[0].global_blocks,
+          theme: projectConfiguration[0].theme,
+        },
+        params: { ...foundPage?.params, locale },
+      }),
       {
         status: 200,
         headers: {

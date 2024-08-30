@@ -4,7 +4,7 @@ import { Block, Message } from '../types';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
 import useUndoAndRedo from './useUndoAndRedo';
-import { updatePageData, updateValueByPath } from '../utils';
+import { updateOrInsertProjectConfig, updatePageData, updateValueByPath } from '../utils';
 import useBlockHistory from './useBlockHistory';
 import { useTabState } from '../states/useTabsState';
 import { useListState } from '../states/useListState';
@@ -179,6 +179,7 @@ export default function useCanvas() {
             const path = propName.split('.');
             const blockInputs = updateValueByPath(globalBlock?.inputs || {}, path, value);
             //update global block inputs and inputs to history
+
             addInputsToGlobalBlockHistory(globalBlock?.id || '', blockInputs);
           }
         }
@@ -234,6 +235,12 @@ export default function useCanvas() {
       await updatePageData({ blocks: activePage?.blocks }, activePage?.id || '');
     })();
   }, [activePage?.blocks, activePage?.id]);
+
+  useEffect(() => {
+    (async () => {
+      await updateOrInsertProjectConfig({ global_blocks: globalBlocks });
+    })();
+  }, [globalBlocks]);
 
   return { blockToAddAsGlobalId, setBlockToAddAsGlobalId };
 }

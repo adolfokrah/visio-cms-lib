@@ -20,6 +20,7 @@ import { useDbState } from './states/usedbState';
 import { useProjectConfigurationState } from './states/useProjectConfigState';
 import { usePageContentState } from './states/usePageContentState';
 import { useAuthState } from './states/useAuthState';
+import { useParamState } from './states/useParamState';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -616,6 +617,7 @@ export type PageData = {
     globalBlocks: ProjectConfiguration['globalBlocks'];
     theme: ProjectConfiguration['theme'];
   };
+  params: { [key: string]: any };
 };
 
 export async function getPageBlocks(
@@ -623,7 +625,7 @@ export async function getPageBlocks(
   supabaseAnonKey: string,
   supabaseProjectUrl: string,
   locale: string,
-): Promise<PageData | null> {
+): Promise<PageData & { error?: string }> {
   const url = `${supabaseProjectUrl}/functions/v1/get-page-blocks`;
   const options = {
     method: 'POST',
@@ -634,10 +636,20 @@ export async function getPageBlocks(
     body: JSON.stringify({ slug, locale }),
   };
 
-  return await fetch(url, options)
-    .then((response) => response.json())
-    .then((data) => data as PageData)
-    .catch((error) => {
-      throw error;
-    });
+  const response = await fetch(url, options);
+
+  if (response.status === 200) {
+    const data = await response.json();
+    return { ...data, error: null } as PageData;
+  } else if (response.status === 404) {
+    return { error: 'page not found' } as PageData & { error: string };
+  } else {
+    // Handle other potential status codes if necessary
+    return { error: `unexpected error: ${response.status}` } as PageData & { error: string };
+  }
+}
+
+export function getParams<T>(): T | undefined {
+  const { params } = useParamState.getState();
+  return params as T;
 }

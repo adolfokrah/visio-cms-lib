@@ -73,7 +73,7 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
           tags: '',
           seo: {},
           blocks: [],
-          folder_id: newPage.folderId,
+          folder_id: newPage?.folderId || null,
           schedule_published: newPage.schedulePublished,
           publish_date: newPage.publishDate,
         })
@@ -90,6 +90,10 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
         })),
       ]);
       setLoading(false);
+      setTabs([
+        ...tabs.map((tab) => ({ ...tab, active: false })),
+        { name: newPage.name, type: 'page', id: newPage.id, active: true },
+      ]);
       if (onPageAdded) onPageAdded();
       addPageForm.reset();
     } catch (error) {

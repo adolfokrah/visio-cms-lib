@@ -4,13 +4,18 @@ type Page = {
   slug: string;
 };
 
-export function matchSlug(slug: string, pages: Page[]): Page | null {
+type MatchResult = {
+  page: Page;
+  params: { [key: string]: string };
+} | null;
+
+export function matchSlug(slug: string, pages: Page[]): MatchResult {
   // Normalize the slug by removing any trailing slashes
   const normalizedSlug = slug.endsWith('/') ? slug.slice(0, -1) : slug;
 
   // First, check for an exact match
   const exactMatch = pages.find((page) => page.slug === normalizedSlug);
-  if (exactMatch) return exactMatch;
+  if (exactMatch) return { page: exactMatch, params: {} };
 
   // If no exact match, look for a pattern match
   for (const page of pages) {
@@ -20,10 +25,13 @@ export function matchSlug(slug: string, pages: Page[]): Page | null {
     if (pageParts.length !== slugParts.length) continue;
 
     let isMatch = true;
+    const params: { [key: string]: string } = {};
+
     for (let i = 0; i < pageParts.length; i++) {
       if (pageParts[i].startsWith(':')) {
-        // It's a parameter, so continue
-        continue;
+        // It's a parameter, so capture its value
+        const paramName = pageParts[i].slice(1);
+        params[paramName] = slugParts[i];
       } else if (pageParts[i] !== slugParts[i]) {
         // If parts don't match, it's not a match
         isMatch = false;
@@ -31,7 +39,7 @@ export function matchSlug(slug: string, pages: Page[]): Page | null {
       }
     }
 
-    if (isMatch) return page;
+    if (isMatch) return { page, params };
   }
 
   // If no match is found
