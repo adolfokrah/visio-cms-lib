@@ -22,8 +22,9 @@ export default function RightSideBar() {
     <div className="visio-cms-h-screen visio-cms-animate-fade-in visio-cms-bg-dark-800 visio-cms-pt-[50px] ">
       <Tabs defaultValue={'properties'} className="visio-cms-w-full">
         <TabsList
-          className={cn('visio-cms-grid visio-cms-w-[95%] visio-cms-grid-cols-2 visio-cms-mx-auto', {
+          className={cn('visio-cms-grid visio-cms-w-[95%] visio-cms-grid-cols-1 visio-cms-mx-auto', {
             'visio-cms-grid-cols-3': activePage != null && globalBlock == null && selectedBlock,
+            'visio-cms-grid-cols-2': activePage != null || globalBlock != null,
           })}
         >
           {((selectedBlock && !globalBlock) || activeGlobalPinnedBlock) && (

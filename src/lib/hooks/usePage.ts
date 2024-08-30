@@ -74,6 +74,8 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
           seo: {},
           blocks: [],
           folder_id: newPage.folderId,
+          schedule_published: newPage.schedulePublished,
+          publish_date: newPage.publishDate,
         })
         .select();
 
@@ -102,8 +104,11 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
     try {
       if (page.type == 'Folder') {
         if (withPages) {
-          const { error } = await db.from('pages').delete().eq('folder_id', page.id);
+          const { error, data } = await db.from('pages').delete().eq('folder_id', page.id).select();
           if (error) throw error;
+
+          const { error: deleteError } = await db.from('pages_scheduled_publish').delete().eq('page_id', data[0].id);
+          if (deleteError) throw deleteError;
         } else {
           const { error } = await db.from('pages').update({ folder_id: null }).eq('folder_id', page.id);
           if (error) throw error;
@@ -111,8 +116,10 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
         const { error } = await db.from('folders').delete().eq('id', page.id);
         if (error) throw error;
       } else {
-        const { error } = await db.from('pages').delete().eq('id', page.id);
+        const { error, data } = await db.from('pages').delete().eq('id', page.id).select();
         if (error) throw error;
+        const { error: deleteError } = await db.from('pages_scheduled_publish').delete().eq('page_id', data[0].id);
+        if (deleteError) throw deleteError;
       }
       const pagesInFolder = pages.filter((fPage) => fPage.folderId == page.id).map((page) => page.id);
 
@@ -156,6 +163,8 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
             seo: newPage.seo,
             blocks: newPage.blocks,
             folder_id: newPage.folderId,
+            schedule_published: newPage.schedulePublished,
+            publish_date: newPage.publishDate,
           })
           .select();
 

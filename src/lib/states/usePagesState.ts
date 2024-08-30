@@ -35,7 +35,7 @@ export type Page = {
   isExpanded?: boolean;
   status: Status;
   schedulePublished: SchedulePublished;
-  publishDate?: Date;
+  publishDate?: Date | null;
   author: {
     first_name: string;
     last_name: string;

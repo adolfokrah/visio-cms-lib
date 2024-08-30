@@ -18,6 +18,7 @@ import { JSON_WEB_SECRET, PAGES } from './constants';
 import { useDbState } from './states/usedbState';
 import { useProjectConfigurationState } from './states/useProjectConfigState';
 import { usePageContentState } from './states/usePageContentState';
+import { useAuthState } from './states/useAuthState';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -536,4 +537,29 @@ export async function fetchProjectConfig() {
   if (error) throw error;
   setTheme(data[0]?.theme || {});
   setGlobalBlocks(data[0]?.global_blocks || []);
+}
+
+export async function updatePageData(dataObject: { [key: string]: any }, pageId: string) {
+  const db = supabase();
+  const { pages } = usePagesState.getState();
+  const { user } = useAuthState.getState();
+  const page = pages.find((page) => page.id === pageId);
+  if (!page) return;
+
+  const { error } = await db
+    .from('pages')
+    .update({
+      name: page.name,
+      slug: page.slug,
+      status: page.status,
+      seo: page.seo,
+      blocks: page.blocks,
+      tags: page.tags,
+      author: user?.user_metadata.id,
+      publish_date: null,
+      schedule_published: 'Now',
+      ...dataObject,
+    })
+    .eq('id', pageId);
+  if (error) throw error;
 }

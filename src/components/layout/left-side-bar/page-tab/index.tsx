@@ -36,25 +36,30 @@ export default function PagesTab() {
         setLoading(true);
         const db = supabase();
         const { data: folders, error } = await db.from('folders').select('*');
-        const { data: pages, error: pagesError } = await db.from('pages').select(`*, author(*)`);
+        const { data: pagesData, error: pagesError } = await db.from('pages').select(`*, author(*)`);
         if (error || pagesError) {
           throw error || pagesError;
         }
         const data = [
           ...folders.map((folder) => ({ ...folder, isExpanded: false, children: [], type: 'Folder' })),
-          ...pages.map((page) => ({ id: page.id, name: page.name, type: 'Page' })),
+          ...pagesData.map((page) => ({ id: page.id, name: page.name, type: 'Page' })),
         ];
 
         setItems(data as PageTreeItem[]);
         setPages(
-          pages.map((page) => ({
-            ...page,
-            selectedView: RESPONSIVE_VIEWS[0].view,
-            activeLanguageLocale: defaultLanguage.locale,
-            pinned: false,
-            schedulePublished: 'Now',
-            folderId: page.folder_id,
-          })),
+          pagesData.map((page) => {
+            const foundPageState = pages.find((pageState) => pageState.id == page.id);
+            return {
+              ...page,
+              selectedView: RESPONSIVE_VIEWS[0].view,
+              activeLanguageLocale: defaultLanguage.locale,
+              pinned: foundPageState?.pinned || false,
+              active: foundPageState?.active || false,
+              schedulePublished: page.schedule_published,
+              publishDate: page.publish_date ? new Date(page.publish_date) : null,
+              folderId: page.folder_id,
+            };
+          }),
         );
       } catch (error) {
         setError('Failed to fetch pages and folders');

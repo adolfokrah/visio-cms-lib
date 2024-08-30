@@ -22,11 +22,11 @@ export default function PageStatusAndVisibility() {
         </TabsList>
       </Tabs>
       {page?.status == 'Publish' && (
-        <div className="visio-cms-mt-3">
+        <div className="visio-cms-mt-3 visio-cms-hidden">
           <Label className="!visio-cms-text-gray-300">Schedule published</Label>
           <div className="visio-cms-my-3">
             <RadioGroup
-              value={page?.schedulePublished}
+              value={page?.schedulePublished || ''}
               onValueChange={(value) => {
                 updateSchedulePublished(value as SchedulePublished);
               }}
@@ -47,7 +47,7 @@ export default function PageStatusAndVisibility() {
               <div className="visio-cms-my-3">
                 <DatePicker
                   key={`${page?.publishDate}`}
-                  selectedDate={page?.publishDate}
+                  selectedDate={page?.publishDate || new Date()}
                   onSelect={handleUpdatePageDate}
                   disabled={{ before: new Date() }}
                 />

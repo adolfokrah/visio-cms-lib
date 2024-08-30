@@ -1,7 +1,8 @@
 import { SchedulePublished, Status, usePagesState } from '@/lib/states/usePagesState';
 import { useCallback, useMemo, useState } from 'react';
-import { formatStringToSlug } from '../utils';
+import { formatStringToSlug, updatePageData } from '../utils';
 import { useTabState } from '../states/useTabsState';
+import { toast } from 'sonner';
 export default function usePageSettings() {
   const { pages, setPages } = usePagesState();
   const [error, setError] = useState<string>('');
@@ -9,77 +10,120 @@ export default function usePageSettings() {
   const { tabs, setTabs } = useTabState();
 
   const updatePageStatus = useCallback(
-    (value: Status) => {
-      setPages(pages.map((page) => ({ ...page, status: page.active ? (value as Status) : page.status })));
+    async (value: Status) => {
+      try {
+        const page = pages.find((page) => page.active);
+        if (page) {
+          await updatePageData({ status: value }, page.id);
+          setPages(
+            pages.map((page) => ({
+              ...page,
+              status: page.active ? (value as Status) : page.status,
+            })),
+          );
+        }
+      } catch (error) {
+        toast.error('Failed to update page status');
+      }
     },
     [pages, setPages],
   );
 
   const updateSchedulePublished = useCallback(
-    (value: SchedulePublished) => {
-      setPages(
-        pages.map((page) => ({
-          ...page,
-          schedulePublished: page.active ? (value as SchedulePublished) : page.schedulePublished,
-        })),
-      );
+    async (value: SchedulePublished) => {
+      try {
+        const page = pages.find((page) => page.active);
+        await updatePageData({ schedule_published: value, publish_date: new Date(0) }, page?.id || '');
+        setPages(
+          pages.map((page) => ({
+            ...page,
+            schedulePublished: page.active ? (value as SchedulePublished) : page.schedulePublished,
+            publishDate: page?.publishDate || new Date(),
+          })),
+        );
+      } catch (error) {
+        toast.error('Failed to update schedule published');
+      }
     },
     [pages, setPages],
   );
 
   const handleUpdatePageDate = useCallback(
-    (value: Date) => {
-      setPages(
-        pages.map((page) => ({
-          ...page,
-          publishDate: page.active ? (value as Date) : page.publishDate,
-        })),
-      );
+    async (value: Date) => {
+      try {
+        const page = pages.find((page) => page.active);
+        await updatePageData({ publish_date: value, schedule_published: 'Later' }, page?.id || '');
+        setPages(
+          pages.map((page) => ({
+            ...page,
+            publishDate: page.active ? (value as Date) : page.publishDate,
+          })),
+        );
+      } catch (error) {
+        toast.error('Failed to update page date');
+      }
     },
     [pages, setPages],
   );
 
   const handleUpdatePageName = useCallback(
-    (value: string) => {
-      if (!value) {
-        setError('Page name can not be empty');
-        return;
-      }
-      const isPageNameExists = pages.find((page) => page.name.toLowerCase() === value.toLowerCase() && !page.active);
+    async (value: string) => {
+      try {
+        if (!value) {
+          setError('Page name can not be empty');
+          return;
+        }
+        const isPageNameExists = pages.find((page) => page.name.toLowerCase() === value.toLowerCase() && !page.active);
 
-      if (isPageNameExists) {
-        setError(`Page name ${value} already exists`);
-        return;
+        if (isPageNameExists) {
+          setError(`Page name ${value} already exists`);
+          return;
+        }
+        const page = pages.find((page) => page.active);
+        await updatePageData({ name: value }, page?.id || '');
+        setPages(pages.map((page) => ({ ...page, name: page.active ? value : page.name })));
+        setTabs(tabs.map((tab) => (tab.id === page?.id ? { ...tab, name: value } : tab)));
+        setError('');
+      } catch (e) {
+        toast.error('Failed to update page name');
       }
-      const page = pages.find((page) => page.active);
-      setPages(pages.map((page) => ({ ...page, name: page.active ? value : page.name })));
-      setTabs(tabs.map((tab) => (tab.id === page?.id ? { ...tab, name: value } : tab)));
-      setError('');
     },
     [pages, setPages, tabs, setTabs],
   );
 
   const handleUpdatePageTag = useCallback(
-    (value: string) => {
-      setPages(pages.map((page) => ({ ...page, tags: page.active ? value : page.tags })));
+    async (value: string) => {
+      try {
+        const page = pages.find((page) => page.active);
+        await updatePageData({ tags: value }, page?.id || '');
+        setPages(pages.map((page) => ({ ...page, tags: page.active ? value : page.tags })));
+      } catch (error) {
+        toast.error('Failed to update page tag');
+      }
     },
     [pages, setPages],
   );
 
   const handleUpdatePageSlug = useCallback(
-    (value: string) => {
-      const slug = `/${formatStringToSlug(value)}`;
-      if (!value) {
-        setError('Page slug can not be empty');
-        return;
-      }
-      const isPageNameExists = pages.find((page) => page.slug.toLowerCase() === slug.toLowerCase() && !page.active);
+    async (value: string) => {
+      try {
+        const slug = `/${formatStringToSlug(value)}`;
+        if (!value) {
+          setError('Page slug can not be empty');
+          return;
+        }
+        const isPageNameExists = pages.find((page) => page.slug.toLowerCase() === slug.toLowerCase() && !page.active);
 
-      if (isPageNameExists) {
-        setError(`Page slug already exists`);
-        return;
+        if (isPageNameExists) {
+          setError(`Page slug already exists`);
+          return;
+        }
+        const page = pages.find((page) => page.active);
+        await updatePageData({ slug: value }, page?.id || '');
+        setPages(pages.map((page) => ({ ...page, slug: page.active ? slug : page.slug })));
+      } catch (error) {
+        toast.error('Failed to update page slug');
       }
-      setPages(pages.map((page) => ({ ...page, slug: page.active ? slug : page.slug })));
     },
     [pages, setPages],
   );
@@ -95,48 +139,60 @@ export default function usePageSettings() {
   }, [page?.author]);
 
   const updatePageMeta = useCallback(
-    (value: { title?: string; description?: string; keywords?: string; featuredImage?: string }) => {
-      setPages(
-        pages.map((page) => ({
-          ...page,
-          seo: page.active
-            ? {
-                ...page.seo,
-                [page.activeLanguageLocale]: {
-                  meta: {
-                    title: value.title || page.seo?.[page.activeLanguageLocale]?.meta?.title || '',
-                    description: value.description || page.seo?.[page.activeLanguageLocale]?.meta?.description || '',
-                    keywords: value.keywords || page.seo?.[page.activeLanguageLocale]?.meta?.keywords || '',
-                    featuredImage: page.seo?.[page.activeLanguageLocale]?.meta?.featuredImage,
-                  },
-                },
-              }
-            : page.seo,
-        })),
-      );
+    async (value: { title?: string; description?: string; keywords?: string; featuredImage?: string }) => {
+      try {
+        const page = pages.find((page) => page.active);
+        if (!page) return;
+        const seo = {
+          ...page.seo,
+          [page.activeLanguageLocale]: {
+            meta: {
+              title: value.title || page.seo?.[page.activeLanguageLocale]?.meta?.title || '',
+              description: value.description || page.seo?.[page.activeLanguageLocale]?.meta?.description || '',
+              keywords: value.keywords || page.seo?.[page.activeLanguageLocale]?.meta?.keywords || '',
+              featuredImage: page.seo?.[page.activeLanguageLocale]?.meta?.featuredImage,
+            },
+          },
+        };
+        await updatePageData({ seo }, page?.id || '');
+        setPages(
+          pages.map((page) => ({
+            ...page,
+            seo: page.active ? seo : page.seo,
+          })),
+        );
+      } catch (error) {
+        toast.error('Failed to update page meta');
+      }
     },
     [pages, setPages],
   );
 
-  const updatePageFeaturedImage = (image: string | undefined) => {
-    setPages(
-      pages.map((page) => ({
-        ...page,
-        seo: page.active
-          ? {
-              ...page?.seo,
-              [page.activeLanguageLocale]: {
-                meta: {
-                  title: page.seo?.[page.activeLanguageLocale]?.meta?.title || '',
-                  description: page.seo?.[page.activeLanguageLocale]?.meta?.description || '',
-                  keywords: page.seo?.[page.activeLanguageLocale]?.meta?.keywords || '',
-                  featuredImage: image,
-                },
-              },
-            }
-          : page.seo,
-      })),
-    );
+  const updatePageFeaturedImage = async (image: string | undefined) => {
+    try {
+      const page = pages.find((page) => page.active);
+      if (!page) return;
+      const seo = {
+        ...page?.seo,
+        [page.activeLanguageLocale]: {
+          meta: {
+            title: page.seo?.[page.activeLanguageLocale]?.meta?.title || '',
+            description: page.seo?.[page.activeLanguageLocale]?.meta?.description || '',
+            keywords: page.seo?.[page.activeLanguageLocale]?.meta?.keywords || '',
+            featuredImage: image,
+          },
+        },
+      };
+      await updatePageData({ seo }, page?.id || '');
+      setPages(
+        pages.map((page) => ({
+          ...page,
+          seo: page.active ? seo : page.seo,
+        })),
+      );
+    } catch (error) {
+      toast.error('Failed to update page featured image');
+    }
   };
 
   return {
