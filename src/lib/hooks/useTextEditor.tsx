@@ -1,5 +1,5 @@
 import { usePageContentState } from '@/lib/states/usePageContentState';
-import { sendMessageToParent } from '@/lib/utils';
+import { getProjectMode, sendMessageToParent } from '@/lib/utils';
 import { debounce } from 'lodash';
 import { useMemo } from 'react';
 import sanitizeHtml from 'sanitize-html';
@@ -17,6 +17,8 @@ export default function useTextEditor({
   const activePage = pages.find((page) => page.active);
 
   const isBlockGlobal = useMemo(() => {
+    const projectMode = getProjectMode();
+    if (projectMode === 'LIVE') return false;
     const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
     const foundBlock = pageBlocks.find((block) => block.id === pageBlockId);
 

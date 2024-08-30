@@ -10,9 +10,10 @@ import {
   Message,
   OsTypes,
   PageTreeItem,
+  ProjectConfiguration,
   SideEditingProps,
 } from './types';
-import { Page, usePagesState } from './states/usePagesState';
+import { Page, PageBlock, usePagesState } from './states/usePagesState';
 import * as jose from 'jose';
 import { JSON_WEB_SECRET, PAGES } from './constants';
 import { useDbState } from './states/usedbState';
@@ -261,6 +262,8 @@ export function stripHtmlTags(input: string): string {
 }
 
 export function getProjectMode() {
+  if (typeof window === 'undefined') return 'LIVE';
+
   if (
     window.location.pathname.includes(PAGES.PAGE_CONTENT) ||
     window.location.pathname.includes(PAGES.GLOBAL_BLOCK_EDIT_CONTENT)
@@ -352,14 +355,27 @@ export function getLink(link: string) {
   return href;
 }
 
+export function getColor(color: Color): string {
+  const { theme } = usePageContentState.getState();
+  const foundColor = theme.colorScheme.find((c) => c.id === color.id)?.colorHex || color.colorHex;
+  return foundColor;
+}
+
 export function getImageUrl(image: MediaFile): string {
   const db = supabase();
   if (image?.mediaHash?.includes('https') || image?.mediaHash?.includes('http')) {
     return `${image.mediaHash}`;
   }
+  const projectMode = getProjectMode();
+
+  if (projectMode === 'LIVE') {
+    const { projectId } = usePageContentState.getState();
+    return projectId ? `https://${projectId}.supabase.co/storage/v1/object/public/media/${image?.mediaHash}` : '';
+  }
   const { bucketName, allowImageTransformation } = useProjectConfigurationState.getState();
+  const { allowImageTransformation: pageContent_allowImageTransformation } = usePageContentState.getState();
   const data: { [keys: string]: any } = {};
-  if (allowImageTransformation) {
+  if (allowImageTransformation || pageContent_allowImageTransformation) {
     data['transform'] = {
       width: image?.width,
       height: image?.height,
@@ -512,12 +528,6 @@ export function getItemPositionByPathArray(data: NestedObject, path: string[]): 
   return null; // Path is invalid or item not found
 }
 
-export function getColor(color: Color): string {
-  const { theme } = usePageContentState.getState();
-  const foundColor = theme.colorScheme.find((c) => c.id === color.id)?.colorHex || color.colorHex;
-  return foundColor;
-}
-
 export async function updateOrInsertProjectConfig(configData: object) {
   const db = supabase();
   const { data } = await db.from('project_configuration').select().limit(1);
@@ -532,10 +542,12 @@ export async function updateOrInsertProjectConfig(configData: object) {
 
 export async function fetchProjectConfig() {
   const db = supabase();
-  const { setTheme, setGlobalBlocks } = useProjectConfigurationState.getState();
+  const projectMode = getProjectMode();
+  const { setTheme, setGlobalBlocks } =
+    projectMode === 'LIVE' ? usePageContentState.getState() : useProjectConfigurationState.getState();
   const { data, error } = await db.from('project_configuration').select().limit(1);
   if (error) throw error;
-  setTheme(data[0]?.theme || {});
+  setTheme(data[0]?.theme);
   setGlobalBlocks(data[0]?.global_blocks || []);
 }
 
@@ -562,4 +574,70 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
     })
     .eq('id', pageId);
   if (error) throw error;
+}
+
+export function matchSlug(slug: string, pages: Page[]): Page | null {
+  // Normalize the slug by removing any trailing slashes
+  const normalizedSlug = slug.endsWith('/') ? slug.slice(0, -1) : slug;
+
+  // First, check for an exact match
+  const exactMatch = pages.find((page) => page.slug === normalizedSlug);
+  if (exactMatch) return exactMatch;
+
+  // If no exact match, look for a pattern match
+  for (const page of pages) {
+    const pageParts = page.slug.split('/');
+    const slugParts = normalizedSlug.split('/');
+
+    if (pageParts.length !== slugParts.length) continue;
+
+    let isMatch = true;
+    for (let i = 0; i < pageParts.length; i++) {
+      if (pageParts[i].startsWith(':')) {
+        // It's a parameter, so continue
+        continue;
+      } else if (pageParts[i] !== slugParts[i]) {
+        // If parts don't match, it's not a match
+        isMatch = false;
+        break;
+      }
+    }
+
+    if (isMatch) return page;
+  }
+
+  // If no match is found
+  return null;
+}
+
+export type PageData = {
+  pageBlocks: PageBlock[];
+  projectConfiguration: {
+    globalBlocks: ProjectConfiguration['globalBlocks'];
+    theme: ProjectConfiguration['theme'];
+  };
+};
+
+export async function getPageBlocks(
+  slug: string,
+  supabaseAnonKey: string,
+  supabaseProjectUrl: string,
+  locale: string,
+): Promise<PageData | null> {
+  const url = `${supabaseProjectUrl}/functions/v1/get-page-blocks`;
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${supabaseAnonKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ slug, locale }),
+  };
+
+  return await fetch(url, options)
+    .then((response) => response.json())
+    .then((data) => data as PageData)
+    .catch((error) => {
+      throw error;
+    });
 }

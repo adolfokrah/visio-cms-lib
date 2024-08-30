@@ -13,7 +13,10 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/components/index.ts'),
+      entry: {
+        main: path.resolve(__dirname, 'src/components/index.ts'),
+        exposedFunctions: path.resolve(__dirname, 'src/lib/exposed-functions.ts'),
+      },
       name: 'visio-cms',
       formats: ['es'],
       fileName: (format) => `[name].${format}.js`,

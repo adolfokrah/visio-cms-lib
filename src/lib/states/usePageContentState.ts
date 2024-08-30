@@ -15,6 +15,10 @@ type State = {
   setSelectedListItem: ListStateType['setSelectedListItem'];
   theme: ProjectConfiguration['theme'];
   setTheme: (theme: ProjectConfiguration['theme']) => void;
+  allowImageTransformation: boolean;
+  setAllowImageTransformation: (allowImageTransformation: boolean) => void;
+  projectId: string;
+  setProjectId: (projectId: string) => void;
 };
 
 export const usePageContentState = create<State>((set) => ({
@@ -30,4 +34,8 @@ export const usePageContentState = create<State>((set) => ({
     colorScheme: [],
   },
   setTheme: (theme) => set({ theme }),
+  allowImageTransformation: false,
+  setAllowImageTransformation: (allowImageTransformation) => set({ allowImageTransformation }),
+  projectId: '',
+  setProjectId: (projectId) => set({ projectId }),
 }));

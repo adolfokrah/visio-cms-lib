@@ -28,7 +28,7 @@ export default function List<T>({
   const activePage = pages.find((page) => page.active);
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
   const foundBlock = pageBlocks.find((block) => block.id === pageBlockId);
-  const globalBlock = globalBlocks.find((block) => block.id === foundBlock?.globalBlockId);
+  const globalBlock = globalBlocks?.find((block) => block.id === foundBlock?.globalBlockId);
   const projectMode = getProjectMode();
 
   const children = defaultPropValues.map((values, index) => {

@@ -24,7 +24,7 @@ export default function RightSideBar() {
         <TabsList
           className={cn('visio-cms-grid visio-cms-w-[95%] visio-cms-grid-cols-1 visio-cms-mx-auto', {
             'visio-cms-grid-cols-3': activePage != null && globalBlock == null && selectedBlock,
-            'visio-cms-grid-cols-2': activePage != null || globalBlock != null,
+            'visio-cms-grid-cols-2': activePage != null || activeGlobalPinnedBlock != null,
           })}
         >
           {((selectedBlock && !globalBlock) || activeGlobalPinnedBlock) && (

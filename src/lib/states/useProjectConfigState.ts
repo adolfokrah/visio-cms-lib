@@ -18,7 +18,7 @@ type Actions = {
       | 'allowImageTransformation'
     >,
   ) => void;
-  setTheme: (props: Pick<ProjectConfiguration, 'theme'>) => void;
+  setTheme: (props: ProjectConfiguration['theme']) => void;
   setGlobalBlocks: (blocks: ProjectConfiguration['globalBlocks']) => void;
 };
 
@@ -47,7 +47,7 @@ export const useProjectConfigurationState = create(
       theme: {
         colorScheme: [],
       },
-      setTheme: (theme) => set(() => ({ ...theme })),
+      setTheme: (theme) => set(() => ({ theme })),
       setGlobalBlocks: (globalBlocks) => set(() => ({ globalBlocks })),
     }),
     {

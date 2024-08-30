@@ -3,12 +3,12 @@
   "private": false,
   "version": "0.1.167",
   "type": "module",
-  "main": "./dist/index.umd.js",
-  "module": "./dist/index.es.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/main.umd.js",
+  "module": "./dist/main.es.js",
+  "types": "./dist/components/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/components/index.es.js",
+      "import": "./dist/main.es.js",
       "types": "./dist/components/index.d.ts"
     },
     "./types": {
@@ -31,8 +31,12 @@
       "types": "./dist/components/exposed-components/list/index.d.ts"
     },
     "./utils": {
-      "import": "./dist/libs/exposed-functions.es.js",
-      "types": "./dist/libs/exposed-functions.d.ts"
+      "import": "./dist/exposedFunctions.es.js",
+      "types": "./dist/exposedFunctions.d.ts"
+    },
+    "./LivePage": {
+      "import": "./dist/components/pages/live-page/index.es.js",
+      "types": "./dist/components/pages/live-page/index.d.ts"
     }
   },
   "scripts": {

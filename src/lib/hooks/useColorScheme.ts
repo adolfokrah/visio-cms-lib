@@ -19,11 +19,7 @@ export default function useColorScheme() {
         };
         await updateOrInsertProjectConfig({ theme: newTheme });
 
-        setTheme({
-          theme: {
-            ...newTheme,
-          },
-        });
+        setTheme(newTheme);
       } catch (error) {
         toast.error('Failed to update color');
       }
@@ -39,11 +35,7 @@ export default function useColorScheme() {
       };
       await updateOrInsertProjectConfig({ theme: newTheme });
 
-      setTheme({
-        theme: {
-          ...newTheme,
-        },
-      });
+      setTheme(newTheme);
     } catch (error) {
       toast.error('Failed to add new color');
     }
@@ -57,11 +49,7 @@ export default function useColorScheme() {
       };
       await updateOrInsertProjectConfig({ theme: newTheme });
 
-      setTheme({
-        theme: {
-          ...newTheme,
-        },
-      });
+      setTheme(newTheme);
     } catch (error) {
       toast.error('Failed to delete color');
     }

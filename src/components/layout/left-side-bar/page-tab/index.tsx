@@ -40,8 +40,16 @@ export default function PagesTab() {
         if (error || pagesError) {
           throw error || pagesError;
         }
+
         const data = [
-          ...folders.map((folder) => ({ ...folder, isExpanded: false, children: [], type: 'Folder' })),
+          ...folders.map((folder) => ({
+            ...folder,
+            isExpanded: items
+              .filter((item) => item.type === 'Folder')
+              ?.find((itemFolder) => folder.id === itemFolder.id)?.isExpanded,
+            children: [],
+            type: 'Folder',
+          })),
           ...pagesData.map((page) => ({ id: page.id, name: page.name, type: 'Page' })),
         ];
 

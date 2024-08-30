@@ -3,7 +3,6 @@ import Text from '../exposed-components/text';
 import { cn, getColor, getLink, getProjectMode } from '@/lib/utils';
 import Image from '../exposed-components/image';
 import List from '../exposed-components/list';
-import { Link } from 'react-router-dom';
 type NavbarProps = {
   logo: MediaFile;
   links: {
@@ -62,13 +61,13 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
           listItemClassName="visio-cms-group visio-cms-relative"
           renderComponent={(link, index) => (
             <>
-              <Link
-                to={getLink(link.url)}
+              <a
+                href={getLink(link.url)}
                 key={`${link.title}-${index}`}
                 className="visio-cms-relative visio-cms-p-2 hover:visio-cms-bg-gray-100 visio-cms-cursor-pointer visio-cms-inline-block "
               >
                 <Text pageBlockId={pageBlockId} defaultValue={link.title} propName={`links.${index}.title`} />
-              </Link>
+              </a>
 
               <List
                 propName={`links.${index}.subLinks`}
