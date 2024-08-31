@@ -8,6 +8,7 @@ export default function TestLivePage() {
   const [pageBlocks, setPageBlocks] = useState<PageBlock[]>([]);
   const [projectConfiguration, setProjectConfiguration] = useState<PageData['projectConfiguration'] | null>(null);
   const [params, setParams] = useState<PageData['params']>({});
+  const [pages, setPages] = useState<PageData['pages']>([]);
 
   useEffect(() => {
     (async () => {
@@ -22,6 +23,7 @@ export default function TestLivePage() {
         setPageBlocks(data.pageBlocks);
         setProjectConfiguration(data.projectConfiguration);
         setParams(data.params);
+        setPages(data.pages);
       }
     })();
   }, []);
@@ -36,6 +38,7 @@ export default function TestLivePage() {
         blocks,
       }}
       params={params}
+      pages={pages}
     />
   );
 }

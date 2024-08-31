@@ -1,4 +1,5 @@
 import { usePageContentState } from '@/lib/states/usePageContentState';
+import { Page } from '@/lib/states/usePagesState';
 import { useParamState } from '@/lib/states/useParamState';
 import { ProjectConfiguration } from '@/lib/types';
 import { PageData } from '@/lib/utils';
@@ -9,16 +10,18 @@ export default function LivePage({
   pageBlocks,
   projectConfiguration,
   params,
+  pages,
 }: {
   allowImageTransformation?: boolean;
   pageBlocks: PageData['pageBlocks'];
   params: PageData['params'];
+  pages: Page[];
   projectConfiguration: PageData['projectConfiguration'] & {
     blocks: ProjectConfiguration['blocks'];
     projectId: string;
   };
 }) {
-  const { setGlobalBlocks, setTheme, setAllowImageTransformation, setProjectId } = usePageContentState();
+  const { setGlobalBlocks, setTheme, setAllowImageTransformation, setProjectId, setPages } = usePageContentState();
   const { setParams } = useParamState();
   useEffect(() => {
     setAllowImageTransformation(allowImageTransformation || false);
@@ -26,6 +29,7 @@ export default function LivePage({
     setTheme(projectConfiguration.theme);
     setProjectId(projectConfiguration.projectId);
     setParams(params);
+    setPages(pages);
   }, [
     setAllowImageTransformation,
     setGlobalBlocks,
@@ -35,6 +39,8 @@ export default function LivePage({
     setProjectId,
     setParams,
     params,
+    pages,
+    setPages,
   ]);
 
   return (

@@ -26,7 +26,7 @@ export default function AddNewPageForm({
           <DialogTitle>Add new page</DialogTitle>
           <Form {...addPageForm}>
             <form
-              className="visio-cms-space-y-4"
+              className="visio-cms-space-y-4 "
               onSubmit={addPageForm.handleSubmit((data) => onAddPage({ ...data, folderId }))}
             >
               <ErrorAlert errorMessage={error} onClearError={() => setError('')} className="visio-cms-bg-dark-900" />

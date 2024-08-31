@@ -618,6 +618,7 @@ export function matchSlug(slug: string, pages: Page[]): Page | null {
 
 export type PageData = {
   pageBlocks: PageBlock[];
+  pages: Page[];
   projectConfiguration: {
     globalBlocks: ProjectConfiguration['globalBlocks'];
     theme: ProjectConfiguration['theme'];

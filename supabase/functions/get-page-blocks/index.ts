@@ -44,6 +44,7 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({
         pageBlocks: [...pageBlocks],
+        pages: data,
         projectConfiguration: {
           globalBlocks: projectConfiguration[0].global_blocks,
           theme: projectConfiguration[0].theme,
