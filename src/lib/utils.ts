@@ -621,6 +621,56 @@ export async function getPageBlocks(
   }
 }
 
+type PageMeta = {
+  title: string;
+  description: string;
+  keywords: string;
+  featuredImage?: string;
+  error?: string;
+};
+export async function getPageMetaData(
+  slug: string,
+  supabaseAnonKey: string,
+  supabaseProjectUrl: string,
+  locale: string,
+): Promise<PageMeta> {
+  const url = `${supabaseProjectUrl}/functions/v1/get-page-meta`;
+  const options = {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${supabaseAnonKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ slug, locale }),
+  };
+
+  const response = await fetch(url, options);
+
+  function extractProjectId(url: string): string {
+    // Split the URL by '/' and get the hostname
+    const hostname = url.split('//')[1]?.split('.')[0];
+
+    // If hostname is not found, return an empty string
+    if (!hostname) {
+      return '';
+    }
+
+    return hostname;
+  }
+
+  if (response.status === 200) {
+    const data = await response.json();
+    const projectId = extractProjectId(supabaseProjectUrl);
+    const featuredImage = `https://${projectId}.supabase.co/storage/v1/object/public/media/${data?.featuredImage}`;
+    return { ...data, featuredImage, error: null } as PageMeta;
+  } else if (response.status === 404) {
+    return { error: 'page meta not found' } as PageMeta & { error: string };
+  } else {
+    // Handle other potential status codes if necessary
+    return { error: `unexpected error: ${response.status}` } as PageMeta & { error: string };
+  }
+}
+
 export function getParams<T>(): T {
   const { params } = useParamState.getState();
   return params as T;
