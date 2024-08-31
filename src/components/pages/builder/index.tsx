@@ -6,17 +6,15 @@ import PageTabs from '@/components/layout/page-tabs';
 import Canvas from '@/components/layout/canvas';
 import { useAuthState } from '@/lib/states/useAuthState';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { PAGES } from '@/lib/constants';
 
 export default function Builder() {
   const { user } = useAuthState();
-  const navigate = useNavigate();
   useEffect(() => {
     if (!user) {
-      navigate(PAGES.LOGIN);
+      window.location.pathname = PAGES.LOGIN;
     }
-  }, [user, navigate]);
+  }, [user]);
   return (
     <>
       <SmallerScreenWarning />

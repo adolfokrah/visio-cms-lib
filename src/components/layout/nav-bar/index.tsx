@@ -4,7 +4,6 @@ import { Button } from '../../ui/button';
 import UserAvatar from './user-avatar';
 import Share from './share';
 import { usePagesState } from '@/lib/states/usePagesState';
-import { Link } from 'react-router-dom';
 import { PAGES } from '@/lib/constants';
 
 export default function Navbar() {
@@ -20,9 +19,9 @@ export default function Navbar() {
         <Separator orientation="vertical" className="visio-cms-bg-dark-900" />
         <Share />
         {activePage && (
-          <Link target="_blank" to={`${PAGES.PREVIEW_PAGE}/${activePage.id}`}>
+          <a target="_blank" href={`${PAGES.PREVIEW_PAGE}/${activePage.id}`}>
             <Button className="visio-cms-my-2">Preview</Button>
-          </Link>
+          </a>
         )}
       </div>
     </div>

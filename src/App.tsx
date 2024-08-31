@@ -4,10 +4,11 @@ import './styles/tailwind.css';
 import TestLivePage from './TestLivePage';
 
 function App() {
-  const url = window.location.href;
-  if (url.includes('cms')) {
+  const path = window.location.pathname;
+  if (path.includes('cms')) {
     return (
       <Cms
+        path={path}
         allowImageTransformation={false}
         blocks={blocks}
         defaultLanguage={{

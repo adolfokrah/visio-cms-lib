@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { PAGES, ROLES } from '../constants';
 import { toast } from 'sonner';
 import { supabase, verifyToken } from '../utils';
@@ -19,12 +18,15 @@ export default function useAuth(page?: string) {
   const [loading, setLoading] = useState(false);
   const { user, clearUser, fetchUser } = useAuthState();
   const { bucketName } = useProjectConfigurationState();
-  const navigate = useNavigate();
   const db = supabase();
 
+  const navigate = (path: string) => {
+    window.location.pathname = path;
+  };
+
   useEffect(() => {
-    if (user && page != PAGES.UPDATE_PASSWORD) navigate(PAGES.BUILDER);
-  }, [user, navigate, page]);
+    if (user && ![PAGES.UPDATE_PASSWORD, PAGES.BUILDER].includes(page || '')) navigate(PAGES.BUILDER);
+  }, [user, page]);
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),

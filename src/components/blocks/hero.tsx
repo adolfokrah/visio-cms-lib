@@ -32,12 +32,7 @@ const Hero: Block<HeroProps> = ({
       <div className="visio-cms-mx-auto visio-cms-max-w-2xl visio-cms-py-32">
         <div className="visio-cms-hidden sm:visio-cms-mb-8 sm:visio-cms-flex sm:visio-cms-justify-center">
           <div className="visio-cms-relative visio-cms-rounded-full visio-cms-px-3 visio-cms-py-1 visio-cms-text-sm visio-cms-leading-6 visio-cms-text-gray-600 visio-cms-ring-1 ring-gray-900/10 hover:ring-gray-900/20 visio-cms-flex visio-cms-gap-2">
-            <Text
-              allowedControls={['bold', 'italic', 'text-color']}
-              defaultValue={announcement}
-              propName="announcement"
-              pageBlockId={pageBlockId}
-            />
+            <Text defaultValue={announcement} propName="announcement" pageBlockId={pageBlockId} />
             <a href="https://facebook.com" className="visio-cms-font-semibold visio-cms-text-indigo-600 ">
               Read more <span aria-hidden="true">&rarr;</span>
             </a>
@@ -45,20 +40,10 @@ const Hero: Block<HeroProps> = ({
         </div>
         <div className="visio-cms-text-center">
           <h1 className="visio-cms-text-4xl visio-cms-font-bold visio-cms-tracking-tight visio-cms-text-gray-900 sm:visio-cms-text-6xl">
-            <Text
-              allowedControls={['bold', 'italic', 'text-color']}
-              defaultValue={mainHeader}
-              propName="mainHeader"
-              pageBlockId={pageBlockId}
-            />
+            <Text defaultValue={mainHeader} propName="mainHeader" pageBlockId={pageBlockId} />
           </h1>
           <div className="visio-cms-mt-6 visio-cms-text-lg visio-cms-leading-8 visio-cms-text-gray-600">
-            <Text
-              allowedControls={['italic', 'text-color']}
-              defaultValue={subHeading}
-              propName="subHeading"
-              pageBlockId={pageBlockId}
-            />
+            <Text defaultValue={subHeading} propName="subHeading" pageBlockId={pageBlockId} />
           </div>
           <div className="visio-cms-mt-10 visio-cms-flex visio-cms-items-center visio-cms-justify-center visio-cms-gap-x-6">
             <List
@@ -73,7 +58,6 @@ const Hero: Block<HeroProps> = ({
                   className="visio-cms-rounded-md visio-cms-bg-indigo-600 visio-cms-px-3.5 visio-cms-py-2.5 visio-cms-text-sm visio-cms-font-semibold visio-cms-text-white visio-cms-shadow-sm hover:visio-cms-bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 visio-cms-inline-block"
                 >
                   <Text
-                    allowedControls={['italic', 'text-color']}
                     defaultValue={button.name}
                     propName={`getStartedButton.${index}.name`}
                     pageBlockId={pageBlockId}
@@ -86,12 +70,7 @@ const Hero: Block<HeroProps> = ({
               href="#"
               className="visio-cms-text-sm visio-cms-font-semibold visio-cms-flex visio-cms-gap-2 visio-cms-leading-6 visio-cms-text-gray-900"
             >
-              <Text
-                allowedControls={['italic', 'text-color']}
-                defaultValue={learnMore}
-                propName="learnMore"
-                pageBlockId={pageBlockId}
-              />{' '}
+              <Text defaultValue={learnMore} propName="learnMore" pageBlockId={pageBlockId} />{' '}
               <span aria-hidden="true">→</span>
             </a>
           </div>

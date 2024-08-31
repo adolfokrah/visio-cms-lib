@@ -5,7 +5,6 @@ import useAuth from '@/lib/hooks/useAuth';
 import ErrorAlert from '@/components/ui/error-alert';
 import { Loader } from 'lucide-react';
 import { getQueryParamsFromUrl } from '@/lib/utils';
-import { useNavigate } from 'react-router-dom';
 import { PAGES } from '@/lib/constants';
 import { useEffect } from 'react';
 
@@ -14,13 +13,12 @@ export default function UpdatePasswordPage() {
     PAGES.UPDATE_PASSWORD,
   );
   const path = getQueryParamsFromUrl(window.location.href.replace('/#/g', '&'));
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (path['error_code'] || !path['token']) {
-      navigate(PAGES.PAGE_NOT_FOUND);
+      window.location.pathname = PAGES.PAGE_NOT_FOUND;
     }
-  }, [path, navigate]);
+  }, [path]);
 
   return (
     <div className="visio-cms-bg-dark-900 visio-cms-px-3 visio-cms-text-white visio-cms-text-xs visio-cms-h-screen visio-cms-flex visio-cms-items-center visio-cms-place-content-center">

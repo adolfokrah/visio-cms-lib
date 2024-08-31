@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import VisioLogo from '@/components/ui/visio-logo';
-import { useNavigate } from 'react-router-dom';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import useAuth from '@/lib/hooks/useAuth';
 import ErrorAlert from '@/components/ui/error-alert';
@@ -9,7 +8,6 @@ import { Loader } from 'lucide-react';
 import { PAGES } from '@/lib/constants';
 
 export default function LoginPage() {
-  const navigate = useNavigate();
   const { onLogin, loginForm, errorMessage, setErrorMessage, loading } = useAuth();
 
   return (
@@ -67,7 +65,11 @@ export default function LoginPage() {
             <Button disabled={loading} className="visio-cms-w-full" type="submit">
               {loading ? <Loader size={16} className="visio-cms-animate-spin" /> : 'Login'}
             </Button>
-            <Button className="visio-cms-w-full" variant={'link'} onClick={() => navigate(PAGES.FORGOTTEN_PASSWORD)}>
+            <Button
+              className="visio-cms-w-full"
+              variant={'link'}
+              onClick={() => (window.location.pathname = PAGES.FORGOTTEN_PASSWORD)}
+            >
               Forgotten password?
             </Button>
           </form>

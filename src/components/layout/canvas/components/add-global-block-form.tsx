@@ -14,7 +14,6 @@ import { Input } from '@/components/ui/input';
 import { VISIO_DOCS_BASE_URL } from '@/lib/constants';
 import useGlobalBlock from '@/lib/hooks/useGlobalBlock';
 import { Loader } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 export default function AddGlobalBlockForm({
   open,
@@ -34,9 +33,9 @@ export default function AddGlobalBlockForm({
           <DialogDescription className="visio-cms-leading-7 visio-cms-text-xs">
             Global blocks can be used across your project. A single change in a global block will affect all instances
             in your project. Learn more about <CodeTag>Global blocks</CodeTag>{' '}
-            <Link to={`${VISIO_DOCS_BASE_URL}/global-blocks`} target="_blank" className="visio-cms-text-primary">
+            <a href={`${VISIO_DOCS_BASE_URL}/global-blocks`} target="_blank" className="visio-cms-text-primary">
               here
-            </Link>
+            </a>
           </DialogDescription>
         </DialogHeader>
         <Form {...addGlobalBlockForm}>

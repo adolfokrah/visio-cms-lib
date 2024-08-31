@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import useAuth from '@/lib/hooks/useAuth';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Loader } from 'lucide-react';
+import { PAGES } from '@/lib/constants';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +30,7 @@ export default function UserAvatar() {
     errorMessage,
     setErrorMessage,
     updateProfilePhoto,
-  } = useAuth();
+  } = useAuth(PAGES.BUILDER);
 
   const [open, setOpen] = useState(false);
   if (!user) return null;

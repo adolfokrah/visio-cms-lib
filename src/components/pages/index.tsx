@@ -1,6 +1,5 @@
 import LoginPage from './auth/login-page';
 import ForgottenPasswordPage from './auth/forgotten-password-page';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import RegisterPage from './auth/register-page';
 import { ProjectConfiguration } from '@/lib/types';
 import { Toaster } from '@/components/ui/sonner';
@@ -8,60 +7,63 @@ import { CMS_BASE_PATH, PAGES } from '@/lib/constants';
 import UpdatePasswordPage from './auth/update-password';
 import PageNotFound from './error-pages/page-not-found';
 import Builder from './builder';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import { useAuthState } from '@/lib/states/useAuthState';
 import PageContent from './page-content';
 import { TooltipProvider } from '../ui/tooltip';
 import GlobalEditContent from './global-edit-content';
 import PagePreview from './page-preview';
-import { fetchProjectConfig } from '@/lib/utils';
+import { fetchProjectConfig, matchSlug } from '@/lib/utils';
 
-const router = createBrowserRouter([
+const router: {
+  slug: string;
+  element: React.ComponentType<any>;
+}[] = [
   {
-    path: PAGES.LOGIN,
-    element: <LoginPage />,
+    slug: PAGES.LOGIN,
+    element: LoginPage,
   },
   {
-    path: PAGES.FORGOTTEN_PASSWORD,
-    element: <ForgottenPasswordPage />,
+    slug: PAGES.FORGOTTEN_PASSWORD,
+    element: ForgottenPasswordPage,
   },
   {
-    path: PAGES.REGISTER,
-    element: <RegisterPage />,
+    slug: PAGES.REGISTER,
+    element: RegisterPage,
   },
   {
-    path: PAGES.UPDATE_PASSWORD,
-    element: <UpdatePasswordPage />,
+    slug: PAGES.UPDATE_PASSWORD,
+    element: UpdatePasswordPage,
   },
   {
-    path: PAGES.PAGE_NOT_FOUND,
-    element: <PageNotFound />,
+    slug: PAGES.PAGE_NOT_FOUND,
+    element: PageNotFound,
   },
   {
-    path: CMS_BASE_PATH,
-    element: <LoginPage />,
+    slug: CMS_BASE_PATH,
+    element: LoginPage,
   },
   {
-    path: PAGES.BUILDER,
-    element: <Builder />,
+    slug: PAGES.BUILDER,
+    element: Builder,
   },
   {
-    path: PAGES.PAGE_CONTENT,
-    element: <PageContent />,
+    slug: PAGES.PAGE_CONTENT,
+    element: PageContent,
   },
   {
-    path: PAGES.GLOBAL_BLOCK_EDIT_CONTENT,
-    element: <GlobalEditContent />,
+    slug: PAGES.GLOBAL_BLOCK_EDIT_CONTENT,
+    element: GlobalEditContent,
   },
   {
-    path: `${PAGES.PREVIEW_PAGE}/:id`,
-    element: <PagePreview />,
+    slug: `${PAGES.PREVIEW_PAGE}/:id`,
+    element: PagePreview,
   },
-]);
+];
 
-export default function Auth(
-  projectConfiguration: Pick<
+export default function Cms(
+  props: Pick<
     ProjectConfiguration,
     | 'supabaseAnonKey'
     | 'supabaseProjectUrl'
@@ -71,24 +73,26 @@ export default function Auth(
     | 'supportedLanguages'
     | 'blocks'
     | 'allowImageTransformation'
-  >,
+  > & { path: string },
 ) {
   const { setConfiguration, supabaseProjectUrl, supabaseAnonKey, projectId } = useProjectConfigurationState();
   const { fetchUser, fetchingUser } = useAuthState();
   useEffect(() => {
-    if (projectConfiguration) setConfiguration(projectConfiguration);
+    if (props) setConfiguration(props);
     (async () => {
       fetchProjectConfig();
       fetchUser();
     })();
-  }, [projectConfiguration, setConfiguration, fetchUser]);
+  }, [props, setConfiguration, fetchUser]);
 
   if (!supabaseProjectUrl.length && !supabaseAnonKey.length && !projectId) return null;
   if (fetchingUser) return null;
 
+  const foundPage = matchSlug(props.path, router);
+
   return (
     <TooltipProvider>
-      <RouterProvider router={router} />
+      {foundPage ? <>{React.createElement(foundPage.page.element, { ...foundPage.params })}</> : <PageNotFound />}
       <Toaster />
     </TooltipProvider>
   );

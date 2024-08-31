@@ -1,5 +1,6 @@
 import { PageBlock, usePagesState } from '../states/usePagesState';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
+import { updateOrInsertProjectConfig } from '../utils';
 export default function useBlockHistory() {
   const { setPages } = usePagesState();
   const { setGlobalBlocks, globalBlocks } = useProjectConfigurationState();
@@ -33,7 +34,7 @@ export default function useBlockHistory() {
     }
   };
 
-  const addInputsToGlobalBlockHistory = (blockId: string, inputs: Record<string, any>) => {
+  const addInputsToGlobalBlockHistory = async (blockId: string, inputs: Record<string, any>) => {
     const globalBlock = globalBlocks.find((block) => block.id === blockId);
     if (globalBlock) {
       const history = globalBlock.history?.inputs ?? [{ ...globalBlock.inputs }];
@@ -47,8 +48,10 @@ export default function useBlockHistory() {
         inputs: newHistory,
       };
       globalBlock.inputs = { ...inputs };
+      const newGlobalBlocks = globalBlocks.map((block) => (block.id === blockId ? globalBlock : block));
+      await updateOrInsertProjectConfig({ global_blocks: newGlobalBlocks });
 
-      setGlobalBlocks(globalBlocks.map((block) => (block.id === blockId ? globalBlock : block)));
+      setGlobalBlocks(newGlobalBlocks);
     }
   };
 

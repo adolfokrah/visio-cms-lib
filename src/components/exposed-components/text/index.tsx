@@ -1,9 +1,8 @@
 import React from 'react';
 import useTextEditor from '@/lib/hooks/useTextEditor';
 import { EditorControlTypes } from '@/lib/types';
-import { getProjectMode } from '@/lib/utils';
+import { getProjectMode, removeHtmlTags } from '@/lib/utils';
 const Tiptap = React.lazy(() => import('@/components/ui/tiptap/tiptap'));
-import parse from 'html-react-parser';
 
 export type TextEditorControls = Exclude<
   EditorControlTypes,
@@ -11,12 +10,10 @@ export type TextEditorControls = Exclude<
 >;
 
 export default function Text({
-  allowedControls = [],
   defaultValue,
   propName,
   pageBlockId,
 }: {
-  allowedControls?: TextEditorControls[];
   defaultValue?: string;
   propName: string;
   pageBlockId: string;
@@ -33,7 +30,7 @@ export default function Text({
       <React.Suspense fallback={<></>}>
         <Tiptap
           isEditable={!isBlockGlobal}
-          allowedControls={allowedControls}
+          allowedControls={[]}
           defaultValue={defaultValue}
           allowNewLines={false}
           onChange={(value) => {
@@ -42,5 +39,5 @@ export default function Text({
         />
       </React.Suspense>
     );
-  else return <>{parse(html)}</>;
+  else return removeHtmlTags(html);
 }

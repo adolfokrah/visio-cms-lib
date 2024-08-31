@@ -125,12 +125,7 @@ const Footer: Block<NavigationItem> = ({
             <div className="md:visio-cms-grid md:visio-cms-grid-cols-2 md:visio-cms-gap-8">
               <div>
                 <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
-                  <Text
-                    pageBlockId={pageBlockId}
-                    allowedControls={['bold', 'italic', 'text-color']}
-                    defaultValue={solutionsHeader}
-                    propName="solutionsHeader"
-                  />
+                  <Text pageBlockId={pageBlockId} defaultValue={solutionsHeader} propName="solutionsHeader" />
                 </h3>
 
                 <List
@@ -174,12 +169,7 @@ const Footer: Block<NavigationItem> = ({
               </div>
               <div className="visio-cms-mt-10 md:visio-cms-mt-0">
                 <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
-                  <Text
-                    allowedControls={['bold', 'italic', 'text-color']}
-                    defaultValue={supportHeader}
-                    propName="supportHeader"
-                    pageBlockId={pageBlockId}
-                  />
+                  <Text defaultValue={supportHeader} propName="supportHeader" pageBlockId={pageBlockId} />
                 </h3>
                 <ul role="list" className="visio-cms-mt-6 visio-cms-space-y-4">
                   {navigation.support.map((item) => (
@@ -198,12 +188,7 @@ const Footer: Block<NavigationItem> = ({
             <div className="md:visio-cms-grid md:visio-cms-grid-cols-2 md:visio-cms-gap-8">
               <div>
                 <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
-                  <Text
-                    allowedControls={['bold', 'italic', 'text-color']}
-                    defaultValue={companyHeader}
-                    propName="companyHeader"
-                    pageBlockId={pageBlockId}
-                  />
+                  <Text defaultValue={companyHeader} propName="companyHeader" pageBlockId={pageBlockId} />
                 </h3>
                 <ul role="list" className="visio-cms-mt-6 visio-cms-space-y-4">
                   {navigation.company.map((item) => (
@@ -239,12 +224,7 @@ const Footer: Block<NavigationItem> = ({
           </div>
           <div className="visio-cms-mt-10 xl:visio-cms-mt-0">
             <h3 className="visio-cms-text-sm visio-cms-font-semibold visio-cms-leading-6 visio-cms-text-white">
-              <Text
-                allowedControls={['bold', 'text-color', 'underline']}
-                defaultValue={subscriptionHeader}
-                propName="subscriptionHeader"
-                pageBlockId={pageBlockId}
-              />
+              <Text defaultValue={subscriptionHeader} propName="subscriptionHeader" pageBlockId={pageBlockId} />
             </h3>
             <p className="visio-cms-mt-2 visio-cms-text-sm visio-cms-leading-6 visio-cms-text-gray-300">
               The latest news, articles, and resources, sent to your inbox weekly.

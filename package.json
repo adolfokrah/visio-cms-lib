@@ -11,6 +11,10 @@
       "import": "./dist/main.es.js",
       "types": "./dist/components/index.d.ts"
     },
+    "./Cms": {
+      "import": "./dist/components/pages/index.es.js",
+      "types": "./dist/components/pages/index.d.ts"
+    },
     "./types": {
       "types": "./dist/lib/exposed-types.d.ts"
     },
@@ -96,7 +100,6 @@
     "react-hook-form": "^7.52.1",
     "react-image-crop": "^11.0.6",
     "react-jwt": "^1.2.2",
-    "react-router-dom": "^6.25.1",
     "resend": "^3.5.0",
     "sanitize-html": "^2.13.0",
     "sonner": "^1.5.0",

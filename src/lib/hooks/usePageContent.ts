@@ -66,6 +66,8 @@ export default function usePageContent() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     document.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', function (event) {
         event.preventDefault(); // Prevent the default navigation behavior

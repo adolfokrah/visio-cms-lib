@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { PAGES } from '@/lib/constants';
-import { Link } from 'react-router-dom';
 
 export default function PageNotFound() {
   return (
@@ -12,9 +11,9 @@ export default function PageNotFound() {
       <div className="visio-cms-text-center visio-cms-space-y-4 visio-cms-relative">
         <h3 className="visio-cms-text-4xl visio-cms-text-gray-500">👀</h3>
         <p>We couldn't find the page you are looking for</p>
-        <Link to={PAGES.LOGIN}>
+        <a href={PAGES.LOGIN}>
           <Button className="visio-cms-mt-4">Go back home</Button>
-        </Link>
+        </a>
       </div>
     </div>
   );

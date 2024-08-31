@@ -8,7 +8,7 @@ export default function Image({
   propName,
   pageBlockId,
   renderImage,
-  wrapperClassName,
+  wrapperClassName = '',
 }: {
   defaultValue: MediaFile;
   propName: string;
