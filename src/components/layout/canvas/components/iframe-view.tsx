@@ -8,6 +8,7 @@ export default function IframeView() {
   const ref = useRef<HTMLIFrameElement | null>(null);
 
   if (!pinnedTab) return null;
+
   return (
     <iframe
       ref={ref}
@@ -15,7 +16,9 @@ export default function IframeView() {
       onLoad={() => {
         ref?.current?.contentDocument?.body.classList.add('scrollbar-custom', '!visio-cms-bg-white');
       }}
-      className="visio-cms-w-full visio-cms-h-[calc(100vh-90px)] visio-cms-rounded-md visio-cms-m-0 visio-cms-p-0 visio-cms-bg-white"
+      className={
+        'visio-cms-w-full visio-cms-h-[calc(100vh-90px)] visio-cms-rounded-md visio-cms-m-0 visio-cms-p-0 visio-cms-bg-white'
+      }
     />
   );
 }
