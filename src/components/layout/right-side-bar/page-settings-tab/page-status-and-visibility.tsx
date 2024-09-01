@@ -1,18 +1,21 @@
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
-import { SchedulePublished, Status } from '@/lib/states/usePagesState';
+import { SchedulePublished, Status, usePagesState } from '@/lib/states/usePagesState';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { DatePicker } from '@/components/ui/date-picker';
 import usePageSettings from '@/lib/hooks/usePageSettings';
 
 export default function PageStatusAndVisibility() {
   const { handleUpdatePageDate, updateSchedulePublished, updatePageStatus, page } = usePageSettings();
+  const { pages } = usePagesState();
+  const activePage = pages.find((page) => page.active);
+  const activeLanguage = activePage?.activeLanguageLocale ?? '';
 
   return (
     <>
       <Label className="!visio-cms-text-gray-300">Status</Label>
       <Tabs
-        value={page?.status}
+        value={page?.status[activeLanguage]}
         className="visio-cms-w-full visio-cms-mt-3"
         onValueChange={(value) => updatePageStatus(value as Status)}
       >
@@ -21,7 +24,7 @@ export default function PageStatusAndVisibility() {
           <TabsTrigger value="Publish">Publish</TabsTrigger>
         </TabsList>
       </Tabs>
-      {page?.status == 'Publish' && (
+      {page?.status[activeLanguage] == 'Publish' && (
         <div className="visio-cms-mt-3 visio-cms-hidden">
           <Label className="!visio-cms-text-gray-300">Schedule published</Label>
           <div className="visio-cms-my-3">

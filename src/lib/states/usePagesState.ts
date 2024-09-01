@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { supabase } from '../utils';
+import { Language } from '../types';
 
 export type ResponsiveView = 'Desktop' | 'Tablet' | 'Mobile';
 export type ResponsiveViews = {
@@ -33,7 +34,9 @@ export type Page = {
   folderId?: string;
   pinned: boolean;
   isExpanded?: boolean;
-  status: Status;
+  status: {
+    [key: Language['locale']]: Status;
+  };
   schedulePublished: SchedulePublished;
   publishDate?: Date | null;
   author: {

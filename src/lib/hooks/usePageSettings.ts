@@ -5,6 +5,7 @@ import { useTabState } from '../states/useTabsState';
 import { toast } from 'sonner';
 export default function usePageSettings() {
   const { pages, setPages } = usePagesState();
+
   const [error, setError] = useState<string>('');
   const page = useMemo(() => pages.find((page) => page.active), [pages]);
   const { tabs, setTabs } = useTabState();
@@ -14,11 +15,16 @@ export default function usePageSettings() {
       try {
         const page = pages.find((page) => page.active);
         if (page) {
-          await updatePageData({ status: value }, page.id);
+          const newStatus = page.active ? value : page.status[page.activeLanguageLocale];
+
+          await updatePageData({ status: { ...page.status, [page.activeLanguageLocale]: newStatus } }, page.id);
           setPages(
             pages.map((page) => ({
               ...page,
-              status: page.active ? (value as Status) : page.status,
+              status: {
+                ...page.status,
+                [page.activeLanguageLocale]: newStatus,
+              },
             })),
           );
         }

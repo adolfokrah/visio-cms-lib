@@ -299,7 +299,8 @@ function PageItem({ item }: { item: PageTreeItem }) {
             <Circle
               size={10}
               className={cn('visio-cms-flex-shrink-0 visio-cms-text-slate-500 visio-cms-fill-slate-500', {
-                '!visio-cms-fill-primary !visio-cms-text-primary': item.status == 'Publish',
+                '!visio-cms-fill-primary !visio-cms-text-primary':
+                  item.status?.[item?.activeLanguageLocale || ''] == 'Publish',
               })}
             />
             <div className="visio-cms-truncate visio-cms-flex-nowrap visio-cms-overflow-hidden">{item.name}</div>

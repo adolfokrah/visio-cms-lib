@@ -11,7 +11,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { slug, locale } = await req.json();
 
     const supabaseClient = createClient(Deno.env.get('URL') ?? '', Deno.env.get('SERVICE_ROLE') ?? '');
-    const { error, data } = await supabaseClient.from('pages').select('slug, id, name').eq('status', 'Publish');
+    const { error, data } = await supabaseClient.from('pages').select('slug, id, name');
     if (error) {
       throw error;
     }
@@ -22,7 +22,9 @@ const handler = async (req: Request): Promise<Response> => {
       .eq('slug', foundPage?.page?.slug)
       .limit(1);
 
-    if (pageData.length === 0) {
+    const pageStatus = pageData[0]?.status[locale];
+
+    if (pageData.length === 0 || pageStatus === 'Draft') {
       return new Response(null, {
         status: 404,
         statusText: 'Not Found',

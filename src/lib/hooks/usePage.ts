@@ -53,7 +53,9 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
         selectedView: 'Desktop',
         activeLanguageLocale: defaultLanguage.locale,
         pinned: true,
-        status: 'Draft',
+        status: {
+          [defaultLanguage.locale]: 'Draft',
+        },
         author: {
           first_name: user?.user_metadata.first_name,
           last_name: user?.user_metadata.last_name,
