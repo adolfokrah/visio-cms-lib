@@ -17,7 +17,7 @@ import {
 import { toast } from 'sonner';
 import { useTabState } from '@/lib/states/useTabsState';
 import { usePagesState } from '@/lib/states/usePagesState';
-import { updateOrInsertProjectConfig } from '@/lib/utils';
+import { cn, updateOrInsertProjectConfig } from '@/lib/utils';
 
 export default function GlobalBlocks() {
   const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
@@ -56,7 +56,10 @@ export default function GlobalBlocks() {
             .map(({ id, name, blockId }) => (
               <div
                 key={id}
-                className="visio-cms-flex visio-cms-group visio-cms-items-center visio-cms-gap-2 visio-cms-p-3 hover:visio-cms-bg-dark-700 visio-cms-rounded-md visio-cms-cursor-pointer"
+                className={cn(
+                  'visio-cms-flex visio-cms-group visio-cms-items-center visio-cms-gap-2 visio-cms-p-2 hover:visio-cms-bg-dark-700 visio-cms-rounded-md visio-cms-cursor-pointer',
+                  { 'visio-cms-bg-dark-900': tabs.find((tab) => tab.id === id)?.active },
+                )}
                 draggable={true} // Add draggable attribute
                 onDragStart={(e) => {
                   e.stopPropagation();
