@@ -15,7 +15,7 @@ export default function PageStatusAndVisibility() {
     <>
       <Label className="!visio-cms-text-gray-300">Status</Label>
       <Tabs
-        value={page?.status[activeLanguage]}
+        value={page?.status?.[activeLanguage] || 'Draft'}
         className="visio-cms-w-full visio-cms-mt-3"
         onValueChange={(value) => updatePageStatus(value as Status)}
       >
@@ -24,7 +24,7 @@ export default function PageStatusAndVisibility() {
           <TabsTrigger value="Publish">Publish</TabsTrigger>
         </TabsList>
       </Tabs>
-      {page?.status[activeLanguage] == 'Publish' && (
+      {page?.status?.[activeLanguage] == 'Publish' && (
         <div className="visio-cms-mt-3 visio-cms-hidden">
           <Label className="!visio-cms-text-gray-300">Schedule published</Label>
           <div className="visio-cms-my-3">
