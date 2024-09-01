@@ -187,3 +187,14 @@ export const EDITOR_MENU_CONTROLS: MenuControlsType[] = [
     title: 'Text Highlight Color',
   },
 ];
+
+export const HTML_SECTIONS = [
+  {
+    name: 'head',
+    title: 'Head tag',
+  },
+  {
+    name: 'body',
+    title: 'End of Body tag',
+  },
+];

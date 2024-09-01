@@ -113,6 +113,7 @@ const Tiptap = ({
     extensions: [...extensions, PreventNewLine.configure({ allowNewLines })],
     editable: isEditable,
     content: value,
+    immediatelyRender: true,
     onFocus: () => setIsFocused(true),
     onBlur: ({ editor }) => {
       const { view } = editor;

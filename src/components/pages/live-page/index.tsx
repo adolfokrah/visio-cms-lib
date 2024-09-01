@@ -16,7 +16,7 @@ export default function LivePage({
   pageBlocks: PageData['pageBlocks'];
   params: PageData['params'];
   pages: Page[];
-  projectConfiguration: PageData['projectConfiguration'] & {
+  projectConfiguration: Omit<PageData['projectConfiguration'], 'scripts'> & {
     blocks: ProjectConfiguration['blocks'];
     projectId: string;
   };

@@ -87,6 +87,7 @@
     "@tiptap/react": "^2.6.2",
     "@tiptap/starter-kit": "^2.6.2",
     "@types/uuid": "^10.0.0",
+    "@uiw/react-textarea-code-editor": "^1.6.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",

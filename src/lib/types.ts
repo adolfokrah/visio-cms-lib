@@ -36,6 +36,11 @@ export type ProjectConfiguration = {
     colorScheme: Color[];
   };
   globalBlocks: GlobalBlock[];
+  scripts: {
+    head: string;
+    body: string;
+  };
+  setScripts: (script: { head: string; body: string }) => void;
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 

@@ -9,12 +9,14 @@ export default function Image({
   pageBlockId,
   renderImage,
   wrapperClassName = '',
+  fallbackImage = '',
 }: {
   defaultValue: MediaFile;
   propName: string;
   wrapperClassName?: string;
   pageBlockId: string;
   allowTransformation?: boolean;
+  fallbackImage?: string;
   renderImage: ({
     imagePublicUrl,
     altText,
@@ -30,6 +32,7 @@ export default function Image({
   const { openMediaExplorer, setOpenMediaExplorer, imagePublicUrl, isBlockGlobal } = useImage({
     defaultValue,
     pageBlockId,
+    fallbackImage,
   });
 
   const projectMode = getProjectMode();

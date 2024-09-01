@@ -32,6 +32,11 @@ export const useProjectConfigurationState = create(
       projectId: '',
       bucketName: 'media',
       emailSender: '',
+      scripts: {
+        head: '',
+        body: '',
+      },
+      setScripts: (scripts) => set({ scripts }),
       blocks: [],
       setConfiguration: (data) =>
         set(() => {

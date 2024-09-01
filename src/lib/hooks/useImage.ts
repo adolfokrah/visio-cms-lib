@@ -3,11 +3,19 @@ import { getProjectMode, isValidURL, supabase } from '@/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { MediaFile } from '../types';
 import { usePageContentState } from '../states/usePageContentState';
-export default function useImage({ defaultValue, pageBlockId }: { defaultValue: MediaFile; pageBlockId: string }) {
+export default function useImage({
+  defaultValue,
+  pageBlockId,
+  fallbackImage,
+}: {
+  defaultValue: MediaFile;
+  pageBlockId: string;
+  fallbackImage: string;
+}) {
   const db = supabase();
   const { bucketName, allowImageTransformation } = useProjectConfigurationState();
   const [openMediaExplorer, setOpenMediaExplorer] = useState(false);
-  const [imagePublicUrl, setImagePublicUrl] = useState<string>('https://placehold.co/600x400');
+  const [imagePublicUrl, setImagePublicUrl] = useState<string>(fallbackImage);
   const { pages, globalBlocks, projectId } = usePageContentState();
   const activePage = pages.find((page) => page.active);
 
@@ -32,7 +40,7 @@ export default function useImage({ defaultValue, pageBlockId }: { defaultValue: 
         setImagePublicUrl(
           projectId
             ? `https://${projectId}.supabase.co/storage/v1/object/public/media/${defaultValue?.mediaHash}`
-            : 'https://placehold.co/600x400',
+            : fallbackImage,
         );
         return;
       }
@@ -51,7 +59,7 @@ export default function useImage({ defaultValue, pageBlockId }: { defaultValue: 
     if (defaultValue?.mediaHash && !isValidURL(defaultValue?.mediaHash)) {
       getImagePublicUrl(defaultValue?.mediaHash, defaultValue.width, defaultValue.height);
     } else {
-      setImagePublicUrl(defaultValue?.mediaHash || 'https://placehold.co/600x400');
+      setImagePublicUrl(defaultValue?.mediaHash || fallbackImage);
     }
   }, [
     bucketName,
@@ -61,6 +69,7 @@ export default function useImage({ defaultValue, pageBlockId }: { defaultValue: 
     db.storage,
     allowImageTransformation,
     projectId,
+    fallbackImage,
   ]);
 
   return { openMediaExplorer, setOpenMediaExplorer, imagePublicUrl, isBlockGlobal };

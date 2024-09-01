@@ -3,10 +3,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import PageSettingsTab from './page-settings-tab';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import ThemeTab from './theme-tab';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import PropertiesTab from './properties-tab';
 import { useTabState } from '@/lib/states/useTabsState';
+import ProjectSettingsTab from './project-settings-tab';
 
 export default function RightSideBar() {
   const { pages } = usePagesState();
@@ -31,7 +31,7 @@ export default function RightSideBar() {
             <TabsTrigger value="properties">Properties</TabsTrigger>
           )}
           {activePage && <TabsTrigger value="page">Page</TabsTrigger>}
-          <TabsTrigger value="theme">Theme</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
         {!globalBlock && (
           <TabsContent value="properties">
@@ -45,9 +45,9 @@ export default function RightSideBar() {
             </div>
           </TabsContent>
         )}
-        <TabsContent value="theme">
+        <TabsContent value="settings">
           <div className="visio-cms-px-2">
-            <ThemeTab />
+            <ProjectSettingsTab />
           </div>
         </TabsContent>
       </Tabs>

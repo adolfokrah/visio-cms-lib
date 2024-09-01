@@ -36,7 +36,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { error: configurationError, data: projectConfiguration } = await supabaseClient
       .from('project_configuration')
-      .select('global_blocks, theme')
+      .select('global_blocks, theme, scripts')
       .limit(1);
 
     if (configurationError) throw configurationError;
@@ -48,6 +48,7 @@ const handler = async (req: Request): Promise<Response> => {
         projectConfiguration: {
           globalBlocks: projectConfiguration[0].global_blocks,
           theme: projectConfiguration[0].theme,
+          scripts: projectConfiguration[0].scripts,
         },
         params: { ...foundPage?.params, locale },
       }),

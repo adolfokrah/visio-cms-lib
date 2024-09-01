@@ -549,12 +549,20 @@ export async function updateOrInsertProjectConfig(configData: object) {
 export async function fetchProjectConfig() {
   const db = supabase();
   const projectMode = getProjectMode();
-  const { setTheme, setGlobalBlocks } =
-    projectMode === 'LIVE' ? usePageContentState.getState() : useProjectConfigurationState.getState();
+  const { setTheme, setGlobalBlocks, setScripts } = useProjectConfigurationState.getState();
+
+  const { setTheme: setPageContentTheme, setGlobalBlocks: setPageContentGlobalBlocks } = usePageContentState.getState();
   const { data, error } = await db.from('project_configuration').select().limit(1);
+
   if (error) throw error;
   setTheme(data[0]?.theme);
   setGlobalBlocks(data[0]?.global_blocks || []);
+  setScripts(data[0]?.scripts);
+
+  if (projectMode === 'BUILDER') {
+    setPageContentTheme(data[0]?.theme);
+    setPageContentGlobalBlocks(data[0]?.global_blocks || []);
+  }
 }
 
 export async function updatePageData(dataObject: { [key: string]: any }, pageId: string) {
@@ -588,6 +596,7 @@ export type PageData = {
   projectConfiguration: {
     globalBlocks: ProjectConfiguration['globalBlocks'];
     theme: ProjectConfiguration['theme'];
+    scripts: { head: string; body: string };
   };
   params: { [key: string]: any };
 };
