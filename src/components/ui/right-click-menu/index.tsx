@@ -111,9 +111,6 @@ export default function RightClickMenu({
 
         {pageBlock && pageBlockId && (
           <>
-            <ContextMenuSeparator className="visio-cms-bg-dark-700" />
-            <ContextMenuItem className="visio-cms-text-xs">Lock block</ContextMenuItem>
-            <ContextMenuItem className="visio-cms-text-xs">Unlock block</ContextMenuItem>
             {pageBlock.isGlobalBlock ? (
               <>
                 <ContextMenuSeparator className="visio-cms-bg-dark-700" />
