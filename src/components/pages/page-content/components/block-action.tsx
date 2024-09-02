@@ -59,7 +59,7 @@ export default function BlockAction({
         className="hover:!visio-cms-bg-dark-700"
         onClick={(e) => {
           e.stopPropagation();
-          sendMessageToParent({ type: 'copyBlock', content: pageBlockId });
+          sendMessageToParent({ type: 'duplicateBlock', content: pageBlockId });
         }}
       >
         <Copy size={16} />

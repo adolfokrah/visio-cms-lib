@@ -8,6 +8,7 @@ import { updatePageData, updateValueByPath } from '../utils';
 import useBlockHistory from './useBlockHistory';
 import { useTabState } from '../states/useTabsState';
 import { useListState } from '../states/useListState';
+import { toast } from 'sonner';
 
 export default function useCanvas() {
   const { pages, setPages } = usePagesState();
@@ -20,23 +21,37 @@ export default function useCanvas() {
   const { tabs, setTabs } = useTabState();
 
   useEffect(() => {
-    const setPageBlocks = (block: Block, position: number, isGlobalBlock: boolean, globalBlockId: string) => {
+    const setPageBlocks = async (
+      block: Block,
+      position: number,
+      isGlobalBlock: boolean,
+      globalBlockId: string,
+      fromClipBoard?: boolean,
+    ) => {
       const page = activePage;
       if (page) {
         const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
         const newBlocks = [...blocks].map((block) => ({ ...block, isSelected: false }));
         const globalBlock = globalBlocks.find((block) => block.id === globalBlockId);
+        const copiedBlock = localStorage.getItem('copiedBlock');
+        const inputs =
+          fromClipBoard && copiedBlock
+            ? JSON.parse(copiedBlock)?.inputs
+            : globalBlock?.inputs || block.Schema.defaultPropValues;
         newBlocks.splice(position, 0, {
           id: uuidv4(),
           blockId: block.Schema.id,
           isSelected: true,
-          inputs: globalBlock?.inputs || block.Schema.defaultPropValues,
+          inputs,
           isGlobalBlock,
           globalBlockId,
         });
 
         // setPages(pages.map((p) => (p.active ? page : p)));
-        addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
+        await addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
+        if (fromClipBoard) {
+          localStorage.removeItem('copiedBlock');
+        }
       }
     };
 
@@ -68,14 +83,14 @@ export default function useCanvas() {
       }
     };
 
-    const handleMessage = (event: MessageEvent) => {
+    const handleMessage = async (event: MessageEvent) => {
       const data: Message = event.data;
       if (data.type === 'addBlock') {
-        const { blockId, position, isGlobal, globalBlockId } = JSON.parse(data.content);
+        const { blockId, position, isGlobal, globalBlockId, fromClipBoard } = JSON.parse(data.content);
 
         const block = blocks.find((block) => block.Schema.id === blockId);
         if (block) {
-          setPageBlocks(block, Number(position), isGlobal, globalBlockId);
+          setPageBlocks(block, Number(position), isGlobal, globalBlockId, fromClipBoard || false);
         }
       } else if (data.type === 'removeBlock') {
         const blockId = data.content;
@@ -109,7 +124,7 @@ export default function useCanvas() {
           // setPages(pages.map((p) => (p.active ? page : p)));
           addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         }
-      } else if (data.type === 'copyBlock') {
+      } else if (data.type === 'duplicateBlock') {
         const blockId = data.content;
         const page = activePage;
         if (page) {
@@ -205,6 +220,36 @@ export default function useCanvas() {
             { id: blockId, type: 'globalBlock', active: true, name: globalBlock?.name },
           ]);
           setPages(pages.map((page) => ({ ...page, active: false })));
+        }
+      } else if (data.type === 'unlinkBlockFromGlobal') {
+        const blockId = data.content;
+        const pageBlock = activePage?.blocks?.[activePage.activeLanguageLocale]?.find((block) => block.id === blockId);
+        const globalBlockInputs = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId)?.inputs;
+        const page = activePage;
+        if (page && globalBlockInputs) {
+          const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
+          const newBlocks = blocks.map((block) => {
+            if (block.id === blockId) {
+              return {
+                ...block,
+                inputs: { ...block.inputs, ...globalBlockInputs },
+                isGlobalBlock: false,
+                globalBlockId: '',
+              };
+            }
+            return block;
+          });
+
+          // setPages(pages.map((p) => (p.active ? page : p)));
+          await addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
+          toast.success('Block unlinked from global block');
+        }
+      } else if (data.type === 'copyBlock') {
+        const blockId = data.content;
+        const pageBlock = activePage?.blocks?.[activePage.activeLanguageLocale]?.find((block) => block.id === blockId);
+        if (pageBlock) {
+          localStorage.setItem('copiedBlock', JSON.stringify(pageBlock));
+          toast.success('Block copied');
         }
       }
     };

@@ -7,6 +7,7 @@ import BlockAction from './block-action';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { usePageContentState } from '@/lib/states/usePageContentState';
 import { useRepeaterState } from '@/lib/states/useRepeaterState';
+import RightClickMenu from '@/components/ui/right-click-menu';
 
 export default function BlockItem({
   block,
@@ -25,67 +26,73 @@ export default function BlockItem({
   const { setRepeaterId } = useRepeaterState();
   const blockInputs = { ...block.Schema.defaultPropValues, ...pageBlock.inputs, ...globalBlock?.inputs };
   return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation();
-        setRepeaterId('');
-        sendMessageToParent({ type: 'selectBlock', content: pageBlock.id });
-      }}
-      className={cn('visio-cms-relative')}
-      onDragOver={(e) => {
-        if (e.dataTransfer.types.includes('text/plain')) {
-          return;
-        }
-        setIsDraggingOver(true);
-        e.preventDefault();
-      }}
-      onDragLeave={(e) => {
-        setIsDraggingOver(false);
-        e.preventDefault();
-      }}
-      onDrop={(e) => {
-        e.preventDefault();
-        setIsDraggingOver(false);
-      }}
+    <RightClickMenu
+      index={index}
+      pageBlock={{ ...pageBlock, isGlobalBlock: globalBlock != null }}
+      pageBlocks={pageBlocks}
     >
-      <Popover open={pageBlock?.isSelected}>
-        <PopoverTrigger asChild>
-          <div className="visio-cms-relative">
-            <div>
-              {React.createElement(block, {
-                key: block.Schema.id,
-                ...blockInputs,
-                pageBlockId: pageBlock.id,
-              })}
+      <div
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          setRepeaterId('');
+          sendMessageToParent({ type: 'selectBlock', content: pageBlock.id });
+        }}
+        className={cn('visio-cms-relative')}
+        onDragOver={(e) => {
+          if (e.dataTransfer.types.includes('text/plain')) {
+            return;
+          }
+          setIsDraggingOver(true);
+          e.preventDefault();
+        }}
+        onDragLeave={(e) => {
+          setIsDraggingOver(false);
+          e.preventDefault();
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setIsDraggingOver(false);
+        }}
+      >
+        <Popover open={pageBlock?.isSelected}>
+          <PopoverTrigger asChild>
+            <div className="visio-cms-relative">
+              <div>
+                {React.createElement(block, {
+                  key: block.Schema.id,
+                  ...blockInputs,
+                  pageBlockId: pageBlock.id,
+                })}
+              </div>
+              <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} />
+              <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} />
+              <div
+                className={cn(
+                  'visio-cms-absolute visio-cms-top-0 visio-cms-left-0 visio-cms-h-full visio-cms-bg-transparent visio-cms-w-full visio-cms-pointer-events-none',
+                  {
+                    'visio-cms-outline-blue-400 visio-cms-outline visio-cms-outline-2 -visio-cms-outline-offset-2 ':
+                      pageBlock.isSelected,
+                  },
+                )}
+              />
             </div>
-            <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} />
-            <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} />
-            <div
-              className={cn(
-                'visio-cms-absolute visio-cms-top-0 visio-cms-left-0 visio-cms-h-full visio-cms-bg-transparent visio-cms-w-full visio-cms-pointer-events-none',
-                {
-                  'visio-cms-outline-blue-400 visio-cms-outline visio-cms-outline-2 -visio-cms-outline-offset-2 ':
-                    pageBlock.isSelected,
-                },
-              )}
+          </PopoverTrigger>
+          <PopoverContent
+            className="!visio-cms-p-0 visio-cms-w-max"
+            align="end"
+            side="top"
+            alignOffset={20}
+            sideOffset={pageBlocks.length < 2 ? -40 : 0}
+          >
+            <BlockAction
+              blockName={globalBlock?.name || block.Schema.name}
+              index={index}
+              pageBlock={{ ...pageBlock, isGlobalBlock: globalBlock != null }}
+              pageBlocks={pageBlocks}
             />
-          </div>
-        </PopoverTrigger>
-        <PopoverContent
-          className="!visio-cms-p-0 visio-cms-w-max"
-          align="end"
-          side="top"
-          alignOffset={20}
-          sideOffset={pageBlocks.length < 2 ? -40 : 0}
-        >
-          <BlockAction
-            blockName={globalBlock?.name || block.Schema.name}
-            index={index}
-            pageBlock={{ ...pageBlock, isGlobalBlock: globalBlock != null }}
-            pageBlocks={pageBlocks}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+    </RightClickMenu>
   );
 }
