@@ -61,7 +61,6 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
           last_name: user?.user_metadata.last_name,
           photo: user?.user_metadata.photo,
         },
-        schedulePublished: 'Now',
         folderId: data.folderId,
       };
 
@@ -75,8 +74,8 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
           tags: '',
           seo: {},
           blocks: [],
+          blocks_dev: [],
           folder_id: newPage?.folderId || null,
-          schedule_published: newPage.schedulePublished,
           publish_date: newPage.publishDate,
         })
         .select();
@@ -158,6 +157,9 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
           name: `${foundPage.name}-${id}`,
         };
 
+        const { data: foundPageData, error: foundPageError } = await db.from('pages').select().eq('id', page.id);
+        if (foundPageError) throw foundPageData;
+
         const { error, data } = await db
           .from('pages')
           .insert({
@@ -167,9 +169,9 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
             author: user?.user_metadata.id,
             tags: newPage.tags,
             seo: newPage.seo,
-            blocks: newPage.blocks,
+            blocks_dev: newPage.blocks,
+            blocks: foundPageData?.[0].blocks,
             folder_id: newPage.folderId,
-            schedule_published: newPage.schedulePublished,
             publish_date: newPage.publishDate,
           })
           .select();

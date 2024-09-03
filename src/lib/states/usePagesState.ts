@@ -9,8 +9,7 @@ export type ResponsiveViews = {
   size: string;
   icon: React.ReactNode;
 };
-export type Status = 'Draft' | 'Publish';
-export type SchedulePublished = 'Now' | 'Later';
+export type Status = 'Draft' | 'Publish' | 'Schedule';
 export type PageBlock = {
   id: string;
   isGlobalBlock?: boolean;
@@ -37,7 +36,6 @@ export type Page = {
   status: {
     [key: Language['locale']]: Status;
   };
-  schedulePublished: SchedulePublished;
   publishDate?: Date | null;
   author: {
     first_name: string;

@@ -1,4 +1,4 @@
-import { SchedulePublished, Status, usePagesState } from '@/lib/states/usePagesState';
+import { Status, usePagesState } from '@/lib/states/usePagesState';
 import { useCallback, useMemo, useState } from 'react';
 import { formatStringToSlug, updatePageData } from '../utils';
 import { useTabState } from '../states/useTabsState';
@@ -35,30 +35,11 @@ export default function usePageSettings() {
     [pages, setPages],
   );
 
-  const updateSchedulePublished = useCallback(
-    async (value: SchedulePublished) => {
-      try {
-        const page = pages.find((page) => page.active);
-        await updatePageData({ schedule_published: value, publish_date: new Date(0) }, page?.id || '');
-        setPages(
-          pages.map((page) => ({
-            ...page,
-            schedulePublished: page.active ? (value as SchedulePublished) : page.schedulePublished,
-            publishDate: page?.publishDate || new Date(),
-          })),
-        );
-      } catch (error) {
-        toast.error('Failed to update schedule published');
-      }
-    },
-    [pages, setPages],
-  );
-
   const handleUpdatePageDate = useCallback(
     async (value: Date) => {
       try {
         const page = pages.find((page) => page.active);
-        await updatePageData({ publish_date: value, schedule_published: 'Later' }, page?.id || '');
+        await updatePageData({ publish_date: value }, page?.id || '');
         setPages(
           pages.map((page) => ({
             ...page,
@@ -203,7 +184,6 @@ export default function usePageSettings() {
 
   return {
     handleUpdatePageDate,
-    updateSchedulePublished,
     updatePageStatus,
     page,
     handleUpdatePageName,

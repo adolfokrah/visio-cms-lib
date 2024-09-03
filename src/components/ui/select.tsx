@@ -72,7 +72,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        'visio-cms-relative visio-cms-z-50 visio-cms-max-h-96 visio-cms-min-w-[8rem] visio-cms-overflow-hidden visio-cms-rounded-md visio-cms-border visio-cms-bg-dark-900 visio-cms-text-popover-foreground visio-cms-shadow-md data-[state=open]:visio-cms-animate-in data-[state=closed]:visio-cms-animate-out data-[state=closed]:visio-cms-fade-out-0 data-[state=open]:visio-cms-fade-in-0 data-[state=closed]:visio-cms-zoom-out-95 data-[state=open]:visio-cms-zoom-in-95 data-[side=bottom]:visio-cms-slide-in-from-top-2 data-[side=left]:visio-cms-slide-in-from-right-2 data-[side=right]:visio-cms-slide-in-from-left-2 data-[side=top]:visio-cms-slide-in-from-bottom-2',
+        'visio-cms-relative visio-cms-z-[9999] visio-cms-max-h-96 visio-cms-min-w-[8rem] visio-cms-overflow-hidden visio-cms-rounded-md visio-cms-border visio-cms-bg-dark-900 visio-cms-text-popover-foreground visio-cms-shadow-md data-[state=open]:visio-cms-animate-in data-[state=closed]:visio-cms-animate-out data-[state=closed]:visio-cms-fade-out-0 data-[state=open]:visio-cms-fade-in-0 data-[state=closed]:visio-cms-zoom-out-95 data-[state=open]:visio-cms-zoom-in-95 data-[side=bottom]:visio-cms-slide-in-from-top-2 data-[side=left]:visio-cms-slide-in-from-right-2 data-[side=right]:visio-cms-slide-in-from-left-2 data-[side=top]:visio-cms-slide-in-from-bottom-2',
         position === 'popper' &&
           'data-[side=bottom]:visio-cms-translate-y-1 data-[side=left]:visio-cms--translate-x-1 data-[side=right]:visio-cms-translate-x-1 data-[side=top]:visio-cms--translate-y-1',
         className,

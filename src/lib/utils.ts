@@ -572,21 +572,31 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
   const page = pages.find((page) => page.id === pageId);
   if (!page) return;
 
-  const { error } = await db
-    .from('pages')
-    .update({
-      name: page.name,
-      slug: page.slug,
-      status: page.status,
-      seo: page.seo,
-      blocks: page.blocks,
-      tags: page.tags,
-      author: user?.user_metadata.id,
-      publish_date: null,
-      schedule_published: 'Now',
-      ...dataObject,
-    })
-    .eq('id', pageId);
+  const { data: foundPageData, error: foundPageError } = await db.from('pages').select().eq('id', page.id);
+  if (foundPageError) throw foundPageError;
+
+  const pageBlocks = foundPageData[0].blocks;
+  if (
+    foundPageData[0].status[page.activeLanguageLocale] === 'Publish' ||
+    dataObject?.['status']?.[page.activeLanguageLocale] === 'Publish'
+  ) {
+    pageBlocks[page.activeLanguageLocale] = page.blocks?.[page.activeLanguageLocale];
+    dataObject['blocks'] = pageBlocks;
+  }
+
+  const data = {
+    name: page.name,
+    slug: page.slug,
+    status: page.status,
+    seo: page.seo,
+    blocks_dev: page.blocks,
+    tags: page.tags,
+    author: user?.user_metadata.id,
+    publish_date: null,
+    ...dataObject,
+  };
+
+  const { error } = await db.from('pages').update(data).eq('id', pageId);
   if (error) throw error;
 }
 

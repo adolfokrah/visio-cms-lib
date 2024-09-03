@@ -66,6 +66,7 @@ export default function PagesTab() {
               schedulePublished: page.schedule_published,
               publishDate: page.publish_date ? new Date(page.publish_date) : null,
               folderId: page.folder_id,
+              blocks: page.blocks_dev,
             };
           }),
         );

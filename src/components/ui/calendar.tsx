@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { DayPicker } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
@@ -51,10 +50,6 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         day_range_middle: 'aria-selected:visio-cms-bg-accent aria-selected:visio-cms-text-accent-foreground',
         day_hidden: 'visio-cms-invisible',
         ...classNames,
-      }}
-      components={{
-        IconLeft: () => <ChevronLeftIcon className="visio-cms-h-4 visio-cms-w-4" />,
-        IconRight: () => <ChevronRightIcon className="visio-cms-h-4 visio-cms-w-4" />,
       }}
       {...props}
     />

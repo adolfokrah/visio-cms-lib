@@ -277,7 +277,7 @@ export default function useCanvas() {
 
   useEffect(() => {
     (async () => {
-      await updatePageData({ blocks: activePage?.blocks }, activePage?.id || '');
+      await updatePageData({ blocks_dev: activePage?.blocks }, activePage?.id || '');
     })();
   }, [activePage?.blocks, activePage?.id]);
 
