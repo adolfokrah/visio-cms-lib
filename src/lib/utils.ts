@@ -612,6 +612,7 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
     ...dataObject,
   };
 
+
   const { error } = await db.from('pages').update(data).eq('id', pageId);
   if (error) throw error;
 }
