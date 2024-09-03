@@ -1,6 +1,5 @@
 import { Button, buttonVariants } from '@/components/ui/button';
 import type { CalendarProps } from '@/components/ui/calendar';
-import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '../../lib/utils';
 import { add, format } from 'date-fns';
@@ -69,33 +68,6 @@ function getValidMinuteOrSecond(value: string) {
   return getValidNumber(value, { max: 59 });
 }
 
-type GetValidArrowNumberConfig = {
-  min: number;
-  max: number;
-  step: number;
-};
-
-function getValidArrowNumber(value: string, { min, max, step }: GetValidArrowNumberConfig) {
-  let numericValue = parseInt(value, 10);
-  if (!Number.isNaN(numericValue)) {
-    numericValue += step;
-    return getValidNumber(String(numericValue), { min, max, loop: true });
-  }
-  return '00';
-}
-
-function getValidArrowHour(value: string, step: number) {
-  return getValidArrowNumber(value, { min: 0, max: 23, step });
-}
-
-function getValidArrow12Hour(value: string, step: number) {
-  return getValidArrowNumber(value, { min: 1, max: 12, step });
-}
-
-function getValidArrowMinuteOrSecond(value: string, step: number) {
-  return getValidArrowNumber(value, { min: 0, max: 59, step });
-}
-
 function setMinutes(date: Date, value: string) {
   const minutes = getValidMinuteOrSecond(value);
   date.setMinutes(parseInt(minutes, 10));
@@ -152,21 +124,6 @@ function getDateByType(date: Date | null, type: TimePickerType) {
       return getValidHour(String(date.getHours()));
     case '12hours':
       return getValid12Hour(String(display12HourValue(date.getHours())));
-    default:
-      return '00';
-  }
-}
-
-function getArrowByType(value: string, step: number, type: TimePickerType) {
-  switch (type) {
-    case 'minutes':
-      return getValidArrowMinuteOrSecond(value, step);
-    case 'seconds':
-      return getValidArrowMinuteOrSecond(value, step);
-    case 'hours':
-      return getValidArrowHour(value, step);
-    case '12hours':
-      return getValidArrow12Hour(value, step);
     default:
       return '00';
   }
@@ -262,7 +219,7 @@ function Calendar({
           buttonVariants({ variant: 'outline' }),
           'visio-cms-h-7 visio-cms-w-7 visio-cms-bg-transparent visio-cms-p-0 visio-cms-opacity-50 visio-cms-hover:opacity-100 visio-cms-absolute visio-cms-right-5 visio-cms-top-5',
         ),
-        month_grid: 'visio-cms-w-auto visio-cms-border-collapse visio-cms-space-y-1',
+        month_grid: 'visio-cms-w-max visio-cms-border-collapse visio-cms-space-y-1',
         weekdays: cn('visio-cms-flex', props.showWeekNumber && 'visio-cms-justify-end'),
         weekday:
           'visio-cms-text-muted-foreground visio-cms-rounded-md visio-cms-w-9 visio-cms-font-normal visio-cms-text-[0.8rem]',
@@ -393,121 +350,96 @@ const TimePeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectorProps
 
 TimePeriodSelect.displayName = 'TimePeriodSelect';
 
-interface TimePickerInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TimePickerInputProps extends React.InputHTMLAttributes<HTMLButtonElement> {
   picker: TimePickerType;
-  date?: Date | null;
+  date?: Date;
   onDateChange?: (date: Date | undefined) => void;
   period?: Period;
   onRightFocus?: () => void;
   onLeftFocus?: () => void;
+  value?: string;
 }
 
-const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>(
-  (
-    {
-      className,
-      type = 'tel',
-      value,
-      id,
-      name,
-      date = new Date(new Date().setHours(0, 0, 0, 0)),
-      onDateChange,
-      onChange,
-      onKeyDown,
-      picker,
-      period,
-      onLeftFocus,
-      onRightFocus,
-      ...props
-    },
-    ref,
-  ) => {
-    const [flag, setFlag] = React.useState<boolean>(false);
-    const [prevIntKey, setPrevIntKey] = React.useState<string>('0');
-
+const TimePickerInput = React.forwardRef<HTMLButtonElement, TimePickerInputProps>(
+  ({ value, date = new Date(new Date().setHours(0, 0, 0, 0)), onDateChange, picker, period }, ref) => {
     /**
      * allow the user to enter the second digit within 2 seconds
      * otherwise start again with entering first digit
      */
-    React.useEffect(() => {
-      if (flag) {
-        const timer = setTimeout(() => {
-          setFlag(false);
-        }, 2000);
+    const hours_12 = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+    const hours_24 = [...hours_12, '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
+    const minutes = [...Array.from({ length: 50 }, (_, i) => i.toString().padStart(2, '0'))];
+    const seconds = minutes;
 
-        return () => clearTimeout(timer);
-      }
-    }, [flag]);
-
-    const calculatedValue = React.useMemo(() => {
-      return getDateByType(date, picker);
-    }, [date, picker]);
-
-    const calculateNewValue = (key: string) => {
-      /*
-       * If picker is '12hours' and the first digit is 0, then the second digit is automatically set to 1.
-       * The second entered digit will break the condition and the value will be set to 10-12.
-       */
-      if (picker === '12hours') {
-        if (flag && calculatedValue.slice(1, 2) === '1' && prevIntKey === '0') return `0${key}`;
-      }
-
-      return !flag ? `0${key}` : calculatedValue.slice(1, 2) + key;
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Tab') return;
-      e.preventDefault();
-      if (e.key === 'ArrowRight') onRightFocus?.();
-      if (e.key === 'ArrowLeft') onLeftFocus?.();
-      if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
-        const step = e.key === 'ArrowUp' ? 1 : -1;
-        const newValue = getArrowByType(calculatedValue, step, picker);
-        if (flag) setFlag(false);
-        const tempDate = date ? new Date(date) : new Date();
-        onDateChange?.(setDateByType(tempDate, newValue, picker, period));
-      }
-      if (e.key >= '0' && e.key <= '9') {
-        if (picker === '12hours') setPrevIntKey(e.key);
-
-        const newValue = calculateNewValue(e.key);
-        if (flag) onRightFocus?.();
-        setFlag((prev) => !prev);
-        const tempDate = date ? new Date(date) : new Date();
-        onDateChange?.(setDateByType(tempDate, newValue, picker, period));
-      }
-    };
+    let options = hours_12;
+    switch (picker) {
+      case 'hours':
+        options = hours_24;
+        break;
+      case 'minutes':
+        options = minutes;
+        break;
+      case 'seconds':
+        options = seconds;
+        break;
+      default:
+        break;
+    }
 
     return (
-      <Input
-        ref={ref}
-        id={id || picker}
-        name={name || picker}
-        className={cn(
-          'visio-cms-w-[48px] visio-cms-text-center visio-cms-font-mono visio-cms-text-base visio-cms-tabular-nums visio-cms-caret-transparent focus:visio-cms-bg-accent focus:visio-cms-text-accent-foreground [&::-webkit-inner-spin-button]:appearance-none',
-          className,
-        )}
-        value={value || calculatedValue}
-        onChange={(e) => {
-          e.preventDefault();
-          onChange?.(e);
-        }}
-        type={type}
-        inputMode="decimal"
-        onKeyDown={(e) => {
-          onKeyDown?.(e);
-          handleKeyDown(e);
-        }}
-        {...props}
-      />
+      <div className="visio-cms-flex visio-cms-h-10 visio-cms-items-center">
+        <Select
+          value={value || options[0]}
+          onValueChange={(value) => {
+            onDateChange?.(setDateByType(new Date(date), value, picker as TimePickerType, period));
+          }}
+        >
+          <SelectTrigger
+            ref={ref}
+            className="visio-cms-w-[65px] focus:visio-cms-bg-accent focus:visio-cms-text-accent-foreground"
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((option) => (
+              <SelectItem value={option} key={option}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     );
+    // return (
+    //   <Input
+    //     ref={ref}
+    //     id={id || picker}
+    //     name={name || picker}
+    //     className={cn(
+    //       'visio-cms-w-[48px] visio-cms-text-center visio-cms-font-mono visio-cms-text-base visio-cms-tabular-nums visio-cms-caret-transparent focus:visio-cms-bg-accent focus:visio-cms-text-accent-foreground [&::-webkit-inner-spin-button]:appearance-none',
+    //       className,
+    //     )}
+    //     value={value || calculatedValue}
+    //     onBlur={(e) => {
+    //       e.preventDefault();
+    //       onChange?.(e);
+    //     }}
+    //     type={type}
+    //     inputMode="decimal"
+    //     onKeyDown={(e) => {
+    //       onKeyDown?.(e);
+    //       handleKeyDown(e);
+    //     }}
+    //     {...props}
+    //   />
+    // );
   },
 );
 
 TimePickerInput.displayName = 'TimePickerInput';
 
 interface TimePickerProps {
-  date?: Date | null;
+  date?: Date;
   onChange?: (date: Date | undefined) => void;
   hourCycle?: 12 | 24;
   /**
@@ -518,16 +450,16 @@ interface TimePickerProps {
 }
 
 interface TimePickerRef {
-  minuteRef: HTMLInputElement | null;
-  hourRef: HTMLInputElement | null;
-  secondRef: HTMLInputElement | null;
+  minuteRef: HTMLButtonElement | null;
+  hourRef: HTMLButtonElement | null;
+  secondRef: HTMLButtonElement | null;
 }
 
 const TimePicker = React.forwardRef<TimePickerRef, TimePickerProps>(
-  ({ date, onChange, hourCycle = 24, granularity = 'second' }, ref) => {
-    const minuteRef = React.useRef<HTMLInputElement>(null);
-    const hourRef = React.useRef<HTMLInputElement>(null);
-    const secondRef = React.useRef<HTMLInputElement>(null);
+  ({ date = new Date(), onChange, hourCycle = 24, granularity = 'second' }, ref) => {
+    const minuteRef = React.useRef<HTMLButtonElement>(null);
+    const hourRef = React.useRef<HTMLButtonElement>(null);
+    const secondRef = React.useRef<HTMLButtonElement>(null);
     const periodRef = React.useRef<HTMLButtonElement>(null);
     const [period, setPeriod] = React.useState<Period>(date && date.getHours() >= 12 ? 'PM' : 'AM');
 
@@ -549,11 +481,12 @@ const TimePicker = React.forwardRef<TimePickerRef, TimePickerProps>(
         </label>
         <TimePickerInput
           picker={hourCycle === 24 ? 'hours' : '12hours'}
-          date={date}
+          date={date || new Date()}
           id="datetime-picker-hour-input"
           onDateChange={onChange}
           ref={hourRef}
           period={period}
+          value={getDateByType(date, hourCycle === 24 ? 'hours' : '12hours')}
           onRightFocus={() => minuteRef.current?.focus()}
         />
         {(granularity === 'minute' || granularity === 'second') && (
@@ -561,9 +494,10 @@ const TimePicker = React.forwardRef<TimePickerRef, TimePickerProps>(
             :
             <TimePickerInput
               picker="minutes"
-              date={date}
+              date={date || new Date()}
               onDateChange={onChange}
               ref={minuteRef}
+              value={getDateByType(date, 'minutes')}
               onLeftFocus={() => hourRef.current?.focus()}
               onRightFocus={() => secondRef.current?.focus()}
             />
@@ -574,7 +508,8 @@ const TimePicker = React.forwardRef<TimePickerRef, TimePickerProps>(
             :
             <TimePickerInput
               picker="seconds"
-              date={date}
+              value={getDateByType(date, 'seconds')}
+              date={date || new Date()}
               onDateChange={onChange}
               ref={secondRef}
               onLeftFocus={() => minuteRef.current?.focus()}
@@ -722,7 +657,7 @@ const DateTimePicker = React.forwardRef<Partial<DateTimePickerRef>, DateTimePick
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="visio-cms-w-auto !visio-cms-p-0" side="left" sideOffset={20} align="start">
+        <PopoverContent className="visio-cms-w-[350px] !visio-cms-p-0" side="left" sideOffset={20} align="start">
           <Calendar
             mode="single"
             selected={value}

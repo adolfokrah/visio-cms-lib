@@ -39,7 +39,15 @@ export default function usePageSettings() {
     async (value: Date) => {
       try {
         const page = pages.find((page) => page.active);
-        await updatePageData({ publish_date: value }, page?.id || '');
+        if (!page) return;
+
+        await updatePageData(
+          {
+            publish_date: value,
+            status: { ...page.status, [page.activeLanguageLocale]: page.status[page.activeLanguageLocale] },
+          },
+          page?.id || '',
+        );
         setPages(
           pages.map((page) => ({
             ...page,

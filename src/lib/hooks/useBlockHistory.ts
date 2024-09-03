@@ -1,11 +1,11 @@
 import { PageBlock, usePagesState } from '../states/usePagesState';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
-import { updateOrInsertProjectConfig } from '../utils';
+import { updateOrInsertProjectConfig, updatePageData } from '../utils';
 export default function useBlockHistory() {
   const { setPages } = usePagesState();
   const { setGlobalBlocks, globalBlocks } = useProjectConfigurationState();
 
-  const addBlocksToPageHistory = (locale: string, blocks: PageBlock[]) => {
+  const addBlocksToPageHistory = async (locale: string, blocks: PageBlock[]) => {
     const pages = usePagesState.getState().pages;
     const page = pages.find((page) => page.active);
     if (page) {
@@ -29,7 +29,7 @@ export default function useBlockHistory() {
           },
         },
       };
-
+      await updatePageData({ blocks_dev: page?.blocks }, page?.id || '');
       setPages(pages.map((p) => (p.active ? newPage : p)));
     }
   };

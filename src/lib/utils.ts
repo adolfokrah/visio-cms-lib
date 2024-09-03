@@ -584,6 +584,22 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
     dataObject['blocks'] = pageBlocks;
   }
 
+  if (dataObject?.['status']?.[page.activeLanguageLocale] || dataObject?.['publish_date']) {
+    let action = 'DELETE';
+    if (dataObject?.['publish_date'] || dataObject?.['status']?.[page.activeLanguageLocale] === 'Schedule') {
+      action = 'CREATE';
+    }
+    const { error: cronError } = await db.functions.invoke('cron-job', {
+      body: {
+        action,
+        date: dataObject?.['publish_date'] || new Date(),
+        name: `${page.id}-locale-${page.activeLanguageLocale}`,
+      },
+    });
+
+    if (cronError) throw cronError;
+  }
+
   const data = {
     name: page.name,
     slug: page.slug,

@@ -45,3 +45,18 @@ export function matchSlug(slug: string, pages: Page[]): MatchResult {
   // If no match is found
   return null;
 }
+
+export function dateToCron(date) {
+  const jsDate = new Date(date);
+
+  const minutes = jsDate.getUTCMinutes();
+  const hours = jsDate.getUTCHours();
+  const dayOfMonth = jsDate.getUTCDate();
+  const month = jsDate.getUTCMonth() + 1; // Cron months are 1-based (January is 1, December is 12)
+  const dayOfWeek = '*'; // Set to '*' because it's not relevant for a specific date
+
+  // Generate the cron expression
+  const cronExpression = `${minutes} ${hours} ${dayOfMonth} ${month} ${dayOfWeek}`;
+
+  return cronExpression;
+}
