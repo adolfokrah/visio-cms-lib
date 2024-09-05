@@ -16,6 +16,7 @@ type Actions = {
       | 'supportedLanguages'
       | 'blocks'
       | 'allowImageTransformation'
+      | 'unsplashAccessKey'
     >,
   ) => void;
   setTheme: (props: ProjectConfiguration['theme']) => void;
@@ -31,6 +32,7 @@ export const useProjectConfigurationState = create(
       globalBlocks: [],
       projectId: '',
       bucketName: 'media',
+      unsplashAccessKey: '',
       emailSender: '',
       scripts: {
         head: '',

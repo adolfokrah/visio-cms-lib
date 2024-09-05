@@ -15,7 +15,7 @@ export default function useImage({
   const db = supabase();
   const { bucketName, allowImageTransformation } = useProjectConfigurationState();
   const [openMediaExplorer, setOpenMediaExplorer] = useState(false);
-  const [imagePublicUrl, setImagePublicUrl] = useState<string>(fallbackImage);
+  const [imagePublicUrl, setImagePublicUrl] = useState<string>(defaultValue?.mediaHash || fallbackImage);
   const { pages, globalBlocks, projectId } = usePageContentState();
   const activePage = pages.find((page) => page.active);
 
@@ -32,6 +32,7 @@ export default function useImage({
     const projectMode = getProjectMode();
 
     if (defaultValue?.mediaHash?.includes('http') || defaultValue?.mediaHash?.includes('https')) {
+      setImagePublicUrl(defaultValue?.mediaHash);
       return;
     }
 

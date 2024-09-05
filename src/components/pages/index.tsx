@@ -73,6 +73,7 @@ export default function Cms(
     | 'supportedLanguages'
     | 'blocks'
     | 'allowImageTransformation'
+    | 'unsplashAccessKey'
   > & { path: string },
 ) {
   const { setConfiguration, supabaseProjectUrl, supabaseAnonKey, projectId } = useProjectConfigurationState();
