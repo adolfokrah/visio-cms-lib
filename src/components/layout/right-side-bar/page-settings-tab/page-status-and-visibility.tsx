@@ -4,12 +4,21 @@ import { Status, usePagesState } from '@/lib/states/usePagesState';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { DateTimePicker } from '@/components/ui/date-time-picker';
 import usePageSettings from '@/lib/hooks/usePageSettings';
+import { useState } from 'react';
+import { Loader } from 'lucide-react';
 
 export default function PageStatusAndVisibility() {
   const { handleUpdatePageDate, updatePageStatus, page } = usePageSettings();
   const { pages } = usePagesState();
   const activePage = pages.find((page) => page.active);
   const activeLanguage = activePage?.activeLanguageLocale ?? '';
+  const [loading, setLoading] = useState(false);
+
+  const updateLoadingState = async (callbackFunc: () => Promise<void>) => {
+    setLoading(true);
+    await callbackFunc();
+    setLoading(false);
+  };
 
   return (
     <>
@@ -17,7 +26,7 @@ export default function PageStatusAndVisibility() {
       <Tabs
         value={['Publish', 'Schedule'].includes(page?.status?.[activeLanguage] || 'Draft') ? 'Publish' : 'Draft'}
         className="visio-cms-w-full visio-cms-mt-3"
-        onValueChange={(value) => updatePageStatus(value as Status)}
+        onValueChange={(value) => updateLoadingState(() => updatePageStatus(value as Status))}
       >
         <TabsList className="visio-cms-grid visio-cms-w-full visio-cms-grid-cols-2">
           <TabsTrigger value="Draft">Draft</TabsTrigger>
@@ -26,12 +35,15 @@ export default function PageStatusAndVisibility() {
       </Tabs>
       {['Publish', 'Schedule'].includes(page?.status?.[activeLanguage] || 'Draft') && (
         <div className="visio-cms-mt-3 ">
-          <Label className="!visio-cms-text-gray-300">Schedule published</Label>
+          <div className="visio-cms-flex visio-cms-items-center visio-cms-justify-between">
+            <Label className="!visio-cms-text-gray-300">Schedule published</Label>
+            {loading && <Loader size={12} className="visio-cms-animate-spin visio-cms-mr-2 " />}
+          </div>
           <div className="visio-cms-my-3">
             <RadioGroup
               value={page?.status?.[activeLanguage] || ''}
               onValueChange={(value) => {
-                updatePageStatus(value as Status);
+                updateLoadingState(() => updatePageStatus(value as Status));
               }}
             >
               <div className="visio-cms-flex visio-cms-items-center visio-cms-space-x-2">
@@ -55,7 +67,7 @@ export default function PageStatusAndVisibility() {
                   onChange={(date) => {
                     if (page?.publishDate != date) {
                       if (date) {
-                        handleUpdatePageDate(date);
+                        updateLoadingState(() => handleUpdatePageDate(date));
                       }
                     }
                   }}

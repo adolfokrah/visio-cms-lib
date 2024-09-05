@@ -24,13 +24,13 @@ Deno.serve(async (req: Request): Promise<Response> => {
       // Run a query
       const cron_expression = dateToCron(new Date(date));
 
-      const results = await connection.queryObject(`select * from cron.job where jobname = '${name}'`);
+      const results = await connection.queryObject`select * from cron.job where jobname = ${name}`;
 
       let query = '';
       if (action === 'CREATE') {
         query = `select cron.schedule (
-          '${name}', 
-          '${cron_expression}', 
+          '${name}',
+          '${cron_expression}',
           $$ select net.http_post(
           url:='${projectUrl}/functions/v1/publish-page',
           headers:='{"Content-Type": "application/json", "Authorization": "Bearer ${anonKey}"}'::jsonb,
