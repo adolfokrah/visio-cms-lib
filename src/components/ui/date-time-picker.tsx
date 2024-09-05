@@ -368,7 +368,7 @@ const TimePickerInput = React.forwardRef<HTMLButtonElement, TimePickerInputProps
      */
     const hours_12 = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
     const hours_24 = [...hours_12, '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
-    const minutes = [...Array.from({ length: 50 }, (_, i) => i.toString().padStart(2, '0'))];
+    const minutes = [...Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'))];
     const seconds = minutes;
 
     let options = hours_12;

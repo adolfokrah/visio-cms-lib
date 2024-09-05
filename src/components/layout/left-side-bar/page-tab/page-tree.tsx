@@ -261,7 +261,6 @@ function PageItem({ item }: { item: PageTreeItem }) {
       ]);
     }
 
-    console.log(pages)
 
     const newPages = pages.map((page) => ({
       ...page,

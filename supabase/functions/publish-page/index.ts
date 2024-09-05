@@ -1,5 +1,6 @@
 import { corsHeaders } from '../_shared/cors.ts';
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { sendEmail } from '../_shared/utils.ts';
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
@@ -12,7 +13,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   const { error, data } = await supabaseClient
     .from('pages')
-    .select('id, blocks_dev, seo, status')
+    .select('id, blocks_dev, seo, name, slug, status, author(*)')
     .eq('id', id)
     .limit(1);
 
@@ -22,8 +23,15 @@ const handler = async (req: Request): Promise<Response> => {
     .from('pages')
     .update({ blocks: data[0].blocks_dev, status: { ...data[0]?.status, [locale]: 'Publish' } })
     .eq('id', id)
-    .select();
+  
   if (updateError) throw updateError;
+
+  await sendEmail({
+    emails: [data[0].author.email],
+    from: 'noreply@visiocms.com',
+    body: `Your changes for the below page have been published <br/> <b>name</b> : ${data[0].name}<br/><b>slug</b> : ${data[0].slug}<br/><b>Locale</b> : ${locale}`,
+    subject: `Your changes have been published`
+  })
 
   return new Response(JSON.stringify({ ...updateData }), {
     status: 200,
