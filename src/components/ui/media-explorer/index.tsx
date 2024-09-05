@@ -74,16 +74,16 @@ export default function MediaExplorer({
             </TabsList>
             <TabsContent value="media" className="visio-cms-h-[95%] ">
               <div className="visio-cms-h-full visio-cms-flex visio-cms-flex-col">
-                <div className="visio-cms-flex-1 visio-cms-bg-blue-500">
-                  <div className="visio-cms-grid visio-cms-h-full  visio-cms-w-full visio-cms-grid-cols-7">
+                <div className="visio-cms-h-[90%] visio-cms-max-h-full visio-cms-flex-1">
+                  <div className=" visio-cms-h-full  visio-cms-max-h-full  visio-cms-w-full visio-cms-flex visio-cms-gap-2">
                     {loading ? (
-                      <div className="visio-cms-col-span-7  visio-cms-h-full visio-cms-grid visio-cms-place-items-center">
+                      <div className="visio-cms-flex-1 visio-cms-h-full visio-cms-grid visio-cms-place-items-center">
                         <Loader size={16} className="visio-cms-animate-spin visio-cms-text-white" />
                       </div>
                     ) : (
                       <>
                         {files.length < 1 ? (
-                          <div className="visio-cms-col-span-7  visio-cms-h-full visio-cms-grid visio-cms-place-items-center">
+                          <div className="visio-cms-flex-1 visio-cms-h-full visio-cms-grid visio-cms-place-items-center">
                             <div className="visio-cms-flex visio-cms-items-center visio-cms-flex-col visio-cms-gap-2">
                               <p className="visio-cms-text-lg">👀</p>
                               {'You have no files uploaded yet :('}
@@ -93,7 +93,7 @@ export default function MediaExplorer({
                         ) : (
                           <>
                             {error ? (
-                              <div className="visio-cms-col-span-7  visio-cms-h-full visio-cms-grid visio-cms-place-items-center">
+                              <div className="visio-cms-flex-1 isio-cms-h-full visio-cms-grid visio-cms-place-items-center">
                                 <div className="visio-cms-flex visio-cms-items-center visio-cms-flex-col visio-cms-gap-2">
                                   <FileWarning size={35} />
                                   {error}
@@ -103,15 +103,15 @@ export default function MediaExplorer({
                             ) : (
                               <>
                                 <div
-                                  className={cn('visio-cms-col-span-7 visio-cms-h-full  visio-cms-bg-red-500 ', {
+                                  className={cn('visio-cms-flex-1 visio-cms-flex visio-cms-flex-col  visio-cms-max-h-full visio-cms-h-full   ', {
                                     '!visio-cms-col-span-5': selectedFile != undefined,
                                   })}
                                 >
                                   <div className="visio-cms-mb-3">
                                     <UploadButton uploadFiles={uploadFiles} />
                                   </div>
-                                  {/* <div className="visio-cms-flex-1">
-                                    <div className="visio-cms-bg-red-500 visio-cms-flex-grow-0 visio-cms-h-full visio-cms-overflow-auto scrollbar-custom">
+                                  <div className="visio-cms-w-full visio-cms-overflow-auto visio-cms-h-full visio-cms-max-h-full visio-cms-bg-black/20">
+                                    <div className=" visio-cms-flex-grow-0 visio-cms-h-full visio-cms-overflow-auto scrollbar-custom">
                                       <div className="visio-cms-flex visio-cms-flex-wrap visio-cms-gap-2 ">
                                         {files.map((file) => (
                                           <div
@@ -146,19 +146,11 @@ export default function MediaExplorer({
                                         ))}
                                       </div>
                                     </div>
-                                  </div> */}
-
-                                  <div className="visio-cms-w-full  visio-cms-h-[500px] visio-cms-bg-dark-700">
-                                    <div>
-                                      {Array.from({ length: 100 }).map((_, index) => (
-                                        <div>{index} </div>
-                                      ))}
-                                    </div>
                                   </div>
-                                  <Button>hsome</Button>
+
                                 </div>
                                 {selectedFile && (
-                                  <div className="visio-cms-w-full visio-cms-rounded-md visio-cms-overflow-auto scrollbar-custom  visio-cms-p-2 visio-cms-col-span-2 visio-cms-shrink-0 visio-cms-h-full visio-cms-bg-dark-700">
+                                  <div className="visio-cms-w-[220px] visio-cms-rounded-md visio-cms-overflow-auto scrollbar-custom  visio-cms-p-2 visio-cms-col-span-2 visio-cms-shrink-0 visio-cms-h-full visio-cms-bg-dark-700">
                                     <Label>ATTACHMENT DETAILS</Label>
                                     <img
                                       src={selectedFile?.mediaUrl}

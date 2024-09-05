@@ -31,7 +31,7 @@ export default function Unsplash({ onImageChosen }: { onImageChosen: (image: Med
   }, []);
 
   const handleSelect = (index: number) => {
-    const nextImages = images.map((image, i) => ({ ...image, isSelected: index == i }));
+    const nextImages = images.map((image, i) => ({ ...image, isSelected: index == i ? !image.isSelected : false }));
     setImages(nextImages);
   };
 
@@ -69,7 +69,7 @@ export default function Unsplash({ onImageChosen }: { onImageChosen: (image: Med
 
   const selectedFile = images.find((image) => image.isSelected);
   return (
-    <div className="visio-cms-text-xs visio-cms-text-white visio-cms-h-full visio-cms-flex visio-cms-flex-col">
+    <div className="visio-cms-text-xs visio-cms-text-white visio-cms-h-[95%] visio-cms-flex visio-cms-flex-col">
       <Input
         value={search}
         placeholder="Search Image"
