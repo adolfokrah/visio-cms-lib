@@ -1,7 +1,7 @@
 import LoginPage from './auth/login-page';
 import ForgottenPasswordPage from './auth/forgotten-password-page';
 import RegisterPage from './auth/register-page';
-import { ProjectConfiguration } from '@/lib/types';
+import { ProjectConfig, ProjectConfiguration } from '@/lib/types';
 import { Toaster } from '@/components/ui/sonner';
 import { CMS_BASE_PATH, PAGES } from '@/lib/constants';
 import UpdatePasswordPage from './auth/update-password';
@@ -63,18 +63,7 @@ const router: {
 ];
 
 export default function Cms(
-  props: Pick<
-    ProjectConfiguration,
-    | 'supabaseAnonKey'
-    | 'supabaseProjectUrl'
-    | 'projectId'
-    | 'emailSender'
-    | 'defaultLanguage'
-    | 'supportedLanguages'
-    | 'blocks'
-    | 'allowImageTransformation'
-    | 'unsplashAccessKey'
-  > & { path: string },
+  props: ProjectConfig & { path: string },
 ) {
   const { setConfiguration, supabaseProjectUrl, supabaseAnonKey, projectId } = useProjectConfigurationState();
   const { fetchUser, fetchingUser } = useAuthState();

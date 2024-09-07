@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { BoxSelect, FileIcon, MoreVerticalIcon, X } from 'lucide-react';
-import usePageTabs from '@/lib/hooks/usePageTabls';
+import usePageTabs from '@/lib/hooks/usePageTabs';
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -10,6 +10,7 @@ import {
   Message,
   OsTypes,
   PageTreeItem,
+  ProjectConfig,
   ProjectConfiguration,
   SideEditingProps,
 } from './types';
@@ -761,4 +762,8 @@ export function matchSlug(slug: string, pages: BuilderPage[]): MatchResult {
 
   // If no match is found
   return null;
+}
+
+export function buildConfig(props: ProjectConfig): ProjectConfig {
+  return props
 }
