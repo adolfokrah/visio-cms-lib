@@ -556,9 +556,9 @@ export async function fetchProjectConfig() {
   const { data, error } = await db.from('project_configuration').select().limit(1);
 
   if (error) throw error;
-  setTheme(data[0]?.theme);
+  setTheme(data[0]?.theme || {});
   setGlobalBlocks(data[0]?.global_blocks || []);
-  setScripts(data[0]?.scripts);
+  setScripts(data[0]?.scripts || {header: '', body: ''});
 
   if (projectMode === 'BUILDER') {
     setPageContentTheme(data[0]?.theme);
