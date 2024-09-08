@@ -561,7 +561,7 @@ export async function fetchProjectConfig() {
   setScripts(data[0]?.scripts || {header: '', body: ''});
 
   if (projectMode === 'BUILDER') {
-    setPageContentTheme(data[0]?.theme);
+    setPageContentTheme(data[0]?.theme || {});
     setPageContentGlobalBlocks(data[0]?.global_blocks || []);
   }
 }
