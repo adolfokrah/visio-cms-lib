@@ -73,8 +73,8 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
           author: user?.user_metadata.id,
           tags: '',
           seo: {},
-          blocks: [],
-          blocks_dev: [],
+          blocks: {},
+          blocks_dev: {},
           folder_id: newPage?.folderId || null,
           publish_date: newPage.publishDate,
         })
@@ -109,11 +109,8 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
     try {
       if (page.type == 'Folder') {
         if (withPages) {
-          const { error, data } = await db.from('pages').delete().eq('folder_id', page.id).select();
+          const { error } = await db.from('pages').delete().eq('folder_id', page.id);
           if (error) throw error;
-
-          const { error: deleteError } = await db.from('pages_scheduled_publish').delete().eq('page_id', data[0].id);
-          if (deleteError) throw deleteError;
         } else {
           const { error } = await db.from('pages').update({ folder_id: null }).eq('folder_id', page.id);
           if (error) throw error;
@@ -121,10 +118,8 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
         const { error } = await db.from('folders').delete().eq('id', page.id);
         if (error) throw error;
       } else {
-        const { error, data } = await db.from('pages').delete().eq('id', page.id).select();
+        const { error } = await db.from('pages').delete().eq('id', page.id);
         if (error) throw error;
-        const { error: deleteError } = await db.from('pages_scheduled_publish').delete().eq('page_id', data[0].id);
-        if (deleteError) throw deleteError;
       }
       const pagesInFolder = pages.filter((fPage) => fPage.folderId == page.id).map((page) => page.id);
 
