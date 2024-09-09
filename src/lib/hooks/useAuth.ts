@@ -136,7 +136,7 @@ export default function useAuth(page?: string) {
         return;
       }
       toast.success('Success', { description: 'User registered' });
-      navigate(PAGES.LOGIN);
+      navigate(PAGES.BUILDER);
     } catch (e) {
       setErrorMessage('Ops! an error occurred');
     } finally {
