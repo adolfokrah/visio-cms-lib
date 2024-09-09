@@ -83,7 +83,7 @@ export default function MediaExplorer({
                     ) : (
                       <>
                         {files.length < 1 ? (
-                          <div className="visio-cms-flex-1 visio-cms-h-full visio-cms-grid visio-cms-place-items-center">
+                          <div className="visio-cms-flex-1 visio-cms-text-white visio-cms-h-full visio-cms-grid visio-cms-place-items-center">
                             <div className="visio-cms-flex visio-cms-items-center visio-cms-flex-col visio-cms-gap-2">
                               <p className="visio-cms-text-lg">👀</p>
                               {'You have no files uploaded yet :('}
@@ -110,7 +110,7 @@ export default function MediaExplorer({
                                   <div className="visio-cms-mb-3">
                                     <UploadButton uploadFiles={uploadFiles} />
                                   </div>
-                                  <div className="visio-cms-w-full visio-cms-overflow-auto visio-cms-h-full visio-cms-max-h-full visio-cms-bg-black/20">
+                                  <div className="visio-cms-w-full visio-cms-overflow-auto visio-cms-h-full visio-cms-max-h-full ">
                                     <div className=" visio-cms-flex-grow-0 visio-cms-h-full visio-cms-overflow-auto scrollbar-custom">
                                       <div className="visio-cms-flex visio-cms-flex-wrap visio-cms-gap-2 ">
                                         {files.map((file) => (
