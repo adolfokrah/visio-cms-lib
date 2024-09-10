@@ -581,7 +581,7 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
     foundPageData[0].status[page.activeLanguageLocale] === 'Publish' ||
     dataObject?.['status']?.[page.activeLanguageLocale] === 'Publish'
   ) {
-    pageBlocks[page.activeLanguageLocale] = page.blocks?.[page.activeLanguageLocale];
+    pageBlocks[page.activeLanguageLocale] = dataObject?.['blocks_dev']?.[page.activeLanguageLocale] || page.blocks?.[page.activeLanguageLocale];
     dataObject['blocks'] = pageBlocks;
   }
 

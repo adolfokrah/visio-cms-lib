@@ -35,12 +35,13 @@ export default function PagePreview({ id }: { id: string }) {
         const foundGlobalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
         const id = foundGlobalBlock?.blockId || blockId;
         const block = blocks.find((block) => block.Schema.id == id);
+        const inputs = { ...block?.Schema.defaultPropValues, ...pageBlock?.inputs, ...foundGlobalBlock?.inputs };
 
         if (!block) return null;
 
         return React.createElement(block, {
           key: `${pageBlock.id}-${index}`,
-          ...(foundGlobalBlock?.inputs || pageBlock?.inputs),
+          ...(inputs),
           pageBlockId: pageBlock?.id,
         });
       })}

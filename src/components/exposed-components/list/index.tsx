@@ -11,6 +11,7 @@ type ListProps<T> = {
   listItemClassName?: string;
   renderComponent: (value: T, index: number) => JSX.Element;
   defaultPropValues?: T[];
+  setListItemClassName?: (value: T, index: number) => string;
 };
 
 export default function List<T>({
@@ -21,6 +22,7 @@ export default function List<T>({
   className = '',
   renderComponent,
   listItemClassName = '',
+  setListItemClassName,
   defaultPropValues = [],
 }: ListProps<T>) {
   const { selectedListItem } = usePageContentState();
@@ -34,7 +36,7 @@ export default function List<T>({
   const children = defaultPropValues.map((values, index) => {
     return React.createElement(itemComponent, {
       key: `${propName}.${index}`,
-      className: cn('visio-cms-list-none', listItemClassName, {
+      className: cn('visio-cms-list-none', listItemClassName || setListItemClassName?.(values, index), {
         'visio-cms-outline visio-cms-outline-2 visio-cms-outline-blue-500':
           selectedListItem?.propName === `${propName}.${index}` && !globalBlock,
       }),
