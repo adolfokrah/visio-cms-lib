@@ -556,12 +556,12 @@ export async function fetchProjectConfig() {
   const { data, error } = await db.from('project_configuration').select().limit(1);
 
   if (error) throw error;
-  setTheme(data[0]?.theme || {colorScheme: []});
+  setTheme(data[0]?.theme || { colorScheme: [] });
   setGlobalBlocks(data[0]?.global_blocks || []);
-  setScripts(data[0]?.scripts || {header: '', body: ''});
+  setScripts(data[0]?.scripts || { header: '', body: '' });
 
   if (projectMode === 'BUILDER') {
-    setPageContentTheme(data[0]?.theme || {colorScheme: []});
+    setPageContentTheme(data[0]?.theme || { colorScheme: [] });
     setPageContentGlobalBlocks(data[0]?.global_blocks || []);
   }
 }
@@ -581,7 +581,8 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
     foundPageData[0].status[page.activeLanguageLocale] === 'Publish' ||
     dataObject?.['status']?.[page.activeLanguageLocale] === 'Publish'
   ) {
-    pageBlocks[page.activeLanguageLocale] = dataObject?.['blocks_dev']?.[page.activeLanguageLocale] || page.blocks?.[page.activeLanguageLocale];
+    pageBlocks[page.activeLanguageLocale] =
+      dataObject?.['blocks_dev']?.[page.activeLanguageLocale] || page.blocks?.[page.activeLanguageLocale];
     dataObject['blocks'] = pageBlocks;
   }
 
@@ -612,7 +613,6 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
     publish_date: null,
     ...dataObject,
   };
-
 
   const { error } = await db.from('pages').update(data).eq('id', pageId);
   if (error) throw error;
@@ -765,5 +765,5 @@ export function matchSlug(slug: string, pages: BuilderPage[]): MatchResult {
 }
 
 export function buildConfig(props: ProjectConfig): ProjectConfig {
-  return props
+  return props;
 }

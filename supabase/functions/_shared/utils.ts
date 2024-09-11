@@ -61,9 +61,18 @@ export function dateToCron(date) {
   return cronExpression;
 }
 
-
-export async function sendEmail({emails, from, body, subject}: {emails: string[], from: string, body: string, subject: string}){
-  try{
+export async function sendEmail({
+  emails,
+  from,
+  body,
+  subject,
+}: {
+  emails: string[];
+  from: string;
+  body: string;
+  subject: string;
+}) {
+  try {
     const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
     const payload = emails.map((email: string) => ({
       from,
@@ -71,7 +80,7 @@ export async function sendEmail({emails, from, body, subject}: {emails: string[]
       subject,
       html: body,
     }));
-  
+
     const res = await fetch('https://api.resend.com/emails/batch', {
       method: 'POST',
       headers: {
@@ -80,10 +89,10 @@ export async function sendEmail({emails, from, body, subject}: {emails: string[]
       },
       body: JSON.stringify(payload),
     });
-  
+
     const data = await res.json();
     return data;
-  }catch(e){
-    throw e
+  } catch (e) {
+    throw e;
   }
 }

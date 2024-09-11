@@ -310,14 +310,14 @@ export interface UnsplashPhotoData {
 }
 
 export type ProjectConfig = Pick<
-ProjectConfiguration,
-| 'supabaseAnonKey'
-| 'supabaseProjectUrl'
-| 'projectId'
-| 'emailSender'
-| 'defaultLanguage'
-| 'supportedLanguages'
-| 'blocks'
-| 'allowImageTransformation'
-| 'unsplashAccessKey'
-> 
+  ProjectConfiguration,
+  | 'supabaseAnonKey'
+  | 'supabaseProjectUrl'
+  | 'projectId'
+  | 'emailSender'
+  | 'defaultLanguage'
+  | 'supportedLanguages'
+  | 'blocks'
+  | 'allowImageTransformation'
+  | 'unsplashAccessKey'
+>;

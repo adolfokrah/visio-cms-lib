@@ -261,7 +261,6 @@ function PageItem({ item }: { item: PageTreeItem }) {
       ]);
     }
 
-
     const newPages = pages.map((page) => ({
       ...page,
       active: page.id == item.id,

@@ -103,9 +103,12 @@ export default function MediaExplorer({
                             ) : (
                               <>
                                 <div
-                                  className={cn('visio-cms-flex-1 visio-cms-flex visio-cms-flex-col  visio-cms-max-h-full visio-cms-h-full   ', {
-                                    '!visio-cms-col-span-5': selectedFile != undefined,
-                                  })}
+                                  className={cn(
+                                    'visio-cms-flex-1 visio-cms-flex visio-cms-flex-col  visio-cms-max-h-full visio-cms-h-full   ',
+                                    {
+                                      '!visio-cms-col-span-5': selectedFile != undefined,
+                                    },
+                                  )}
                                 >
                                   <div className="visio-cms-mb-3">
                                     <UploadButton uploadFiles={uploadFiles} />
@@ -147,7 +150,6 @@ export default function MediaExplorer({
                                       </div>
                                     </div>
                                   </div>
-
                                 </div>
                                 {selectedFile && (
                                   <div className="visio-cms-w-[220px] visio-cms-rounded-md visio-cms-overflow-auto scrollbar-custom  visio-cms-p-2 visio-cms-col-span-2 visio-cms-shrink-0 visio-cms-h-full visio-cms-bg-dark-700">

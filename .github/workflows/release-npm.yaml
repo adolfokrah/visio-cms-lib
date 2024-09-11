@@ -1,7 +1,7 @@
 name: Release components package
 
 on:
- repository_dispatch:
+  repository_dispatch:
     types: [create-npm-package]
 
 jobs:
@@ -10,10 +10,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Reconfigure git to use HTTP authentication
-        run: 
-          git config --global url."https://github.com/".insteadOf
+        run: git config --global url."https://github.com/".insteadOf
           ssh://git@github.com/
 
       - name: Install Node.js
@@ -25,7 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Build package
         run: npm run build
 

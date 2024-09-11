@@ -99,7 +99,7 @@ export default function LinkController({
                     setSearch('');
                   }}
                 >
-                  Add {search.startsWith('/') && 'absolute'} url as a link
+                  Add {search.startsWith('/') && 'relative'} url as a link
                 </Button>
               ) : (
                 <p className="visio-cms-mt-2 visio-cms-font-light">Type a valid url to add as a link</p>

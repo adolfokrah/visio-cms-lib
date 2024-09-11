@@ -22,16 +22,16 @@ const handler = async (req: Request): Promise<Response> => {
   const { error: updateError, data: updateData } = await supabaseClient
     .from('pages')
     .update({ blocks: data[0].blocks_dev, status: { ...data[0]?.status, [locale]: 'Publish' } })
-    .eq('id', id)
-  
+    .eq('id', id);
+
   if (updateError) throw updateError;
 
   await sendEmail({
     emails: [data[0].author.email],
     from: 'noreply@visiocms.com',
     body: `Your changes for the below page have been published <br/> <b>name</b> : ${data[0].name}<br/><b>slug</b> : ${data[0].slug}<br/><b>Locale</b> : ${locale}`,
-    subject: `Your changes have been published`
-  })
+    subject: `Your changes have been published`,
+  });
 
   return new Response(JSON.stringify({ ...updateData }), {
     status: 200,

@@ -41,7 +41,7 @@ export default function PagePreview({ id }: { id: string }) {
 
         return React.createElement(block, {
           key: `${pageBlock.id}-${index}`,
-          ...(inputs),
+          ...inputs,
           pageBlockId: pageBlock?.id,
         });
       })}

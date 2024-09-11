@@ -105,7 +105,11 @@ export const usePagesState = create(
               .select('hashed_file_name')
               .eq('hashed_file_name', featuredImage)
               .single();
-            seo[key].meta.featuredImage = data ? data?.hashed_file_name : featuredImage?.startsWith('http') ? featuredImage: undefined;
+            seo[key].meta.featuredImage = data
+              ? data?.hashed_file_name
+              : featuredImage?.startsWith('http')
+                ? featuredImage
+                : undefined;
           }
         }
         set((state) => {

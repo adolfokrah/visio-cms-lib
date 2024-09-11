@@ -62,9 +62,7 @@ const router: {
   },
 ];
 
-export default function Cms(
-  props: ProjectConfig & { path: string },
-) {
+export default function Cms(props: ProjectConfig & { path: string }) {
   const { setConfiguration, supabaseProjectUrl, supabaseAnonKey, projectId } = useProjectConfigurationState();
   const { fetchUser, fetchingUser } = useAuthState();
   useEffect(() => {
