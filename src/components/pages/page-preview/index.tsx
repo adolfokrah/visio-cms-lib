@@ -4,7 +4,6 @@ import { usePagesState } from '@/lib/states/usePagesState';
 import { useParamState } from '@/lib/states/useParamState';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import { getProjectMode } from '@/lib/utils';
-import { is } from 'date-fns/locale';
 import React, { useEffect } from 'react';
 
 export default function PagePreview({ id }: { id: string }) {
