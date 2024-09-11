@@ -659,11 +659,14 @@ export async function getPageBlocks(
 }
 
 type PageMeta = {
-  title: string;
-  description: string;
-  keywords: string;
-  featuredImage?: string;
-  error?: string;
+  seo: {
+    title: string;
+    description: string;
+    keywords: string;
+    featuredImage?: string;
+    error?: string;
+  }
+  params: { [key: string]: any };
 };
 export async function getPageMetaData(
   slug: string,
