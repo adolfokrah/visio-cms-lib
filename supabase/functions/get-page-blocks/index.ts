@@ -9,13 +9,16 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const { slug, locale } = await req.json();
-
-    const supabaseClient = createClient(Deno.env.get('URL') ?? '', Deno.env.get('SERVICE_ROLE') ?? '');
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
     const { error, data } = await supabaseClient.from('pages').select('slug, id, name');
     if (error) {
       throw error;
     }
     const foundPage = matchSlug(slug, data);
+    console.log('foundPage', slug, data);
     const { error: pageError, data: pageData } = await supabaseClient
       .from('pages')
       .select('*')
@@ -52,7 +55,7 @@ const handler = async (req: Request): Promise<Response> => {
           theme: projectConfiguration[0].theme,
           scripts: projectConfiguration[0].scripts,
         },
-        params: { ...foundPage?.params, locale },
+        params: { ...foundPage?.params, locale, pageSlug: foundPage?.page?.slug },
       }),
       {
         status: 200,
@@ -63,6 +66,7 @@ const handler = async (req: Request): Promise<Response> => {
       },
     );
   } catch (error) {
+    console.log(error);
     return new Response(null, {
       status: 500,
       statusText: 'Internal Server Error',

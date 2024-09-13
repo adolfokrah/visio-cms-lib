@@ -664,9 +664,9 @@ type PageMeta = {
     description: string;
     keywords: string;
     featuredImage?: string;
-    error?: string;
   }
   params: { [key: string]: any };
+  error?: string;
 };
 export async function getPageMetaData(
   slug: string,

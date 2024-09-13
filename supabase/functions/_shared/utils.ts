@@ -46,7 +46,7 @@ export function matchSlug(slug: string, pages: Page[]): MatchResult {
   return null;
 }
 
-export function dateToCron(date) {
+export function dateToCron(date: string) {
   const jsDate = new Date(date);
 
   const minutes = jsDate.getUTCMinutes();
