@@ -1,7 +1,7 @@
 import LoginPage from './auth/login-page';
 import ForgottenPasswordPage from './auth/forgotten-password-page';
 import RegisterPage from './auth/register-page';
-import { ProjectConfig, ProjectConfiguration } from '@/lib/types';
+import { ProjectConfig } from '@/lib/types';
 import { Toaster } from '@/components/ui/sonner';
 import { CMS_BASE_PATH, PAGES } from '@/lib/constants';
 import UpdatePasswordPage from './auth/update-password';
@@ -15,6 +15,7 @@ import { TooltipProvider } from '../ui/tooltip';
 import GlobalEditContent from './global-edit-content';
 import PagePreview from './page-preview';
 import { fetchProjectConfig, matchSlug } from '@/lib/utils';
+import { Loader } from 'lucide-react';
 
 const router: {
   slug: string;
@@ -74,7 +75,12 @@ export default function Cms(props: ProjectConfig & { path: string }) {
   }, [props, setConfiguration, fetchUser]);
 
   if (!supabaseProjectUrl.length && !supabaseAnonKey.length && !projectId) return null;
-  if (fetchingUser) return null;
+  if (fetchingUser)
+    return (
+      <div className="visio-cms-w-full visio-cms-bg-dark-900  visio-cms-h-[100vh] visio-cms-grid visio-cms-place-items-center">
+        <Loader  className="visio-cms-animate-spin" color="white" />
+      </div>
+    );
 
   const foundPage = matchSlug(props.path, router);
 

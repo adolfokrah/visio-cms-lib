@@ -49,19 +49,16 @@ const handler = async (req: Request): Promise<Response> => {
 
     const metaData = {
       seo,
-      params: {...foundPage?.params, tags: pageData[0]?.tags},
-    }
+      params: { ...foundPage?.params, tags: pageData[0]?.tags },
+    };
 
-    return new Response(
-      JSON.stringify(metaData),
-      {
-        status: 200,
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
+    return new Response(JSON.stringify(metaData), {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
       },
-    );
+    });
   } catch (error) {
     return new Response(null, {
       status: 500,

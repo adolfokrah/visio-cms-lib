@@ -554,15 +554,17 @@ export async function fetchProjectConfig() {
 
   const { setTheme: setPageContentTheme, setGlobalBlocks: setPageContentGlobalBlocks } = usePageContentState.getState();
   const { data, error } = await db.from('project_configuration').select().limit(1);
+ 
 
   if (error) throw error;
-  setTheme(data[0]?.theme || { colorScheme: [] });
-  setGlobalBlocks(data[0]?.global_blocks || []);
-  setScripts(data[0]?.scripts || { header: '', body: '' });
+
+  setTheme( data && data[0]?.theme || { colorScheme: [] });
+  setGlobalBlocks(data && data[0]?.global_blocks || []);
+  setScripts(data && data[0]?.scripts || { header: '', body: '' });
 
   if (projectMode === 'BUILDER') {
-    setPageContentTheme(data[0]?.theme || { colorScheme: [] });
-    setPageContentGlobalBlocks(data[0]?.global_blocks || []);
+    setPageContentTheme(data && data[0]?.theme || { colorScheme: [] });
+    setPageContentGlobalBlocks(data && data[0]?.global_blocks || []);
   }
 }
 

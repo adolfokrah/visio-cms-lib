@@ -27,7 +27,6 @@ export default function PagePreview({ id }: { id: string }) {
     }
   }, [fetchUser, fetchingUser, user, isBuilderMode, page, setParams]);
 
-  
   if (!page) navigate(PAGES.PAGE_NOT_FOUND);
 
   if (fetchingUser) return null;
