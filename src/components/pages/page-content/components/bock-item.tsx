@@ -80,8 +80,8 @@ export default function BlockItem({
                 propName={propName}
                 pageBlockId={parentBlockId}
               />
-              {droppableDirection == 'vertical' &&   <DroppableItem
-                position={'bottom'}
+              {index + 1 == pageBlocks.length - 1 &&   <DroppableItem
+                position={droppableDirection == 'vertical' ? 'bottom' : 'right'}
                 index={index + 1}
                 showPlaceHolder={isDraggingOver}
                 propName={propName}
