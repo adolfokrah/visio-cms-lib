@@ -36,6 +36,8 @@ export default function BlockItem({
       index={index}
       pageBlock={{ ...pageBlock, isGlobalBlock: globalBlock != null }}
       pageBlocks={pageBlocks}
+      propName={propName}
+      parentBlockId={parentBlockId}
     >
       <div
         onMouseDown={(e) => {

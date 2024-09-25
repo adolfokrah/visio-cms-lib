@@ -53,6 +53,7 @@ export default function useCanvas() {
             ? JSON.parse(copiedBlock)?.inputs
             : globalBlock?.inputs || block.Schema.defaultPropValues;
 
+       
         if (propName && foundBlock) {
           const foundPropInput = getValueByPath(foundBlock?.inputs, propName.split('.')) || [];
           foundPropInput.splice(position, 0, {
@@ -343,7 +344,7 @@ export default function useCanvas() {
         }
       } else if (data.type === 'copyBlock') {
         const blockId = data.content;
-        const pageBlock = activePage?.blocks?.[activePage.activeLanguageLocale]?.find((block) => block.id === blockId);
+        const pageBlock = getSelectedBlock(activePage?.blocks?.[activePage.activeLanguageLocale], blockId)
         if (pageBlock) {
           localStorage.setItem('copiedBlock', JSON.stringify(pageBlock));
           toast.success('Block copied');

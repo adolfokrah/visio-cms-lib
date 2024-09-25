@@ -15,11 +15,15 @@ export default function RightClickMenu({
   pageBlock,
   index,
   pageBlocks,
+  propName,
+  parentBlockId
 }: {
   children: React.ReactNode;
   pageBlock?: PageBlock;
   index: number;
   pageBlocks: PageBlock[];
+  propName?: string;
+  parentBlockId?: string
 }) {
   const pageBlockId = pageBlock?.id;
   const copiedBlock = localStorage.getItem('copiedBlock');
@@ -33,12 +37,16 @@ export default function RightClickMenu({
       isGlobal: copiedBlockData?.isGlobalBlock,
       globalBlockId: copiedBlockData?.globalBlockId,
       fromClipBoard: true,
+      propName: propName,
+      pageBlockId: parentBlockId
     };
     sendMessageToParent({
       type: 'addBlock',
       content: JSON.stringify({ ...data }),
     });
   };
+
+  const content = JSON.stringify({pageBlockId, propName})
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild onMouseDown={(e) => e.stopPropagation()} disabled={!pageBlock && !copiedBlock}>
@@ -51,7 +59,7 @@ export default function RightClickMenu({
               className="visio-cms-text-xs"
               disabled={index === 0}
               onSelect={() => {
-                sendMessageToParent({ type: 'moveBlockUp', content: pageBlockId });
+                sendMessageToParent({ type: 'moveBlockUp', content });
               }}
             >
               Move block up
@@ -63,7 +71,7 @@ export default function RightClickMenu({
               className="visio-cms-text-xs"
               disabled={index === pageBlocks.length - 1}
               onSelect={() => {
-                sendMessageToParent({ type: 'moveBlockDown', content: pageBlockId });
+                sendMessageToParent({ type: 'moveBlockDown', content });
               }}
             >
               Move block down
@@ -84,7 +92,7 @@ export default function RightClickMenu({
             <ContextMenuItem
               className="visio-cms-text-xs"
               onSelect={() => {
-                sendMessageToParent({ type: 'removeBlock', content: pageBlockId });
+                sendMessageToParent({ type: 'removeBlock', content });
               }}
             >
               Remove block
@@ -135,7 +143,7 @@ export default function RightClickMenu({
               <ContextMenuItem
                 className="visio-cms-text-xs"
                 onSelect={() => {
-                  sendMessageToParent({ type: 'convertBlockToGlobal', content: pageBlockId });
+                  sendMessageToParent({ type: 'convertBlockToGlobal', content });
                 }}
               >
                 Save block as global

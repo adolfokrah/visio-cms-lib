@@ -18,7 +18,7 @@ export default function EmptyPageDroppable({
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   return (
-    <RightClickMenu index={0} pageBlocks={[]}>
+    <RightClickMenu index={0} pageBlocks={[]} propName={propName} parentBlockId={pageBlockId}>
       <div
         className={cn(
           'visio-cms-h-screen visio-cms-grid  visio-cms-place-items-center',
