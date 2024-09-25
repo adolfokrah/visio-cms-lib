@@ -21,7 +21,8 @@ export default function LivePage({
     projectId: string;
   };
 }) {
-  const { setGlobalBlocks, setTheme, setBlocks, blocks, setAllowImageTransformation, setProjectId, setPages } = usePageContentState();
+  const { setGlobalBlocks, setTheme, setBlocks, blocks, setAllowImageTransformation, setProjectId, setPages } =
+    usePageContentState();
   const { setParams } = useParamState();
   useEffect(() => {
     setAllowImageTransformation(allowImageTransformation || false);
@@ -30,7 +31,7 @@ export default function LivePage({
     setProjectId(projectConfiguration.projectId);
     setParams(params);
     setPages(pages);
-    setBlocks(projectConfiguration.blocks)
+    setBlocks(projectConfiguration.blocks);
   }, [
     setAllowImageTransformation,
     setGlobalBlocks,
@@ -42,16 +43,14 @@ export default function LivePage({
     params,
     pages,
     setPages,
-    setBlocks
+    setBlocks,
   ]);
 
-
-
-  if(blocks.length < 1) return null;
+  if (blocks.length < 1) return null;
 
   return (
     <>
-      { pageBlocks?.map((block) => {
+      {pageBlocks?.map((block) => {
         const globalBlock = projectConfiguration?.globalBlocks?.find((b) => b.id === block?.globalBlockId);
         const Block = projectConfiguration.blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
         if (!Block) return null;

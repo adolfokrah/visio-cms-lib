@@ -19,8 +19,8 @@ type State = {
   setAllowImageTransformation: (allowImageTransformation: boolean) => void;
   projectId: string;
   setProjectId: (projectId: string) => void;
-  blocks: BlockList[]
-  setBlocks: (blocks: BlockList[]) => void
+  blocks: BlockList[];
+  setBlocks: (blocks: BlockList[]) => void;
 };
 
 export const usePageContentState = create<State>((set) => ({

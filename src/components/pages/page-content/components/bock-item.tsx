@@ -15,14 +15,16 @@ export default function BlockItem({
   pageBlock,
   pageBlocks,
   propName,
-  parentBlockId
+  parentBlockId,
+  droppableDirection = 'vertical',
 }: {
   block: Block<Record<string, any>>;
   index: number;
   pageBlock: PageBlock;
   pageBlocks: PageBlock[];
-  propName?: string
-  parentBlockId?: string
+  propName?: string;
+  parentBlockId?: string;
+  droppableDirection?: 'horizontal' | 'vertical';
 }) {
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
   const { globalBlocks } = usePageContentState();
@@ -39,7 +41,10 @@ export default function BlockItem({
         onMouseDown={(e) => {
           e.stopPropagation();
           setRepeaterId('');
-          sendMessageToParent({ type: 'selectBlock', content: JSON.stringify({blockId: pageBlock.id, parentBlockId,propName}) });
+          sendMessageToParent({
+            type: 'selectBlock',
+            content: JSON.stringify({ blockId: pageBlock.id, parentBlockId, propName }),
+          });
         }}
         className={cn('visio-cms-relative')}
         onDragOver={(e) => {
@@ -61,15 +66,26 @@ export default function BlockItem({
         <Popover open={pageBlock?.isSelected}>
           <PopoverTrigger asChild>
             <div className="visio-cms-relative">
-              <div>
                 {React.createElement(block, {
                   key: block.Schema.id,
                   ...blockInputs,
-                  pageBlockId:  pageBlock.id,
+                  pageBlockId: pageBlock.id,
                 })}
-              </div>
-              <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} propName={propName} pageBlockId={parentBlockId} />
-              <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} propName={propName} pageBlockId={parentBlockId} />
+              <DroppableItem
+                position={droppableDirection == 'vertical' ? 'top' : 'left'}
+                index={index}
+                showPlaceHolder={isDraggingOver}
+                propName={propName}
+                pageBlockId={parentBlockId}
+              />
+              {droppableDirection == 'vertical' &&   <DroppableItem
+                position={'bottom'}
+                index={index + 1}
+                showPlaceHolder={isDraggingOver}
+                propName={propName}
+                pageBlockId={parentBlockId}
+              />}
+            
               <div
                 className={cn(
                   'visio-cms-absolute visio-cms-top-0 visio-cms-left-0 visio-cms-h-full visio-cms-bg-transparent visio-cms-w-full visio-cms-pointer-events-none',

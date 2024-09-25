@@ -5,9 +5,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
-import {  ResponsiveView, usePagesState } from '../states/usePagesState';
+import { ResponsiveView, usePagesState } from '../states/usePagesState';
 import { toast } from 'sonner';
-import { getSelectedBlock, getSelectedBlockPath,  updateOrInsertProjectConfig, updateValueByPath } from '../utils';
+import { getSelectedBlock, getSelectedBlockPath, updateOrInsertProjectConfig, updateValueByPath } from '../utils';
 import useBlockHistory from './useBlockHistory';
 
 export default function useGlobalBlock(onClose?: () => void) {
@@ -31,7 +31,7 @@ export default function useGlobalBlock(onClose?: () => void) {
     const name = data.name;
     const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] ?? [];
     const pageBlock = getSelectedBlock(pageBlocks, data.pageBlockId);
-    const blockId = blocks.find((block) => block.Schema.id ===  pageBlock?.blockId)?.Schema.id;
+    const blockId = blocks.find((block) => block.Schema.id === pageBlock?.blockId)?.Schema.id;
     if (!pageBlock || !blockId) {
       setErrorMessage('Block not found');
       return;
@@ -61,10 +61,8 @@ export default function useGlobalBlock(onClose?: () => void) {
       addGlobalBlockForm.reset();
 
       const blockPath = getSelectedBlockPath(pageBlocks, pageBlock.id);
-      let newBlocks = updateValueByPath(pageBlocks, ( `${blockPath}.isGlobalBlock`).split('.'), true )
-      newBlocks =  updateValueByPath(newBlocks, ( `${blockPath}.globalBlockId`).split('.'), id )
-
-
+      let newBlocks = updateValueByPath(pageBlocks, `${blockPath}.isGlobalBlock`.split('.'), true);
+      newBlocks = updateValueByPath(newBlocks, `${blockPath}.globalBlockId`.split('.'), id);
 
       setPages(
         pages.map((p) =>
@@ -79,7 +77,7 @@ export default function useGlobalBlock(onClose?: () => void) {
             : p,
         ),
       );
-      
+
       addBlocksToPageHistory(activePage.activeLanguageLocale, newBlocks);
 
       toast.success('Block added successfully');

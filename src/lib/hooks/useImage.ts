@@ -25,7 +25,7 @@ export default function useImage({
     if (projectMode === 'LIVE') return false;
     const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
 
-    const selectedBlock = getSelectedBlock(pageBlocks, pageBlockId) as PageBlock
+    const selectedBlock = getSelectedBlock(pageBlocks, pageBlockId) as PageBlock;
     return globalBlocks.some((block) => block.id === selectedBlock?.globalBlockId);
   }, [activePage, globalBlocks, pageBlockId]);
 

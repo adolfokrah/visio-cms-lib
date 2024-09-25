@@ -20,7 +20,7 @@ export default function RenderController(props: SideEditingProps) {
   const activePage = pages.find((page) => page.active);
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
   const activeBlock =
-    getSelectedBlock(pageBlocks) as PageBlock ||
+    (getSelectedBlock(pageBlocks) as PageBlock) ||
     globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
   const { addBlocksToPageHistory, addInputsToGlobalBlockHistory } = useBlockHistory();
   const defaultValue = getValueByPath(activeBlock?.inputs, props.propName.split('.'));
@@ -28,12 +28,14 @@ export default function RenderController(props: SideEditingProps) {
   const debounceChangePropValue = lodash.debounce((value: any) => {
     const page = activePage;
     if (activeBlock) {
-
-     
       if (page) {
         const blockPath = getSelectedBlockPath(pageBlocks, activeBlock.id);
-        const path =  props.propName.split('.')
-        const newBlocks = updateValueByPath(pageBlocks, blockPath ? (`${blockPath}.inputs.${props.propName}`).split('.')  :  path, value) as PageBlock[];
+        const path = props.propName.split('.');
+        const newBlocks = updateValueByPath(
+          pageBlocks,
+          blockPath ? `${blockPath}.inputs.${props.propName}`.split('.') : path,
+          value,
+        ) as PageBlock[];
 
         page.blocks = {
           ...page.blocks,
@@ -44,7 +46,6 @@ export default function RenderController(props: SideEditingProps) {
           ...JSON.parse(JSON.stringify(page.blocks?.[page.activeLanguageLocale])),
         ]);
       } else {
-
         const path = props.propName.split('.');
         const blockInputs = updateValueByPath(activeBlock?.inputs || {}, path, value);
         setGlobalBlocks(

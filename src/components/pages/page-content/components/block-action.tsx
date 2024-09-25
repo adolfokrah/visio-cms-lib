@@ -10,18 +10,18 @@ export default function BlockAction({
   index,
   pageBlocks,
   propName,
-  parentBlockId
+  parentBlockId,
 }: {
   blockName: string;
   pageBlock: PageBlock;
   index: number;
   pageBlocks: PageBlock[];
-  propName?: string
-  parentBlockId?: string
+  propName?: string;
+  parentBlockId?: string;
 }) {
   const pageBlockId = pageBlock.id;
 
-  const content = JSON.stringify({pageBlockId, propName, parentBlockId})
+  const content = JSON.stringify({ pageBlockId, propName, parentBlockId });
   return (
     <div
       onClick={(e) => e.stopPropagation()}

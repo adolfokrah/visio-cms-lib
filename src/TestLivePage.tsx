@@ -3,14 +3,13 @@ import { getPageBlocks, PageData } from './lib/utils';
 import { LivePage } from './components';
 import { PageBlock } from './lib/states/usePagesState';
 import blocks from './components/blocks';
-import visioConfig from '../visio.config'
+import visioConfig from '../visio.config';
 
 export default function TestLivePage() {
   const [pageBlocks, setPageBlocks] = useState<PageBlock[]>([]);
   const [projectConfiguration, setProjectConfiguration] = useState<PageData['projectConfiguration'] | null>(null);
   const [params, setParams] = useState<PageData['params']>({});
   const [pages, setPages] = useState<PageData['pages']>([]);
- 
 
   useEffect(() => {
     const path = window.location.pathname;

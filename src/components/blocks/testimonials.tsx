@@ -44,9 +44,7 @@ const Testimonial: Block<TestimonialProps> = ({
             <h2 className="visio-cms-text-3xl visio-cms-font-bold visio-cms-tracking-tight visio-cms-text-white sm:visio-cms-text-4xl">
               {title}
             </h2>
-            <p className="visio-cms-mt-4 visio-cms-text-lg visio-cms-leading-8 visio-cms-text-gray-300">
-              {link}
-            </p>
+            <p className="visio-cms-mt-4 visio-cms-text-lg visio-cms-leading-8 visio-cms-text-gray-300">{link}</p>
             {showCounter && <h1>{counter}</h1>}
 
             <p>date is: {date}</p>

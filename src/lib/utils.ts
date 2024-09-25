@@ -22,7 +22,7 @@ import { useProjectConfigurationState } from './states/useProjectConfigState';
 import { usePageContentState } from './states/usePageContentState';
 import { useAuthState } from './states/useAuthState';
 import { useParamState } from './states/useParamState';
-import lodash from 'lodash'
+import lodash from 'lodash';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -555,17 +555,16 @@ export async function fetchProjectConfig() {
 
   const { setTheme: setPageContentTheme, setGlobalBlocks: setPageContentGlobalBlocks } = usePageContentState.getState();
   const { data, error } = await db.from('project_configuration').select().limit(1);
- 
 
   if (error) throw error;
 
-  setTheme( data && data[0]?.theme || { colorScheme: [] });
-  setGlobalBlocks(data && data[0]?.global_blocks || []);
-  setScripts(data && data[0]?.scripts || { header: '', body: '' });
+  setTheme((data && data[0]?.theme) || { colorScheme: [] });
+  setGlobalBlocks((data && data[0]?.global_blocks) || []);
+  setScripts((data && data[0]?.scripts) || { header: '', body: '' });
 
   if (projectMode === 'BUILDER') {
-    setPageContentTheme(data && data[0]?.theme || { colorScheme: [] });
-    setPageContentGlobalBlocks(data && data[0]?.global_blocks || []);
+    setPageContentTheme((data && data[0]?.theme) || { colorScheme: [] });
+    setPageContentGlobalBlocks((data && data[0]?.global_blocks) || []);
   }
 }
 
@@ -667,7 +666,7 @@ type PageMeta = {
     description: string;
     keywords: string;
     featuredImage?: string;
-  }
+  };
   params: { [key: string]: any };
   error?: string;
 };
@@ -774,7 +773,7 @@ export function buildConfig(props: ProjectConfig): ProjectConfig {
   return props;
 }
 
-export function  updateIsSelectedByBlockId (obj: any, blockIdToSelect: string): any{
+export function updateIsSelectedByBlockId(obj: any, blockIdToSelect: string): any {
   // Iterate through all keys in the object
   for (const key in obj) {
     if (key in obj) {
@@ -800,7 +799,6 @@ export function  updateIsSelectedByBlockId (obj: any, blockIdToSelect: string): 
   return obj;
 }
 
-
 export function getSelectedBlock(obj: any, id?: string): any | null {
   // Iterate through all keys in the object
   for (const key in obj) {
@@ -809,12 +807,11 @@ export function getSelectedBlock(obj: any, id?: string): any | null {
 
       // If the current object has the 'isSelected' key and it's true, return this object
 
-      if(id && id == obj.id){
+      if (id && id == obj.id) {
         return obj;
-      }else if (!id && 'isSelected' in obj && obj.isSelected === true) {
-      
-      return obj;
-    }
+      } else if (!id && 'isSelected' in obj && obj.isSelected === true) {
+        return obj;
+      }
 
       // If the value is an object, recursively call the function
       if (typeof value === 'object' && value !== null) {
@@ -839,8 +836,7 @@ export function getSelectedBlock(obj: any, id?: string): any | null {
   return null; // If no selected block is found, return null
 }
 
-
-export function getSelectedBlockPath(obj: any, blockId: string, path: string = ''): string | null{
+export function getSelectedBlockPath(obj: any, blockId: string, path: string = ''): string | null {
   // Iterate through all keys in the object
   for (const key in obj) {
     if (key in obj) {

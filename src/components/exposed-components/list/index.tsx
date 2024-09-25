@@ -1,5 +1,5 @@
 import { usePageContentState } from '@/lib/states/usePageContentState';
-import { cn, getProjectMode, sendMessageToParent } from '@/lib/utils';
+import { cn, getProjectMode, getSelectedBlock, sendMessageToParent } from '@/lib/utils';
 import React from 'react';
 
 type ListProps<T> = {
@@ -30,6 +30,7 @@ export default function List<T>({
   const activePage = pages.find((page) => page?.active);
   const pageBlocks = activePage?.blocks?.[activePage?.activeLanguageLocale] || [];
   const foundBlock = pageBlocks.find((block) => block?.id === pageBlockId);
+  const selectedBlock = getSelectedBlock(pageBlocks)
   const globalBlock = globalBlocks?.find((block) => block.id === foundBlock?.globalBlockId);
   const projectMode = getProjectMode();
 
@@ -38,7 +39,7 @@ export default function List<T>({
       key: `${propName}.${index}`,
       className: cn('visio-cms-list-none', listItemClassName || setListItemClassName?.(values, index), {
         'visio-cms-outline visio-cms-outline-2 visio-cms-outline-blue-500':
-          selectedListItem?.propName === `${propName}.${index}` && !globalBlock,
+          `${selectedBlock.id}.${selectedListItem?.propName}` === `${pageBlockId}.${propName}.${index}` && !globalBlock,
       }),
       children: renderComponent(values, index),
       onClick: (e: MouseEvent) => {

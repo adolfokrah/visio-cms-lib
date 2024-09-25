@@ -78,7 +78,7 @@ export default function Cms(props: ProjectConfig & { path: string }) {
   if (fetchingUser)
     return (
       <div className="visio-cms-w-full visio-cms-bg-dark-900  visio-cms-h-[100vh] visio-cms-grid visio-cms-place-items-center">
-        <Loader  className="visio-cms-animate-spin" color="white" />
+        <Loader className="visio-cms-animate-spin" color="white" />
       </div>
     );
 

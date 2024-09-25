@@ -3,7 +3,7 @@ import { PageBlock, usePagesState } from '@/lib/states/usePagesState';
 import useBlockHistory from '@/lib/hooks/useBlockHistory';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { useTabState } from '../states/useTabsState';
-import lodash from 'lodash'
+import lodash from 'lodash';
 export default function useListController() {
   const { pages, setPages } = usePagesState();
   const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
@@ -13,7 +13,7 @@ export default function useListController() {
   const page = activePage;
 
   const blocks = page?.blocks?.[page.activeLanguageLocale] ?? [];
-  const foundBlock = getSelectedBlock(blocks)
+  const foundBlock = getSelectedBlock(blocks);
   const activeGlobalPinnedBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
 
   const updateBlockValue = (path: Path, value: any) => {
