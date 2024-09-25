@@ -9,13 +9,19 @@ export default function BlockAction({
   pageBlock,
   index,
   pageBlocks,
+  propName,
+  parentBlockId
 }: {
   blockName: string;
   pageBlock: PageBlock;
   index: number;
   pageBlocks: PageBlock[];
+  propName?: string
+  parentBlockId?: string
 }) {
   const pageBlockId = pageBlock.id;
+
+  const content = JSON.stringify({pageBlockId, propName, parentBlockId})
   return (
     <div
       onClick={(e) => e.stopPropagation()}
@@ -27,7 +33,7 @@ export default function BlockAction({
         className="hover:!visio-cms-bg-dark-700"
         onClick={(e) => {
           e.stopPropagation();
-          sendMessageToParent({ type: 'removeBlock', content: pageBlockId });
+          sendMessageToParent({ type: 'removeBlock', content });
         }}
       >
         <LucideTrash2 size={16} />
@@ -38,7 +44,7 @@ export default function BlockAction({
         disabled={index === 0}
         onClick={(e) => {
           e.stopPropagation();
-          sendMessageToParent({ type: 'moveBlockUp', content: pageBlockId });
+          sendMessageToParent({ type: 'moveBlockUp', content });
         }}
       >
         <ChevronUp size={16} />
@@ -49,7 +55,7 @@ export default function BlockAction({
         disabled={index === pageBlocks.length - 1}
         onClick={(e) => {
           e.stopPropagation();
-          sendMessageToParent({ type: 'moveBlockDown', content: pageBlockId });
+          sendMessageToParent({ type: 'moveBlockDown', content });
         }}
       >
         <ChevronDown size={16} />
@@ -59,7 +65,7 @@ export default function BlockAction({
         className="hover:!visio-cms-bg-dark-700"
         onClick={(e) => {
           e.stopPropagation();
-          sendMessageToParent({ type: 'duplicateBlock', content: pageBlockId });
+          sendMessageToParent({ type: 'duplicateBlock', content });
         }}
       >
         <Copy size={16} />
@@ -84,7 +90,7 @@ export default function BlockAction({
               className="hover:!visio-cms-bg-dark-700"
               onClick={(e) => {
                 e.stopPropagation();
-                sendMessageToParent({ type: 'convertBlockToGlobal', content: pageBlockId });
+                sendMessageToParent({ type: 'convertBlockToGlobal', content });
               }}
             >
               <BoxSelect size={16} />

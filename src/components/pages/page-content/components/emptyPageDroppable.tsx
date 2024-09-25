@@ -4,7 +4,7 @@ import { cn, sendMessageToParent } from '@/lib/utils';
 import { Box } from 'lucide-react';
 import { useState } from 'react';
 
-export default function EmptyPageDroppable({ activePage }: { activePage: Page }) {
+export default function EmptyPageDroppable({ activePage, propName, pageBlockId, className }: { activePage: Page, propName?: string, pageBlockId?: string, className?: string }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   return (
@@ -15,27 +15,28 @@ export default function EmptyPageDroppable({ activePage }: { activePage: Page })
           {
             'visio-cms-bg-blue-300': isDraggingOver,
           },
+          className
         )}
         onDragOver={(e) => {
           if (e.dataTransfer.types.includes('text/plain')) {
             return;
           }
-          if (activePage?.blocks?.[activePage.activeLanguageLocale]?.length) return;
+          if (activePage?.blocks?.[activePage.activeLanguageLocale]?.length && !propName) return;
           setIsDraggingOver(true);
           e.preventDefault();
         }}
         onDragLeave={(e) => {
-          if (activePage?.blocks?.[activePage.activeLanguageLocale]?.length) return;
+          if (activePage?.blocks?.[activePage.activeLanguageLocale]?.length && !propName) return;
           setIsDraggingOver(false);
           e.preventDefault();
         }}
         onDrop={(e) => {
           e.preventDefault();
-          if (activePage?.blocks?.[activePage.activeLanguageLocale]?.length) return;
+          if (activePage?.blocks?.[activePage.activeLanguageLocale]?.length && !propName) return;
           setIsDraggingOver(false);
           const data = e.dataTransfer.getData('application/block');
           if (data) {
-            sendMessageToParent({ type: 'addBlock', content: JSON.stringify({ ...JSON.parse(data), position: 0 }) });
+            sendMessageToParent({ type: 'addBlock', content: JSON.stringify({ ...JSON.parse(data), position: 0, propName, pageBlockId }) });
           }
         }}
       >

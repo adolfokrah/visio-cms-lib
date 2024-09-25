@@ -23,6 +23,8 @@ export default function AddGlobalBlockForm({
   open: boolean;
   onClose: () => void;
   pageBlockId: string;
+  propName: string;
+  parentBlockId: string
 }) {
   const { onAddGlobalBlock, addGlobalBlockForm, loading, errorMessage, setErrorMessage } = useGlobalBlock(onClose);
   return (

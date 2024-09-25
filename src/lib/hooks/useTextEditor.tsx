@@ -1,8 +1,9 @@
 import { usePageContentState } from '@/lib/states/usePageContentState';
-import { getProjectMode, sendMessageToParent } from '@/lib/utils';
+import { getProjectMode, getSelectedBlock,  sendMessageToParent } from '@/lib/utils';
 import { debounce } from 'lodash';
 import { useMemo } from 'react';
 import sanitizeHtml from 'sanitize-html';
+import { PageBlock } from '../exposed-types';
 
 export default function useTextEditor({
   propName,
@@ -20,9 +21,8 @@ export default function useTextEditor({
     const projectMode = getProjectMode();
     if (projectMode === 'LIVE') return false;
     const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
-    const foundBlock = pageBlocks.find((block) => block.id === pageBlockId);
-
-    return globalBlocks.some((block) => block.id === foundBlock?.globalBlockId);
+    const selectedBlock = getSelectedBlock(pageBlocks, pageBlockId) as PageBlock
+    return globalBlocks.some((block) => block.id === selectedBlock?.globalBlockId);
   }, [activePage, globalBlocks, pageBlockId]);
 
   const debouncedOnUpdate = debounce(({ value }: { value: string }) => {

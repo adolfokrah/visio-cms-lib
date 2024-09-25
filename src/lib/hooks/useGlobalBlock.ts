@@ -5,14 +5,16 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
-import { ResponsiveView, usePagesState } from '../states/usePagesState';
+import {  ResponsiveView, usePagesState } from '../states/usePagesState';
 import { toast } from 'sonner';
-import { updateOrInsertProjectConfig } from '../utils';
+import { getSelectedBlock, getSelectedBlockPath,  updateOrInsertProjectConfig, updateValueByPath } from '../utils';
+import useBlockHistory from './useBlockHistory';
 
 export default function useGlobalBlock(onClose?: () => void) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { globalBlocks, setGlobalBlocks, blocks } = useProjectConfigurationState();
+  const { addBlocksToPageHistory } = useBlockHistory();
   const { pages, setPages } = usePagesState();
   const activePage = pages.find((page) => page.active);
 
@@ -28,8 +30,8 @@ export default function useGlobalBlock(onClose?: () => void) {
 
     const name = data.name;
     const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] ?? [];
-    const pageBlock = pageBlocks.find((block) => block.id === data.pageBlockId);
-    const blockId = blocks.find((block) => block.Schema.id === pageBlock?.blockId)?.Schema.id;
+    const pageBlock = getSelectedBlock(pageBlocks, data.pageBlockId);
+    const blockId = blocks.find((block) => block.Schema.id ===  pageBlock?.blockId)?.Schema.id;
     if (!pageBlock || !blockId) {
       setErrorMessage('Block not found');
       return;
@@ -41,6 +43,7 @@ export default function useGlobalBlock(onClose?: () => void) {
       return;
     }
     setLoading(true);
+
     try {
       const id = uuidv4();
       const newGlobalBlocks = [
@@ -56,8 +59,13 @@ export default function useGlobalBlock(onClose?: () => void) {
       await updateOrInsertProjectConfig({ global_blocks: newGlobalBlocks });
       setGlobalBlocks(newGlobalBlocks);
       addGlobalBlockForm.reset();
-      pageBlock.isGlobalBlock = true;
-      pageBlock.globalBlockId = id;
+
+      const blockPath = getSelectedBlockPath(pageBlocks, pageBlock.id);
+      let newBlocks = updateValueByPath(pageBlocks, ( `${blockPath}.isGlobalBlock`).split('.'), true )
+      newBlocks =  updateValueByPath(newBlocks, ( `${blockPath}.globalBlockId`).split('.'), id )
+
+
+
       setPages(
         pages.map((p) =>
           p.active
@@ -65,12 +73,14 @@ export default function useGlobalBlock(onClose?: () => void) {
                 ...activePage,
                 blocks: {
                   ...activePage.blocks,
-                  [activePage.activeLanguageLocale]: pageBlocks,
+                  [activePage.activeLanguageLocale]: newBlocks,
                 },
               }
             : p,
         ),
       );
+      
+      addBlocksToPageHistory(activePage.activeLanguageLocale, newBlocks);
 
       toast.success('Block added successfully');
       if (onClose) onClose();

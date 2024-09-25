@@ -1,8 +1,9 @@
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import { getProjectMode, isValidURL, supabase } from '@/lib/utils';
+import { getProjectMode, getSelectedBlock, isValidURL, supabase } from '@/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { MediaFile } from '../types';
 import { usePageContentState } from '../states/usePageContentState';
+import { PageBlock } from '../exposed-types';
 export default function useImage({
   defaultValue,
   pageBlockId,
@@ -23,9 +24,9 @@ export default function useImage({
     const projectMode = getProjectMode();
     if (projectMode === 'LIVE') return false;
     const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
-    const foundBlock = pageBlocks.find((block) => block.id === pageBlockId);
 
-    return globalBlocks.some((block) => block.id === foundBlock?.globalBlockId);
+    const selectedBlock = getSelectedBlock(pageBlocks, pageBlockId) as PageBlock
+    return globalBlocks.some((block) => block.id === selectedBlock?.globalBlockId);
   }, [activePage, globalBlocks, pageBlockId]);
 
   useEffect(() => {

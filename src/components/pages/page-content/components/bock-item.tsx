@@ -14,11 +14,15 @@ export default function BlockItem({
   index,
   pageBlock,
   pageBlocks,
+  propName,
+  parentBlockId
 }: {
   block: Block<Record<string, any>>;
   index: number;
   pageBlock: PageBlock;
   pageBlocks: PageBlock[];
+  propName?: string
+  parentBlockId?: string
 }) {
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
   const { globalBlocks } = usePageContentState();
@@ -35,7 +39,7 @@ export default function BlockItem({
         onMouseDown={(e) => {
           e.stopPropagation();
           setRepeaterId('');
-          sendMessageToParent({ type: 'selectBlock', content: pageBlock.id });
+          sendMessageToParent({ type: 'selectBlock', content: JSON.stringify({blockId: pageBlock.id, parentBlockId,propName}) });
         }}
         className={cn('visio-cms-relative')}
         onDragOver={(e) => {
@@ -61,11 +65,11 @@ export default function BlockItem({
                 {React.createElement(block, {
                   key: block.Schema.id,
                   ...blockInputs,
-                  pageBlockId: pageBlock.id,
+                  pageBlockId:  pageBlock.id,
                 })}
               </div>
-              <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} />
-              <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} />
+              <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} propName={propName} pageBlockId={parentBlockId} />
+              <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} propName={propName} pageBlockId={parentBlockId} />
               <div
                 className={cn(
                   'visio-cms-absolute visio-cms-top-0 visio-cms-left-0 visio-cms-h-full visio-cms-bg-transparent visio-cms-w-full visio-cms-pointer-events-none',
@@ -89,6 +93,8 @@ export default function BlockItem({
               index={index}
               pageBlock={{ ...pageBlock, isGlobalBlock: globalBlock != null }}
               pageBlocks={pageBlocks}
+              propName={propName}
+              parentBlockId={parentBlockId}
             />
           </PopoverContent>
         </Popover>

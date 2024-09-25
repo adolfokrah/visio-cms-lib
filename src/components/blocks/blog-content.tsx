@@ -1,8 +1,8 @@
-import { Block } from '@/lib/exposed-types';
-import RichTextEditor from '../exposed-components/rich-text-editor';
+import { Block, PageBlock } from '@/lib/exposed-types';
+import Slot from '../exposed-components/slot';
 
 interface BlogContentProps {
-  content: string;
+  content: PageBlock[];
   pageBlockId?: string;
 }
 
@@ -10,7 +10,8 @@ const BlogContent: Block<BlogContentProps> = ({ content, pageBlockId = '' }) => 
   return (
     <div className="visio-cms-py-2">
       <div className="visio-cms-mx-auto visio-cms-w-[80%]">
-        <RichTextEditor propName="content" defaultValue={content} pageBlockId={pageBlockId} />
+        <h1>Blog content here</h1>
+        <Slot propName='content' pageBlocks={content} pageBlockId={pageBlockId}/>
       </div>
     </div>
   );
@@ -21,7 +22,7 @@ BlogContent.Schema = {
   id: 'blog-content',
   sideEditingProps: [],
   defaultPropValues: {
-    content: 'This is a blog content',
+    content: []
   },
   group: 'Content',
 };

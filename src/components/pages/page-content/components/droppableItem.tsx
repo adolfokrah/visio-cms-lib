@@ -6,10 +6,14 @@ export default function DroppableItem({
   position,
   index,
   showPlaceHolder,
+  propName, 
+  pageBlockId
 }: {
   position: 'top' | 'bottom';
   index: number;
   showPlaceHolder: boolean;
+  propName?: string,
+  pageBlockId?: string
 }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
@@ -41,7 +45,7 @@ export default function DroppableItem({
             if (data) {
               sendMessageToParent({
                 type: 'addBlock',
-                content: JSON.stringify({ ...JSON.parse(data), position: index }),
+                content: JSON.stringify({ ...JSON.parse(data), position: index, propName, pageBlockId }),
               });
             }
           }}

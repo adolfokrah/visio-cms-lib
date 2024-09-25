@@ -1,5 +1,5 @@
 import { Block, Color, MediaFile } from '@/lib/exposed-types';
-import { cn, getImageUrl, getLink } from '@/lib/utils';
+import { cn, getImageUrl } from '@/lib/utils';
 
 const stats = [
   { id: 1, name: 'Creators on the platform', value: '8,000+' },
@@ -45,7 +45,7 @@ const Testimonial: Block<TestimonialProps> = ({
               {title}
             </h2>
             <p className="visio-cms-mt-4 visio-cms-text-lg visio-cms-leading-8 visio-cms-text-gray-300">
-              {getLink(link || '')}
+              {link}
             </p>
             {showCounter && <h1>{counter}</h1>}
 

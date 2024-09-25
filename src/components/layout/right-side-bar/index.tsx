@@ -2,7 +2,7 @@ import { usePagesState } from '@/lib/states/usePagesState';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import PageSettingsTab from './page-settings-tab';
 import { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, getSelectedBlock } from '@/lib/utils';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 import PropertiesTab from './properties-tab';
 import { useTabState } from '@/lib/states/useTabsState';
@@ -14,7 +14,7 @@ export default function RightSideBar() {
   const { tabs } = useTabState();
   const activePage = useMemo(() => pages.find((page) => page.active), [pages]);
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale];
-  const selectedBlock = pageBlocks?.find((block) => block.isSelected);
+  const selectedBlock = getSelectedBlock(pageBlocks);
   const globalBlock = globalBlocks.find((block) => block.id === selectedBlock?.globalBlockId);
   const activeGlobalPinnedBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
 
