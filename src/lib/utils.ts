@@ -808,12 +808,13 @@ export function getSelectedBlock(obj: any, id?: string): any | null {
       const value = obj[key];
 
       // If the current object has the 'isSelected' key and it's true, return this object
-      if ('isSelected' in obj && obj.isSelected === true) {
-        if(id && id == obj.id){
-          return obj;
-        }
+
+      if(id && id == obj.id){
         return obj;
-      }
+      }else if (!id && 'isSelected' in obj && obj.isSelected === true) {
+      
+      return obj;
+    }
 
       // If the value is an object, recursively call the function
       if (typeof value === 'object' && value !== null) {

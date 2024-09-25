@@ -4,7 +4,7 @@ import { Block, Message } from '../types';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { v4 as uuidv4 } from 'uuid';
 import useUndoAndRedo from './useUndoAndRedo';
-import { getSelectedBlockPath, getValueByPath, updateIsSelectedByBlockId, updateValueByPath } from '../utils';
+import { getSelectedBlock, getSelectedBlockPath, getValueByPath, updateIsSelectedByBlockId, updateValueByPath } from '../utils';
 import useBlockHistory from './useBlockHistory';
 import { useTabState } from '../states/useTabsState';
 import { useListState } from '../states/useListState';
@@ -38,14 +38,14 @@ export default function useCanvas() {
         const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
         const newBlocks = updateIsSelectedByBlockId(lodash.cloneDeep(blocks), '') as PageBlock[]
         const globalBlock = globalBlocks.find((block) => block.id === globalBlockId);
-        const foundBlock = newBlocks.find((block)=>block.id === pageBlockId)
+        const foundBlock =  getSelectedBlock(newBlocks, pageBlockId) 
         const copiedBlock = localStorage.getItem('copiedBlock');
         const inputs =
           fromClipBoard && copiedBlock
             ? JSON.parse(copiedBlock)?.inputs :
             globalBlock?.inputs || block.Schema.defaultPropValues;
 
-       
+      
         if(propName  && foundBlock){   
            const foundPropInput = getValueByPath(foundBlock?.inputs, propName.split('.')) || [];
            foundPropInput.splice(position, 0, {
@@ -71,7 +71,6 @@ export default function useCanvas() {
           });
         }
 
-       
         // setPages(pages.map((p) => (p.active ? page : p)));
         await addBlocksToPageHistory(page.activeLanguageLocale, newBlocks);
         if (fromClipBoard) {
