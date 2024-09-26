@@ -45,7 +45,11 @@ export default function Slot({ pageBlocks, direction = 'vertical', className, pr
           const Block = blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
           if (!Block) return null;
           const inputs = { ...Block.Schema.defaultPropValues, ...block.inputs, ...globalBlock?.inputs };
-          return <Block key={block.id} {...inputs} />;
+          return (
+            <div key={block.id}>
+              <Block {...inputs} />
+            </div>
+          );
         })}
       </div>
     );

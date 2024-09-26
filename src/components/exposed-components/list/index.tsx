@@ -30,7 +30,7 @@ export default function List<T>({
   const activePage = pages.find((page) => page?.active);
   const pageBlocks = activePage?.blocks?.[activePage?.activeLanguageLocale] || [];
   const foundBlock = pageBlocks.find((block) => block?.id === pageBlockId);
-  const selectedBlock = getSelectedBlock(pageBlocks)
+  const selectedBlock = getSelectedBlock(pageBlocks);
   const globalBlock = globalBlocks?.find((block) => block.id === foundBlock?.globalBlockId);
   const projectMode = getProjectMode();
 
@@ -39,7 +39,8 @@ export default function List<T>({
       key: `${propName}.${index}`,
       className: cn('visio-cms-list-none', listItemClassName || setListItemClassName?.(values, index), {
         'visio-cms-outline visio-cms-outline-2 visio-cms-outline-blue-500':
-          `${selectedBlock?.id}.${selectedListItem?.propName}` === `${pageBlockId}.${propName}.${index}` && !globalBlock,
+          `${selectedBlock?.id}.${selectedListItem?.propName}` === `${pageBlockId}.${propName}.${index}` &&
+          !globalBlock,
       }),
       children: renderComponent(values, index),
       onClick: (e: MouseEvent) => {

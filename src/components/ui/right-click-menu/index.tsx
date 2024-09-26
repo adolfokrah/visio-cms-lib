@@ -16,14 +16,14 @@ export default function RightClickMenu({
   index,
   pageBlocks,
   propName,
-  parentBlockId
+  parentBlockId,
 }: {
   children: React.ReactNode;
   pageBlock?: PageBlock;
   index: number;
   pageBlocks: PageBlock[];
   propName?: string;
-  parentBlockId?: string
+  parentBlockId?: string;
 }) {
   const pageBlockId = pageBlock?.id;
   const copiedBlock = localStorage.getItem('copiedBlock');
@@ -38,7 +38,7 @@ export default function RightClickMenu({
       globalBlockId: copiedBlockData?.globalBlockId,
       fromClipBoard: true,
       propName: propName,
-      pageBlockId: parentBlockId
+      pageBlockId: parentBlockId,
     };
     sendMessageToParent({
       type: 'addBlock',
@@ -46,7 +46,7 @@ export default function RightClickMenu({
     });
   };
 
-  const content = JSON.stringify({pageBlockId, propName})
+  const content = JSON.stringify({ pageBlockId, propName });
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild onMouseDown={(e) => e.stopPropagation()} disabled={!pageBlock && !copiedBlock}>

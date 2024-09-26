@@ -31,6 +31,7 @@ export default function BlockItem({
   const globalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
   const { setRepeaterId } = useRepeaterState();
   const blockInputs = { ...block.Schema.defaultPropValues, ...pageBlock.inputs, ...globalBlock?.inputs };
+
   return (
     <RightClickMenu
       index={index}
@@ -68,11 +69,11 @@ export default function BlockItem({
         <Popover open={pageBlock?.isSelected}>
           <PopoverTrigger asChild>
             <div className="visio-cms-relative">
-                {React.createElement(block, {
-                  key: block.Schema.id,
-                  ...blockInputs,
-                  pageBlockId: pageBlock.id,
-                })}
+              {React.createElement(block, {
+                key: block.Schema.id,
+                ...blockInputs,
+                pageBlockId: pageBlock.id,
+              })}
               <DroppableItem
                 position={droppableDirection == 'vertical' ? 'top' : 'left'}
                 index={index}
@@ -80,14 +81,16 @@ export default function BlockItem({
                 propName={propName}
                 pageBlockId={parentBlockId}
               />
-              {index + 1 == pageBlocks.length - 1 &&   <DroppableItem
-                position={droppableDirection == 'vertical' ? 'bottom' : 'right'}
-                index={index + 1}
-                showPlaceHolder={isDraggingOver}
-                propName={propName}
-                pageBlockId={parentBlockId}
-              />}
-            
+              {index + 1 == pageBlocks.length - 1 && (
+                <DroppableItem
+                  position={droppableDirection == 'vertical' ? 'bottom' : 'right'}
+                  index={index + 1}
+                  showPlaceHolder={isDraggingOver}
+                  propName={propName}
+                  pageBlockId={parentBlockId}
+                />
+              )}
+
               <div
                 className={cn(
                   'visio-cms-absolute visio-cms-top-0 visio-cms-left-0 visio-cms-h-full visio-cms-bg-transparent visio-cms-w-full visio-cms-pointer-events-none',

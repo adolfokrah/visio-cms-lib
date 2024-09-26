@@ -13,6 +13,7 @@ export default function TestLivePage() {
 
   useEffect(() => {
     const path = window.location.pathname;
+
     (async () => {
       const data = await getPageBlocks(
         path,
