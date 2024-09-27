@@ -3,17 +3,20 @@ import { Page } from '@/lib/states/usePagesState';
 import { cn, sendMessageToParent } from '@/lib/utils';
 import { Box } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function EmptyPageDroppable({
   activePage,
   propName,
   pageBlockId,
   className,
+  allowedBlockIds=[],
 }: {
   activePage: Page;
   propName?: string;
   pageBlockId?: string;
   className?: string;
+  allowedBlockIds?: string[];
 }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
@@ -46,6 +49,12 @@ export default function EmptyPageDroppable({
           if (activePage?.blocks?.[activePage.activeLanguageLocale]?.length && !propName) return;
           setIsDraggingOver(false);
           const data = e.dataTransfer.getData('application/block');
+
+          const block = JSON.parse(data);
+          if(allowedBlockIds?.length && !allowedBlockIds?.includes(block.blockId)){
+            toast.error(`This block is not allowed here, allowed blocks are: ${allowedBlockIds.join(', ')}`);
+            return;
+          }
           if (data) {
             sendMessageToParent({
               type: 'addBlock',

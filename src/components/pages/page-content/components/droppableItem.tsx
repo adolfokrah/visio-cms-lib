@@ -1,6 +1,7 @@
 import { cn, sendMessageToParent } from '@/lib/utils';
 import { useState } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { toast } from 'sonner';
 
 export default function DroppableItem({
   position,
@@ -8,12 +9,14 @@ export default function DroppableItem({
   showPlaceHolder,
   propName,
   pageBlockId,
+  allowedBlockIds=[]
 }: {
   position: 'top' | 'bottom' | 'left' | 'right';
   index: number;
   showPlaceHolder: boolean;
   propName?: string;
   pageBlockId?: string;
+  allowedBlockIds?: string[];
 }) {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
@@ -44,6 +47,13 @@ export default function DroppableItem({
             e.preventDefault();
             setIsDraggingOver(false);
             const data = e.dataTransfer.getData('application/block');
+
+            const block = JSON.parse(data);
+            if(allowedBlockIds?.length && !allowedBlockIds?.includes(block.blockId)) {
+              toast.error(`This block is not allowed here, allowed blocks are: ${allowedBlockIds.join(', ')}`);
+              return;
+            }
+
             if (data) {
               sendMessageToParent({
                 type: 'addBlock',

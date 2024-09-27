@@ -12,8 +12,9 @@ type SlotProps = {
   className?: string;
   propName: string;
   pageBlockId: string;
+  allowedBlockIds?: string[];
 };
-export default function Slot({ defaultValue, direction = 'vertical', className, propName, pageBlockId }: SlotProps) {
+export default function Slot({ defaultValue, direction = 'vertical', className, propName, pageBlockId, allowedBlockIds }: SlotProps) {
   const { activePage } = usePageContent();
   const { blocks: builderBlocks } = useProjectConfigurationState();
   const { blocks: liveBlocks, globalBlocks } = usePageContentState();
@@ -26,6 +27,7 @@ export default function Slot({ defaultValue, direction = 'vertical', className, 
         propName={propName}
         pageBlockId={pageBlockId}
         className="!visio-cms-h-full !visio-cms-min-h-[50px]"
+        allowedBlockIds={allowedBlockIds}
       />
     );
   }
@@ -71,6 +73,7 @@ export default function Slot({ defaultValue, direction = 'vertical', className, 
             index={index}
             pageBlock={pageBlock}
             pageBlocks={defaultValue}
+            allowedBlockIds={allowedBlockIds}
           />
         );
       })}

@@ -17,6 +17,7 @@ export default function BlockItem({
   propName,
   parentBlockId,
   droppableDirection = 'vertical',
+  allowedBlockIds=[]
 }: {
   block: Block<Record<string, any>>;
   index: number;
@@ -25,6 +26,7 @@ export default function BlockItem({
   propName?: string;
   parentBlockId?: string;
   droppableDirection?: 'horizontal' | 'vertical';
+  allowedBlockIds?: string[];
 }) {
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
   const { globalBlocks } = usePageContentState();
@@ -80,6 +82,7 @@ export default function BlockItem({
                 showPlaceHolder={isDraggingOver}
                 propName={propName}
                 pageBlockId={parentBlockId}
+                allowedBlockIds={allowedBlockIds}
               />
               {index + 1 == pageBlocks.length - 1 && (
                 <DroppableItem
@@ -88,6 +91,7 @@ export default function BlockItem({
                   showPlaceHolder={isDraggingOver}
                   propName={propName}
                   pageBlockId={parentBlockId}
+                  allowedBlockIds={allowedBlockIds}
                 />
               )}
 

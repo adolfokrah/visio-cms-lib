@@ -55,7 +55,7 @@ const BlogContent: Block<BlogContentProps> = ({ content, pageBlockId = '', image
             />
           )}
         />
-        <Slot defaultValue={content} propName="content" pageBlockId={pageBlockId} />
+        <Slot defaultValue={content} propName="content" pageBlockId={pageBlockId} allowedBlockIds={['footer','navbar']}  />
       </div>
     </div>
   );
