@@ -7,19 +7,19 @@ import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState
 import { cn, getProjectMode } from '@/lib/utils';
 
 type SlotProps = {
-  pageBlocks: PageBlock[];
+  defaultValue: PageBlock[];
   direction?: 'horizontal' | 'vertical';
   className?: string;
   propName: string;
   pageBlockId: string;
 };
-export default function Slot({ pageBlocks, direction = 'vertical', className, propName, pageBlockId }: SlotProps) {
+export default function Slot({ defaultValue, direction = 'vertical', className, propName, pageBlockId }: SlotProps) {
   const { activePage } = usePageContent();
   const { blocks: builderBlocks } = useProjectConfigurationState();
   const { blocks: liveBlocks, globalBlocks } = usePageContentState();
   const isBuilderMode = getProjectMode() === 'BUILDER';
 
-  if (pageBlocks.length === 0 && activePage) {
+  if (defaultValue.length === 0 && activePage) {
     return (
       <EmptyPageDroppable
         activePage={activePage}
@@ -40,7 +40,7 @@ export default function Slot({ pageBlocks, direction = 'vertical', className, pr
   if (!isBuilderMode) {
     return (
       <div className={cn(divClass)}>
-        {pageBlocks?.map((block) => {
+        {defaultValue?.map((block) => {
           const globalBlock = globalBlocks?.find((b) => b.id === block?.globalBlockId);
           const Block = blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
           if (!Block) return null;
@@ -56,7 +56,7 @@ export default function Slot({ pageBlocks, direction = 'vertical', className, pr
   }
   return (
     <div className={cn(divClass)}>
-      {pageBlocks.map((pageBlock, index) => {
+      {defaultValue.map((pageBlock, index) => {
         const { blockId } = pageBlock;
         const block = blocks.find((block) => block.Schema.id === blockId);
 
@@ -70,7 +70,7 @@ export default function Slot({ pageBlocks, direction = 'vertical', className, pr
             block={block}
             index={index}
             pageBlock={pageBlock}
-            pageBlocks={pageBlocks}
+            pageBlocks={defaultValue}
           />
         );
       })}
