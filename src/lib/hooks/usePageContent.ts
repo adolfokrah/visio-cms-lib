@@ -1,11 +1,18 @@
 import { useEffect } from 'react';
 import { Message } from '../types';
-import { sendMessageToParent } from '../utils';
+import { getProjectMode, sendMessageToParent } from '../utils';
 import { usePageContentState } from '../states/usePageContentState';
+import { useParamState } from '../states/useParamState';
 
 export default function usePageContent() {
   const { pages, setPages, setGlobalBlocks, setTabs, setSelectedListItem, setTheme } = usePageContentState();
   const activePage = pages.find((page) => page.active);
+  const { setParams } = useParamState();
+  const isBuilderMode = getProjectMode() === 'BUILDER';
+
+  useEffect(() => {
+    if (isBuilderMode) setParams({ locale: activePage?.activeLanguageLocale });
+  }, [isBuilderMode, activePage, setParams]);
 
   useEffect(() => {
     function getStorageData() {

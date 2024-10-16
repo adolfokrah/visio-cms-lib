@@ -1,7 +1,7 @@
 import { SideEditingProps } from '@/lib/types';
 import TextController from './text-controller';
-import { getValueByPath, updateValueByPath } from '@/lib/utils';
-import { usePagesState } from '@/lib/states/usePagesState';
+import { getSelectedBlock, getSelectedBlockPath, getValueByPath, updateValueByPath } from '@/lib/utils';
+import { PageBlock, usePagesState } from '@/lib/states/usePagesState';
 import lodash from 'lodash';
 import useBlockHistory from '@/lib/hooks/useBlockHistory';
 import ColorController from './color-controller';
@@ -20,7 +20,7 @@ export default function RenderController(props: SideEditingProps) {
   const activePage = pages.find((page) => page.active);
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
   const activeBlock =
-    pageBlocks.find((block) => block.isSelected) ||
+    (getSelectedBlock(pageBlocks) as PageBlock) ||
     globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
   const { addBlocksToPageHistory, addInputsToGlobalBlockHistory } = useBlockHistory();
   const defaultValue = getValueByPath(activeBlock?.inputs, props.propName.split('.'));
@@ -28,19 +28,26 @@ export default function RenderController(props: SideEditingProps) {
   const debounceChangePropValue = lodash.debounce((value: any) => {
     const page = activePage;
     if (activeBlock) {
-      const blockInputs = updateValueByPath(activeBlock?.inputs, props.propName.split('.'), value);
       if (page) {
+        const blockPath = getSelectedBlockPath(pageBlocks, activeBlock.id);
+        const path = props.propName.split('.');
+        const newBlocks = updateValueByPath(
+          pageBlocks,
+          blockPath ? `${blockPath}.inputs.${props.propName}`.split('.') : path,
+          value,
+        ) as PageBlock[];
+
         page.blocks = {
           ...page.blocks,
-          [page.activeLanguageLocale]: pageBlocks.map((block) =>
-            block.id === activeBlock.id ? { ...block, inputs: blockInputs } : block,
-          ),
+          [page.activeLanguageLocale]: newBlocks,
         };
         setPages(pages.map((p) => (p.active ? page : p)));
         addBlocksToPageHistory(page.activeLanguageLocale, [
           ...JSON.parse(JSON.stringify(page.blocks?.[page.activeLanguageLocale])),
         ]);
       } else {
+        const path = props.propName.split('.');
+        const blockInputs = updateValueByPath(activeBlock?.inputs || {}, path, value);
         setGlobalBlocks(
           globalBlocks.map((block) => (block.id === activeBlock.id ? { ...block, inputs: blockInputs } : block)),
         );

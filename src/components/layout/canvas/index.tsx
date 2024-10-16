@@ -12,7 +12,7 @@ export default function Canvas() {
   const { tabs } = useTabState();
   const activeGlobalPinnedBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
   const activePage = pages.find((page) => page.active) || activeGlobalPinnedBlock;
-  const { blockToAddAsGlobalId, setBlockToAddAsGlobalId } = useCanvas();
+  const { blockToAddAsGlobal, setBlockToAddAsGlobal } = useCanvas();
 
   const selectedView = RESPONSIVE_VIEWS.find((view) => view.view === activePage?.selectedView);
   return (
@@ -23,9 +23,11 @@ export default function Canvas() {
       >
         <IframeView />
         <AddGlobalBlockForm
-          pageBlockId={blockToAddAsGlobalId || ''}
-          open={!!blockToAddAsGlobalId}
-          onClose={() => setBlockToAddAsGlobalId(null)}
+          pageBlockId={blockToAddAsGlobal?.pageBlockId || ''}
+          propName={blockToAddAsGlobal?.propName || ''}
+          parentBlockId={blockToAddAsGlobal?.parentBlockId || ''}
+          open={!!blockToAddAsGlobal}
+          onClose={() => setBlockToAddAsGlobal(null)}
         />
       </div>
     </>

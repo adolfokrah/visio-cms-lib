@@ -10,6 +10,7 @@ import {
   Message,
   OsTypes,
   PageTreeItem,
+  ProjectConfig,
   ProjectConfiguration,
   SideEditingProps,
 } from './types';
@@ -21,7 +22,7 @@ import { useProjectConfigurationState } from './states/useProjectConfigState';
 import { usePageContentState } from './states/usePageContentState';
 import { useAuthState } from './states/useAuthState';
 import { useParamState } from './states/useParamState';
-
+import lodash from 'lodash';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -250,12 +251,13 @@ export function convertToTitleCase(input: string): string {
 }
 
 export function getValueByPath(obj: any, path: Path): any {
+  const newObj = lodash.cloneDeep(obj);
   return path.reduce((acc, key) => {
     if (acc && Object.prototype.hasOwnProperty.call(acc, key)) {
       return acc[key];
     }
     return undefined;
-  }, obj);
+  }, newObj);
 }
 
 export function stripHtmlTags(input: string): string {
@@ -555,13 +557,14 @@ export async function fetchProjectConfig() {
   const { data, error } = await db.from('project_configuration').select().limit(1);
 
   if (error) throw error;
-  setTheme(data[0]?.theme);
-  setGlobalBlocks(data[0]?.global_blocks || []);
-  setScripts(data[0]?.scripts);
+
+  setTheme((data && data[0]?.theme) || { colorScheme: [] });
+  setGlobalBlocks((data && data[0]?.global_blocks) || []);
+  setScripts((data && data[0]?.scripts) || { header: '', body: '' });
 
   if (projectMode === 'BUILDER') {
-    setPageContentTheme(data[0]?.theme);
-    setPageContentGlobalBlocks(data[0]?.global_blocks || []);
+    setPageContentTheme((data && data[0]?.theme) || { colorScheme: [] });
+    setPageContentGlobalBlocks((data && data[0]?.global_blocks) || []);
   }
 }
 
@@ -580,7 +583,8 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
     foundPageData[0].status[page.activeLanguageLocale] === 'Publish' ||
     dataObject?.['status']?.[page.activeLanguageLocale] === 'Publish'
   ) {
-    pageBlocks[page.activeLanguageLocale] = page.blocks?.[page.activeLanguageLocale];
+    pageBlocks[page.activeLanguageLocale] =
+      dataObject?.['blocks_dev']?.[page.activeLanguageLocale] || page.blocks?.[page.activeLanguageLocale];
     dataObject['blocks'] = pageBlocks;
   }
 
@@ -611,7 +615,6 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
     publish_date: null,
     ...dataObject,
   };
-
 
   const { error } = await db.from('pages').update(data).eq('id', pageId);
   if (error) throw error;
@@ -658,10 +661,13 @@ export async function getPageBlocks(
 }
 
 type PageMeta = {
-  title: string;
-  description: string;
-  keywords: string;
-  featuredImage?: string;
+  seo: {
+    title: string;
+    description: string;
+    keywords: string;
+    featuredImage?: string;
+  };
+  params: { [key: string]: any };
   error?: string;
 };
 export async function getPageMetaData(
@@ -761,4 +767,106 @@ export function matchSlug(slug: string, pages: BuilderPage[]): MatchResult {
 
   // If no match is found
   return null;
+}
+
+export function buildConfig(props: ProjectConfig): ProjectConfig {
+  return props;
+}
+
+export function updateIsSelectedByBlockId(obj: any, blockIdToSelect: string): any {
+  // Iterate through all keys in the object
+  for (const key in obj) {
+    if (key in obj) {
+      const value = obj[key];
+
+      // If the current key is "blockId" and it matches the passed blockId, set isSelected to true
+      if (key === 'blockId' && 'isSelected' in obj) {
+        obj.isSelected = obj.id == blockIdToSelect ? true : false;
+      }
+
+      // If the value is an object, recursively call the function
+      if (typeof value === 'object' && value !== null) {
+        updateIsSelectedByBlockId(value, blockIdToSelect);
+      }
+
+      // If the value is an array, traverse each element
+      if (Array.isArray(value)) {
+        value.forEach((item) => updateIsSelectedByBlockId(item, blockIdToSelect));
+      }
+    }
+  }
+
+  return obj;
+}
+
+export function getSelectedBlock(obj: any, id?: string): any | null {
+  // Iterate through all keys in the object
+  for (const key in obj) {
+    if (key in obj) {
+      const value = obj[key];
+
+      // If the current object has the 'isSelected' key and it's true, return this object
+
+      if (id && id == obj.id) {
+        return obj;
+      } else if (!id && 'isSelected' in obj && obj.isSelected === true) {
+        return obj;
+      }
+
+      // If the value is an object, recursively call the function
+      if (typeof value === 'object' && value !== null) {
+        const selectedBlock = getSelectedBlock(value, id);
+        if (selectedBlock) {
+          return selectedBlock;
+        }
+      }
+
+      // If the value is an array, traverse each element
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          const selectedBlock = getSelectedBlock(item, id);
+          if (selectedBlock) {
+            return selectedBlock;
+          }
+        }
+      }
+    }
+  }
+
+  return null; // If no selected block is found, return null
+}
+
+export function getSelectedBlockPath(obj: any, blockId: string, path: string = ''): string | null {
+  // Iterate through all keys in the object
+  for (const key in obj) {
+    if (key in obj) {
+      const value = obj[key];
+      const currentPath = path ? `${path}.${key}` : key; // Update the path
+
+      // Check if the current object has the 'blockId' and matches the provided blockId
+      if (obj.id == blockId) {
+        return path;
+      }
+
+      // If the value is an object, recursively call the function
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        const result = getSelectedBlockPath(value, blockId, currentPath);
+        if (result) {
+          return result;
+        }
+      }
+
+      // If the value is an array, traverse each element
+      if (Array.isArray(value)) {
+        for (let i = 0; i < value.length; i++) {
+          const result = getSelectedBlockPath(value[i], blockId, `${currentPath}.${i}`);
+          if (result) {
+            return result;
+          }
+        }
+      }
+    }
+  }
+
+  return null; // If no matching block is found
 }

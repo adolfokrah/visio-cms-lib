@@ -1,5 +1,5 @@
 import { usePageContentState } from '@/lib/states/usePageContentState';
-import { cn, getProjectMode, sendMessageToParent } from '@/lib/utils';
+import { cn, getProjectMode, getSelectedBlock, sendMessageToParent } from '@/lib/utils';
 import React from 'react';
 
 type ListProps<T> = {
@@ -11,6 +11,7 @@ type ListProps<T> = {
   listItemClassName?: string;
   renderComponent: (value: T, index: number) => JSX.Element;
   defaultPropValues?: T[];
+  setListItemClassName?: (value: T, index: number) => string;
 };
 
 export default function List<T>({
@@ -21,6 +22,7 @@ export default function List<T>({
   className = '',
   renderComponent,
   listItemClassName = '',
+  setListItemClassName,
   defaultPropValues = [],
 }: ListProps<T>) {
   const { selectedListItem } = usePageContentState();
@@ -28,15 +30,17 @@ export default function List<T>({
   const activePage = pages.find((page) => page?.active);
   const pageBlocks = activePage?.blocks?.[activePage?.activeLanguageLocale] || [];
   const foundBlock = pageBlocks.find((block) => block?.id === pageBlockId);
+  const selectedBlock = getSelectedBlock(pageBlocks);
   const globalBlock = globalBlocks?.find((block) => block.id === foundBlock?.globalBlockId);
   const projectMode = getProjectMode();
 
   const children = defaultPropValues.map((values, index) => {
     return React.createElement(itemComponent, {
       key: `${propName}.${index}`,
-      className: cn('visio-cms-list-none', listItemClassName, {
+      className: cn('visio-cms-list-none', listItemClassName || setListItemClassName?.(values, index), {
         'visio-cms-outline visio-cms-outline-2 visio-cms-outline-blue-500':
-          selectedListItem?.propName === `${propName}.${index}` && !globalBlock,
+          `${selectedBlock?.id}.${selectedListItem?.propName}` === `${pageBlockId}.${propName}.${index}` &&
+          !globalBlock,
       }),
       children: renderComponent(values, index),
       onClick: (e: MouseEvent) => {

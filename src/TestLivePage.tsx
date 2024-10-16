@@ -3,6 +3,7 @@ import { getPageBlocks, PageData } from './lib/utils';
 import { LivePage } from './components';
 import { PageBlock } from './lib/states/usePagesState';
 import blocks from './components/blocks';
+import visioConfig from '../visio.config';
 
 export default function TestLivePage() {
   const [pageBlocks, setPageBlocks] = useState<PageBlock[]>([]);
@@ -11,12 +12,14 @@ export default function TestLivePage() {
   const [pages, setPages] = useState<PageData['pages']>([]);
 
   useEffect(() => {
+    const path = window.location.pathname;
+
     (async () => {
       const data = await getPageBlocks(
-        '/test-page/adolf-param/my-name/books',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyaHZyZmF0cG1kYnd0dG90bHdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI0MTIyNDAsImV4cCI6MjAzNzk4ODI0MH0.6oTSoUtEAVdSxUa4ws9PgXEnHCiFCsgXTawwbtOBDh8',
-        'https://urhvrfatpmdbwttotlwc.supabase.co',
-        'en-us',
+        path,
+        visioConfig.supabaseAnonKey,
+        visioConfig.supabaseProjectUrl,
+        visioConfig.defaultLanguage.locale,
       );
 
       if (data && !data.error) {
@@ -27,6 +30,7 @@ export default function TestLivePage() {
       }
     })();
   }, []);
+
   if (!projectConfiguration) return <div>Loading...</div>;
   return (
     <LivePage
@@ -34,7 +38,7 @@ export default function TestLivePage() {
       pageBlocks={pageBlocks}
       projectConfiguration={{
         ...projectConfiguration,
-        projectId: 'urhvrfatpmdbwttotlwc',
+        projectId: visioConfig.projectId,
         blocks,
       }}
       params={params}

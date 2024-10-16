@@ -61,9 +61,13 @@ export default function AddNewPageForm({
                 The page <CodeTag>slug</CodeTag> represents the url of the page, to accept parameters on your page use{' '}
                 <CodeTag>/:param</CodeTag>. where <CodeTag>param</CodeTag> should be the name of your parameter. To
                 access the parameter in your sections, use the{' '}
-                <CodeTag className="visio-cms-text-primary">useParams</CodeTag> hook from visio-cms. Learn more about
+                <CodeTag className="visio-cms-text-primary">getParams</CodeTag> hook from visio-cms. Learn more about
                 params{' '}
-                <a href={`${VISIO_DOCS_BASE_URL}/params`} target="_blank" className="visio-cms-text-primary">
+                <a
+                  href={`${VISIO_DOCS_BASE_URL}/utility-functions-get-params`}
+                  target="_blank"
+                  className="visio-cms-text-primary"
+                >
                   here
                 </a>
               </p>

@@ -38,7 +38,7 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
       className={cn(
         'visio-cms-p-2  visio-cms-w-full visio-cms-justify-between visio-cms-flex visio-cms-gap-2 visio-cms-items-center visio-cms-bg-white ',
         {
-          'visio-cms-fixed visio-cms-z-30': projectMode != 'BUILDER',
+          'visio-cms-z-30': projectMode != 'BUILDER',
         },
       )}
     >

@@ -1,0 +1,1 @@
+alter table "storage"."objects" DISABLE row level security;

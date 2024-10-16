@@ -65,7 +65,7 @@ const TagInput = ({
         </div>
       ))}
       <Input
-        className="visio-cms-border-none !visio-cms-w-max  !p-0 visio-cms-h-8  visio-cms-shadow-none"
+        className="!visio-cms-border-none !visio-cms-w-max !visio-cms-text-xs  !p-0 visio-cms-h-8 !visio-cms-bg-transparent  visio-cms-shadow-none"
         type="text"
         value={inputValue}
         onChange={handleInputChange}

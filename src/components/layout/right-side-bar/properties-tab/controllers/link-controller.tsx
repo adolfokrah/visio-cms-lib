@@ -89,7 +89,7 @@ export default function LinkController({
             <div className="visio-cms-text-center visio-cms-pt-16  visio-cms-text-gray-300 visio-cms-mt-4">
               <p>No pages found</p>
 
-              {isValidURL(search) ? (
+              {isValidURL(search) || search.startsWith('/') || search.startsWith('#') ? (
                 <Button
                   variant={'outline'}
                   className="visio-cms-mt-2"
@@ -99,7 +99,8 @@ export default function LinkController({
                     setSearch('');
                   }}
                 >
-                  Add url as a link
+                  Add {search.startsWith('/') ? 'relative url' : search.startsWith('#') ? 'anchor tag' : 'url'} as a
+                  link
                 </Button>
               ) : (
                 <p className="visio-cms-mt-2 visio-cms-font-light">Type a valid url to add as a link</p>

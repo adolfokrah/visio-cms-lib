@@ -5,6 +5,8 @@ import {
   deleteItemByPathArray,
   findObjectWithParents,
   getItemPositionByPathArray,
+  getSelectedBlock,
+  getSelectedBlockPath,
   getValueByPath,
   groupSideEditingProps,
   moveItemByPathArray,
@@ -27,7 +29,7 @@ export default function PropertiesTab() {
   const { tabs } = useTabState();
   const activePage = pages.find((page) => page.active);
   const pageBlocks = activePage?.blocks?.[activePage?.activeLanguageLocale];
-  const pageBlock = pageBlocks?.find((block) => block.id === selectedListItem?.pageBlockId || block.isSelected);
+  const pageBlock = getSelectedBlock(pageBlocks);
   const activeGlobalPinnedBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
   const selectedBlock = blocks.find(
     (block) => block.Schema.id === pageBlock?.blockId || block.Schema.id === activeGlobalPinnedBlock?.blockId,
@@ -45,11 +47,15 @@ export default function PropertiesTab() {
   }
 
   const moveListItem = (propName: string, direction: 'up' | 'down') => {
-    const path = propName.split('.');
-    const newData = moveItemByPathArray(pageBlock?.inputs || activeGlobalPinnedBlock?.inputs || {}, path, direction);
+    let path = propName.split('.');
+    if (!activeGlobalPinnedBlock) {
+      const blockPath = getSelectedBlockPath(pageBlocks, pageBlock.id);
+      path = `${blockPath}.inputs.${propName}`.split('.');
+    }
+    const newData = moveItemByPathArray(activeGlobalPinnedBlock?.inputs || pageBlocks || {}, path, direction);
 
     updateBlockInputs(newData || {});
-
+    path = propName.split('.');
     let newPath = `${path.slice(0, path.length - 1).join('.')}`;
     const itemIndex = Number(path[path.length - 1]);
     const newIndex = direction === 'up' ? itemIndex - 1 : itemIndex + 1;
@@ -63,15 +69,27 @@ export default function PropertiesTab() {
   };
 
   const addItem = (propName: string, data: any) => {
-    const path = propName.split('.');
-    const value = getValueByPath(pageBlock?.inputs || activeGlobalPinnedBlock?.inputs, path);
-    updateBlockValue(path, [...(value || []), data]);
+    if (activeGlobalPinnedBlock) {
+      const path = propName.split('.');
+      const value = getValueByPath(pageBlock?.inputs || activeGlobalPinnedBlock?.inputs, path);
+      updateBlockValue(path, [...(value || []), data]);
+    } else {
+      const blockPath = getSelectedBlockPath(pageBlocks, pageBlock.id);
+      const path = `${blockPath}.inputs.${propName}`.split('.');
+      const value = getValueByPath(pageBlocks, path);
+      updateBlockValue(path, [...(value || []), data]);
+    }
+
     toast.success('Item added');
   };
 
   const deleteRepeaterItem = (propName: string) => {
-    const path = propName.split('.');
-    const newData = deleteItemByPathArray(pageBlock?.inputs || activeGlobalPinnedBlock?.inputs || {}, path);
+    let path = propName.split('.');
+    if (!activeGlobalPinnedBlock) {
+      const blockPath = getSelectedBlockPath(pageBlocks, pageBlock.id);
+      path = `${blockPath}.inputs.${propName}`.split('.');
+    }
+    const newData = deleteItemByPathArray(activeGlobalPinnedBlock?.inputs || pageBlocks || {}, path);
     updateBlockInputs(newData || {});
     setSelectedListItem(null);
   };

@@ -14,28 +14,42 @@ export default function BlockItem({
   index,
   pageBlock,
   pageBlocks,
+  propName,
+  parentBlockId,
+  droppableDirection = 'vertical',
+  allowedBlockIds=[]
 }: {
   block: Block<Record<string, any>>;
   index: number;
   pageBlock: PageBlock;
   pageBlocks: PageBlock[];
+  propName?: string;
+  parentBlockId?: string;
+  droppableDirection?: 'horizontal' | 'vertical';
+  allowedBlockIds?: string[];
 }) {
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
   const { globalBlocks } = usePageContentState();
   const globalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
   const { setRepeaterId } = useRepeaterState();
   const blockInputs = { ...block.Schema.defaultPropValues, ...pageBlock.inputs, ...globalBlock?.inputs };
+
   return (
     <RightClickMenu
       index={index}
       pageBlock={{ ...pageBlock, isGlobalBlock: globalBlock != null }}
       pageBlocks={pageBlocks}
+      propName={propName}
+      parentBlockId={parentBlockId}
     >
       <div
         onMouseDown={(e) => {
           e.stopPropagation();
           setRepeaterId('');
-          sendMessageToParent({ type: 'selectBlock', content: pageBlock.id });
+          sendMessageToParent({
+            type: 'selectBlock',
+            content: JSON.stringify({ blockId: pageBlock.id, parentBlockId, propName }),
+          });
         }}
         className={cn('visio-cms-relative')}
         onDragOver={(e) => {
@@ -57,15 +71,30 @@ export default function BlockItem({
         <Popover open={pageBlock?.isSelected}>
           <PopoverTrigger asChild>
             <div className="visio-cms-relative">
-              <div>
-                {React.createElement(block, {
-                  key: block.Schema.id,
-                  ...blockInputs,
-                  pageBlockId: pageBlock.id,
-                })}
-              </div>
-              <DroppableItem position="top" index={index} showPlaceHolder={isDraggingOver} />
-              <DroppableItem position="bottom" index={index + 1} showPlaceHolder={isDraggingOver} />
+              {React.createElement(block, {
+                key: block.Schema.id,
+                ...blockInputs,
+                pageBlockId: pageBlock.id,
+              })}
+              <DroppableItem
+                position={droppableDirection == 'vertical' ? 'top' : 'left'}
+                index={index}
+                showPlaceHolder={isDraggingOver}
+                propName={propName}
+                pageBlockId={parentBlockId}
+                allowedBlockIds={allowedBlockIds}
+              />
+              {index + 1 == pageBlocks.length - 1 && (
+                <DroppableItem
+                  position={droppableDirection == 'vertical' ? 'bottom' : 'right'}
+                  index={index + 1}
+                  showPlaceHolder={isDraggingOver}
+                  propName={propName}
+                  pageBlockId={parentBlockId}
+                  allowedBlockIds={allowedBlockIds}
+                />
+              )}
+
               <div
                 className={cn(
                   'visio-cms-absolute visio-cms-top-0 visio-cms-left-0 visio-cms-h-full visio-cms-bg-transparent visio-cms-w-full visio-cms-pointer-events-none',
@@ -89,6 +118,8 @@ export default function BlockItem({
               index={index}
               pageBlock={{ ...pageBlock, isGlobalBlock: globalBlock != null }}
               pageBlocks={pageBlocks}
+              propName={propName}
+              parentBlockId={parentBlockId}
             />
           </PopoverContent>
         </Popover>

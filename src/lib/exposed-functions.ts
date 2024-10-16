@@ -1,1 +1,10 @@
-export { getProjectMode, getImageUrl, getLink, getColor, getPageBlocks, getParams, getPageMetaData } from './utils';
+export {
+  getProjectMode,
+  getImageUrl,
+  getLink,
+  getColor,
+  getPageBlocks,
+  getParams,
+  getPageMetaData,
+  buildConfig,
+} from './utils';

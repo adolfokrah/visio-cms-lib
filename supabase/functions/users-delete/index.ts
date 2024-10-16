@@ -8,7 +8,10 @@ const handler = async (req: Request): Promise<Response> => {
 
   const { email } = await req.json();
 
-  const supabaseClient = createClient(Deno.env.get('URL') ?? '', Deno.env.get('SERVICE_ROLE') ?? '');
+  const supabaseClient = createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+  );
 
   const {
     data: { users },

@@ -29,6 +29,7 @@ export default function useBlockHistory() {
           },
         },
       };
+
       await updatePageData({ blocks_dev: newPage?.blocks }, page?.id || '');
       setPages(pages.map((p) => (p.active ? newPage : p)));
     }

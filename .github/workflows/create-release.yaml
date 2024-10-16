@@ -1,7 +1,7 @@
 name: Create Release
 
 on:
- repository_dispatch:
+  repository_dispatch:
     types: [create-tag-release]
 
 jobs:
@@ -41,14 +41,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "v${{ env.VERSION }}"
-          release_name: "v${{ env.VERSION }}"
+          tag_name: 'v${{ env.VERSION }}'
+          release_name: 'v${{ env.VERSION }}'
           body: |
             ## Changes
             $(git log --oneline $(git describe --tags --abbrev=0)..HEAD)
           draft: false
           prerelease: false
-      
+
       - name: Trigger Release components package workflow
         uses: peter-evans/repository-dispatch@v2
         with:

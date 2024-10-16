@@ -3,7 +3,6 @@ import { EDITOR_MENU_CONTROLS } from '@/lib/constants';
 import useTextEditor from '@/lib/hooks/useTextEditor';
 import { EditorControlTypes } from '@/lib/types';
 import { getProjectMode } from '@/lib/utils';
-import parse from 'html-react-parser';
 
 export default function RichTextEditor({
   allowedControls = [...EDITOR_MENU_CONTROLS.map((control) => control.name)],
@@ -24,7 +23,6 @@ export default function RichTextEditor({
     pageBlockId,
   });
 
-  if (typeof window === 'undefined') return null;
   const projectMode = getProjectMode();
   if (projectMode === 'BUILDER')
     return (
@@ -38,5 +36,5 @@ export default function RichTextEditor({
         }}
       />
     );
-  else return parse(html);
+  else return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }

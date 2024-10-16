@@ -70,6 +70,7 @@ const extensions = [
     },
   }),
   Link.configure({
+    openOnClick: false,
     HTMLAttributes: {
       class: 'visio-cms-text-primary visio-cms-underline visio-cms-editor-link',
     },

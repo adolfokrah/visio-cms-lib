@@ -10,8 +10,11 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { slug, locale } = await req.json();
 
-    const supabaseClient = createClient(Deno.env.get('URL') ?? '', Deno.env.get('SERVICE_ROLE') ?? '');
-    const { error, data } = await supabaseClient.from('pages').select('slug, id, name');
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
+    const { error, data } = await supabaseClient.from('pages').select('slug, id, name, tags');
     if (error) {
       throw error;
     }
@@ -44,18 +47,18 @@ const handler = async (req: Request): Promise<Response> => {
 
     const seo = pageData[0]?.seo[locale]?.meta;
 
-    return new Response(
-      JSON.stringify({
-        ...seo,
-      }),
-      {
-        status: 200,
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
+    const metaData = {
+      seo,
+      params: { ...foundPage?.params, tags: pageData[0]?.tags },
+    };
+
+    return new Response(JSON.stringify(metaData), {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
       },
-    );
+    });
   } catch (error) {
     return new Response(null, {
       status: 500,

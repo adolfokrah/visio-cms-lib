@@ -21,10 +21,12 @@ export default function usePageSettings() {
           setPages(
             pages.map((page) => ({
               ...page,
-              status: {
-                ...page.status,
-                [page.activeLanguageLocale]: newStatus,
-              },
+              status: page.active
+                ? {
+                    ...page.status,
+                    [page.activeLanguageLocale]: newStatus,
+                  }
+                : page.status,
             })),
           );
         }

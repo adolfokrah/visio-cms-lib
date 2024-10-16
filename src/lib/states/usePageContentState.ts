@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Page } from './usePagesState';
-import { ProjectConfiguration } from '../types';
+import { BlockList, ProjectConfiguration } from '../types';
 import { TabsState } from './useTabsState';
 import { ListStateType } from './useListState';
 
@@ -19,6 +19,8 @@ type State = {
   setAllowImageTransformation: (allowImageTransformation: boolean) => void;
   projectId: string;
   setProjectId: (projectId: string) => void;
+  blocks: BlockList[];
+  setBlocks: (blocks: BlockList[]) => void;
 };
 
 export const usePageContentState = create<State>((set) => ({
@@ -38,4 +40,6 @@ export const usePageContentState = create<State>((set) => ({
   setAllowImageTransformation: (allowImageTransformation) => set({ allowImageTransformation }),
   projectId: '',
   setProjectId: (projectId) => set({ projectId }),
+  blocks: [],
+  setBlocks: (blocks) => set({ blocks }),
 }));
