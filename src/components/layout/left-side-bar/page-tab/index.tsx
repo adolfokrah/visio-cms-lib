@@ -20,6 +20,8 @@ import { PageTreeItem } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RESPONSIVE_VIEWS } from '@/lib/constants';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
+import useSWR from 'swr'
+
 
 export default function PagesTab() {
   const { pages, setPages } = usePagesState();
@@ -27,58 +29,56 @@ export default function PagesTab() {
   const [search, setSearch] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [treeItems, setTreeItems] = useState<PageTreeItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const { defaultLanguage } = useProjectConfigurationState();
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
+
+  const { data, error, isLoading: loading } = useSWR(`/api/pages`, async ()=>{
+    const db = supabase();
+    const { data: folders, error } = await db.from('folders').select('*');
+    const { data: pagesData, error: pagesError } = await db.from('pages').select(`*, author(*)`);
+    if (error || pagesError) {
+      throw error || pagesError;
+    }
+
+    const data = [
+      ...folders.map((folder) => ({
+        ...folder,
+        isExpanded: items
+          .filter((item) => item.type === 'Folder')
+          ?.find((itemFolder) => folder.id === itemFolder.id)?.isExpanded,
+        children: [],
+        type: 'Folder',
+      })),
+      ...pagesData.map((page) => ({ id: page.id, name: page.name, type: 'Page' })),
+    ];
+
+    return {data, pagesData}
+  })
+
   useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const db = supabase();
-        const { data: folders, error } = await db.from('folders').select('*');
-        const { data: pagesData, error: pagesError } = await db.from('pages').select(`*, author(*)`);
-        if (error || pagesError) {
-          throw error || pagesError;
-        }
+    if(!data) return;
 
-        const data = [
-          ...folders.map((folder) => ({
-            ...folder,
-            isExpanded: items
-              .filter((item) => item.type === 'Folder')
-              ?.find((itemFolder) => folder.id === itemFolder.id)?.isExpanded,
-            children: [],
-            type: 'Folder',
-          })),
-          ...pagesData.map((page) => ({ id: page.id, name: page.name, type: 'Page' })),
-        ];
-
-        setItems(data as PageTreeItem[]);
-        setPages(
-          pagesData.map((page) => {
-            const foundPageState = pages.find((pageState) => pageState.id == page.id);
-            const blocks = page.blocks_dev;
-            delete page.blocks_dev;
-            return {
-              ...page,
-              selectedView: RESPONSIVE_VIEWS[0].view,
-              activeLanguageLocale: defaultLanguage.locale,
-              pinned: foundPageState?.pinned || false,
-              active: foundPageState?.active || false,
-              schedulePublished: page.schedule_published,
-              publishDate: page.publish_date ? new Date(page.publish_date) : null,
-              folderId: page.folder_id,
-              blocks,
-            };
-          }),
-        );
-      } catch (error) {
-        setError('Failed to fetch pages and folders');
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [setItems, defaultLanguage.locale, setPages]);
+    setItems(data.data as PageTreeItem[]);
+    setPages(
+      data.pagesData.map((page) => {
+        const foundPageState = pages.find((pageState) => pageState.id == page.id);
+        const blocks = page.blocks_dev;
+        delete page.blocks_dev;
+        return {
+          ...page,
+          selectedView: RESPONSIVE_VIEWS[0].view,
+          activeLanguageLocale: defaultLanguage.locale,
+          pinned: foundPageState?.pinned || false,
+          active: foundPageState?.active || false,
+          schedulePublished: page.schedule_published,
+          publishDate: page.publish_date ? new Date(page.publish_date) : null,
+          folderId: page.folder_id,
+          blocks,
+        };
+      }),
+    );
+  }, [data]);
 
   useEffect(() => {
     const tree = generateTree(items, pages);

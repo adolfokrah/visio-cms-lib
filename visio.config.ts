@@ -16,11 +16,11 @@ const visioConfig = {
     language: 'English',
     locale: 'en',
   },
-  emailSender: 'Visio Cms <norepy@visiocms.com>',
-  projectId: 'eyarizmdzidmibcnfmmx',
-  supabaseProjectUrl: 'https://eyarizmdzidmibcnfmmx.supabase.co',
+  emailSender: 'Visio Cms <norepy@okuafpa.com>',
+  projectId: 'oexsxdsfiwezwhunafsc',
+  supabaseProjectUrl: 'https://oexsxdsfiwezwhunafsc.supabase.co',
   supabaseAnonKey:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5YXJpem1kemlkbWliY25mbW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYwNTk3MzMsImV4cCI6MjA0MTYzNTczM30.bM7YysJKmQUp38J-ywwttBHL3AHxhOTzvH_P4_qTApQ',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9leHN4ZHNmaXdlendodW5hZnNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0Mzc5ODIsImV4cCI6MjA1NTAxMzk4Mn0.R6Kk8nMl39IcMKSgpgG0EaGnuxECEOufFTE-vC-BegE',
   unsplashAccessKey: 'Rw6b_NBqAXZV4wTUOF7A2QtagLtB9apC2dQYZco1RUU',
 };
 
