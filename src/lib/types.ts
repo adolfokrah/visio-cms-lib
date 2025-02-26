@@ -321,4 +321,4 @@ export type ProjectConfig = Pick<
   | 'blocks'
   | 'allowImageTransformation'
   | 'unsplashAccessKey'
->;
+> & { routeHandlers?: (path: string) => Promise<Record<string, any> >| null } ;

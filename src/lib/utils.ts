@@ -633,15 +633,14 @@ export type PageData = {
 
 export async function getPageBlocks(
   slug: string,
-  supabaseAnonKey: string,
-  supabaseProjectUrl: string,
   locale: string,
+  config: ProjectConfig ,
 ): Promise<PageData & { error?: string }> {
-  const url = `${supabaseProjectUrl}/functions/v1/get-page-blocks`;
+  const url = `${config.supabaseProjectUrl}/functions/v1/get-page-blocks`;
   const options = {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${supabaseAnonKey}`,
+      Authorization: `Bearer ${config.supabaseAnonKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ slug, locale }),
@@ -649,8 +648,12 @@ export async function getPageBlocks(
 
   const response = await fetch(url, options);
 
+  const externalData = config.routeHandlers ? await config.routeHandlers(slug) : null;
+
+
   if (response.status === 200) {
     const data = await response.json();
+    data.params = { externalData, ...data.params };
     return { ...data, error: null } as PageData;
   } else if (response.status === 404) {
     return { error: 'page not found' } as PageData & { error: string };

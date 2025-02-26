@@ -17,9 +17,8 @@ export default function TestLivePage() {
     (async () => {
       const data = await getPageBlocks(
         path,
-        visioConfig.supabaseAnonKey,
-        visioConfig.supabaseProjectUrl,
         visioConfig.defaultLanguage.locale,
+        visioConfig
       );
 
       if (data && !data.error) {

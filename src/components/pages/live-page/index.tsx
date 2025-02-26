@@ -8,14 +8,12 @@ export default function LivePage({
   pageBlocks,
   projectConfiguration,
   params,
-  pages,
-  externalData
+  pages
 }: {
   allowImageTransformation?: boolean;
   pageBlocks: PageData['pageBlocks'];
   params: PageData['params'];
   pages: Page[];
-  externalData?: Record<string, any>;
   projectConfiguration: Omit<PageData['projectConfiguration'], 'scripts'> & {
     blocks: ProjectConfiguration['blocks'];
     projectId: string;
@@ -39,7 +37,7 @@ export default function LivePage({
         const globalBlock = projectConfiguration?.globalBlocks?.find((b) => b.id === block?.globalBlockId);
         const Block = projectConfiguration.blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
         if (!Block) return null;
-        const inputs = { ...Block.Schema.defaultPropValues, ...block.inputs, ...globalBlock?.inputs, externalData: {...externalData} };
+        const inputs = { ...Block.Schema.defaultPropValues, ...block.inputs, ...globalBlock?.inputs, externalData: {...params?.externalData} };
         return <Block key={block.id} {...inputs} />;
       })}
     </>
