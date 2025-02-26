@@ -64,6 +64,7 @@ export default function Slot({ defaultValue, direction = 'vertical', className, 
         const { blockId } = pageBlock;
         const block = blocks.find((block) => block.Schema.id === blockId);
 
+
         if (!block) return null;
         return (
           <BlockItem
@@ -76,6 +77,7 @@ export default function Slot({ defaultValue, direction = 'vertical', className, 
             pageBlock={pageBlock}
             pageBlocks={defaultValue}
             allowedBlockIds={allowedBlockIds}
+            externalData={externalData}
           />
         );
       })}

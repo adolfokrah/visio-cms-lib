@@ -28,7 +28,7 @@ export default function PageTree({ items }: { items: PageTreeItem[] }) {
       {items.map((treeItem) => {
         if (treeItem.type === 'Folder') {
           return (
-            <div key={treeItem.name} title={treeItem.name}>
+            <div key={treeItem.id} title={treeItem.name}>
               <FolderItem item={treeItem} />
               {treeItem.isExpanded && (
                 <div className="visio-cms-pl-4">
@@ -39,7 +39,7 @@ export default function PageTree({ items }: { items: PageTreeItem[] }) {
           );
         }
         return (
-          <div key={treeItem.name} title={treeItem.slug}>
+          <div key={treeItem.id} title={treeItem.slug}>
             <PageItem item={treeItem} />
           </div>
         );

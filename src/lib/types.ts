@@ -42,6 +42,7 @@ export type ProjectConfiguration = {
     body: string;
   };
   setScripts: (script: { head: string; body: string }) => void;
+  routeHandlers?: (path: string) => Promise<Record<string, any> | null>;
 };
 export type OsTypes = 'mac' | 'windows' | 'unknown';
 

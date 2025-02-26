@@ -67,7 +67,9 @@ export default function Cms(props: ProjectConfig & { path: string }) {
   const { setConfiguration, supabaseProjectUrl, supabaseAnonKey, projectId } = useProjectConfigurationState();
   const { fetchUser, fetchingUser } = useAuthState();
   useEffect(() => {
-    if (props) setConfiguration(props);
+    if (props) {
+      setConfiguration(props);
+    }
     (async () => {
       fetchProjectConfig();
       fetchUser();

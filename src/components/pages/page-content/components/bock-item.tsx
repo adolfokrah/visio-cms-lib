@@ -17,7 +17,8 @@ export default function BlockItem({
   propName,
   parentBlockId,
   droppableDirection = 'vertical',
-  allowedBlockIds=[]
+  allowedBlockIds=[],
+  externalData
 }: {
   block: Block<Record<string, any>>;
   index: number;
@@ -27,12 +28,17 @@ export default function BlockItem({
   parentBlockId?: string;
   droppableDirection?: 'horizontal' | 'vertical';
   allowedBlockIds?: string[];
+  externalData?: Record<string, any>;
 }) {
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
   const { globalBlocks } = usePageContentState();
   const globalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
   const { setRepeaterId } = useRepeaterState();
   const blockInputs = { ...block.Schema.defaultPropValues, ...pageBlock.inputs, ...globalBlock?.inputs };
+  if(externalData && Object.keys(externalData).length > 0){
+    blockInputs.externalData = {...externalData};
+  }
+
 
   return (
     <RightClickMenu

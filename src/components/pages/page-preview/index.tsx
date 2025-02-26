@@ -1,4 +1,5 @@
 import { PAGES } from '@/lib/constants';
+import { useExternalData } from '@/lib/hooks/useExternalData';
 import { useAuthState } from '@/lib/states/useAuthState';
 import { usePagesState } from '@/lib/states/usePagesState';
 import { useParamState } from '@/lib/states/useParamState';
@@ -13,6 +14,7 @@ export default function PagePreview({ id }: { id: string }) {
   const isBuilderMode = getProjectMode() === 'BUILDER';
   const page = pages.find((page) => page.id === id);
   const { setParams } = useParamState();
+  const {externalData, loading} = useExternalData(page?.slug || '');
   const navigate = (path: string) => {
     window.location.pathname = path;
   };
@@ -31,6 +33,10 @@ export default function PagePreview({ id }: { id: string }) {
 
   if (fetchingUser) return null;
 
+  if (loading) {
+    return null
+  }
+
   return (
     <>
       {page?.blocks?.[page.activeLanguageLocale]?.map((pageBlock, index) => {
@@ -39,7 +45,7 @@ export default function PagePreview({ id }: { id: string }) {
         const foundGlobalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
         const id = foundGlobalBlock?.blockId || blockId;
         const block = blocks.find((block) => block.Schema.id == id);
-        const inputs = { ...block?.Schema.defaultPropValues, ...pageBlock?.inputs, ...foundGlobalBlock?.inputs };
+        const inputs = { ...block?.Schema.defaultPropValues, ...pageBlock?.inputs, ...foundGlobalBlock?.inputs, externalData };
 
         if (!block) return null;
 
