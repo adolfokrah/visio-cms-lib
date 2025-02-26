@@ -47,7 +47,7 @@ export default function Slot({ defaultValue, direction = 'vertical', className, 
           const globalBlock = globalBlocks?.find((b) => b.id === block?.globalBlockId);
           const Block = blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
           if (!Block) return null;
-          const inputs = { ...Block.Schema.defaultPropValues, ...block.inputs, ...globalBlock?.inputs, ...externalData };
+          const inputs = { ...Block.Schema.defaultPropValues, ...block.inputs, ...globalBlock?.inputs, externalData: {...externalData} };
           return (
             <div key={block.id}>
               <Block {...inputs} />

@@ -39,7 +39,7 @@ export default function LivePage({
         const globalBlock = projectConfiguration?.globalBlocks?.find((b) => b.id === block?.globalBlockId);
         const Block = projectConfiguration.blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
         if (!Block) return null;
-        const inputs = { ...Block.Schema.defaultPropValues, ...block.inputs, ...globalBlock?.inputs, ...externalData };
+        const inputs = { ...Block.Schema.defaultPropValues, ...block.inputs, ...globalBlock?.inputs, externalData: {...externalData} };
         return <Block key={block.id} {...inputs} />;
       })}
     </>
