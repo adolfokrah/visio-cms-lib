@@ -15,7 +15,7 @@ type SlotProps = {
   allowedBlockIds?: string[];
   externalData?: Record<string, any>;
 };
-export default function Slot({ defaultValue, direction = 'vertical', className, propName, pageBlockId, allowedBlockIds, externalData }: SlotProps) {
+export default function ClientSlot({ defaultValue, direction = 'vertical', className, propName, pageBlockId, allowedBlockIds, externalData }: SlotProps) {
   const { activePage } = usePageContent();
   const { blocks: builderBlocks } = useProjectConfigurationState();
   const { blocks: liveBlocks, globalBlocks } = usePageContentState();
@@ -23,13 +23,15 @@ export default function Slot({ defaultValue, direction = 'vertical', className, 
 
   if (defaultValue.length === 0 && activePage) {
     return (
-      <EmptyPageDroppable
+      <div>
+         <EmptyPageDroppable
         activePage={activePage}
         propName={propName}
         pageBlockId={pageBlockId}
         className="!visio-cms-h-full !visio-cms-min-h-[50px]"
         allowedBlockIds={allowedBlockIds}
       />
+      </div>
     );
   }
 
@@ -39,6 +41,8 @@ export default function Slot({ defaultValue, direction = 'vertical', className, 
     'visio-cms-flex-row visio-cms-w-full visio-cms-items-center visio-cms-bg-red-500': direction === 'horizontal',
     'visio-cms-flex-col': direction === 'vertical',
   });
+
+  
 
   if (!isBuilderMode) {
     return (
@@ -57,7 +61,7 @@ export default function Slot({ defaultValue, direction = 'vertical', className, 
       </div>
     );
   }
-  
+
   return (
     <div className={cn(divClass)}>
       {defaultValue.map((pageBlock, index) => {

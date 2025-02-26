@@ -5,38 +5,38 @@
   "type": "module",
   "main": "./dist/main.umd.js",
   "module": "./dist/main.es.js",
-  "types": "./dist/components/index.d.ts",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
       "import": "./dist/main.es.js",
-      "types": "./dist/components/index.d.ts"
+      "types": "./dist/main.d.ts"
     },
     "./Cms": {
       "import": "./dist/components/pages/index.es.js",
-      "types": "./dist/components/pages/index.d.ts"
+      "types": "./dist/src/components/pages/index.d.ts"
     },
     "./types": {
-      "types": "./dist/lib/exposed-types.d.ts"
+      "types": "./dist/src/lib/exposed-types.d.ts"
     },
     "./Image": {
       "import": "./dist/components/exposed-components/image/index.es.js",
-      "types": "./dist/components/exposed-components/image/index.d.ts"
+      "types": "./dist/src/components/exposed-components/image/index.d.ts"
     },
     "./Text": {
       "import": "./dist/components/exposed-components/text/index.es.js",
-      "types": "./dist/components/exposed-components/text/index.d.ts"
+      "types": "./dist/src/components/exposed-components/text/index.d.ts"
     },
     "./RichText": {
       "import": "./dist/components/exposed-components/rich-text-editor/index.es.js",
-      "types": "./dist/components/exposed-components/rich-text-editor/index.d.ts"
+      "types": "./dist/src/components/exposed-components/rich-text-editor/index.d.ts"
     },
     "./List": {
       "import": "./dist/components/exposed-components/list/index.es.js",
-      "types": "./dist/components/exposed-components/list/index.d.ts"
+      "types": "./dist/src/components/exposed-components/list/index.d.ts"
     },
     "./Slot": {
       "import": "./dist/components/exposed-components/slot/index.es.js",
-      "types": "./dist/components/exposed-components/slot/index.d.ts"
+      "types": "./dist/src/components/exposed-components/slot/index.d.ts"
     },
     "./utils": {
       "import": "./dist/exposedFunctions.es.js",
@@ -44,7 +44,7 @@
     },
     "./LivePage": {
       "import": "./dist/components/pages/live-page/index.es.js",
-      "types": "./dist/components/pages/live-page/index.d.ts"
+      "types": "./dist/src/components/pages/live-page/index.d.ts"
     }
   },
   "scripts": {
