@@ -1,7 +1,7 @@
 {
   "name": "visio-cms-lib",
   "private": false,
-  "version": "0.1.220",
+  "version": "0.1.221",
   "type": "module",
   "main": "./dist/main.umd.js",
   "module": "./dist/main.es.js",
