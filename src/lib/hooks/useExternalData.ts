@@ -6,14 +6,20 @@ export const useExternalData=(pageSlug: string)=>{
     const [loading, setLoading] = useState(false);
       useEffect(() => {
         const fetchExternalData = async () => {
-          if (routeHandlers && pageSlug) {
-            setLoading(true);
-            const data = await routeHandlers(`${pageSlug}`);
-            if (data) {
-              setExternalData(data);
-              setLoading(false);
+           try {
+            if (routeHandlers && pageSlug) {
+              setLoading(true);
+              const data = await routeHandlers(`${pageSlug}`);
+              if (data) {
+                setExternalData(data);
+              }
             }
-          }
+            setLoading(false);
+           } catch (error) {
+             throw new Error('Error fetching external data');
+           }finally{
+            setLoading(false);
+           }
         };
     
         fetchExternalData();
