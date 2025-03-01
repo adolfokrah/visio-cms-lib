@@ -56,6 +56,7 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
         status: {
           [defaultLanguage.locale]: 'Draft',
         },
+        blocks: {[defaultLanguage.locale]: []},
         author: {
           first_name: user?.user_metadata.first_name,
           last_name: user?.user_metadata.last_name,

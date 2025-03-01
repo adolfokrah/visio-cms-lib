@@ -44,7 +44,7 @@ export type Page = {
   };
   tags?: string;
   seo?: {
-    [key: string]: {
+    [key: Language['locale']]: {
       meta: {
         title: string;
         description: string;
@@ -54,10 +54,10 @@ export type Page = {
     };
   };
   blocks?: {
-    [key: string]: PageBlock[];
+    [key: Language['locale']]: PageBlock[];
   };
   history?: {
-    [key: string]: {
+    [key: Language['locale']]: {
       currentIndex: number;
       blocks: PageBlock[][];
     };

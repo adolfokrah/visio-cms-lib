@@ -6,11 +6,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { usePagesState } from '@/lib/states/usePagesState';
+import {  usePagesState } from '@/lib/states/usePagesState';
 import { RESPONSIVE_VIEWS } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 import { useTabState } from '@/lib/states/useTabsState';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
+
+
+
 
 export default function ResponsiveBar() {
   const { pages, setPageResponsiveView } = usePagesState();
@@ -21,7 +24,8 @@ export default function ResponsiveBar() {
   const activePage = pages.find((page) => page.active) || activeGlobalPinnedBlock;
   if (!activePage) return null;
   return (
-    <DropdownMenu>
+    <>
+     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -46,6 +50,7 @@ export default function ResponsiveBar() {
             onClick={() => {
               const activePage = pages.find((page) => page.active);
               if (activePage) {
+                
                 setPageResponsiveView(view);
               } else {
                 setGlobalBlocks([
@@ -71,5 +76,9 @@ export default function ResponsiveBar() {
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
+
+
+</>
+
   );
 }

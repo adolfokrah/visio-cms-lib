@@ -18,10 +18,10 @@ const visioConfig:ProjectConfig = {
     locale: 'en',
   },
   emailSender: 'Visio Cms <norepy@okuafpa.com>',
-  projectId: 'oexsxdsfiwezwhunafsc',
-  supabaseProjectUrl: 'https://oexsxdsfiwezwhunafsc.supabase.co',
+  projectId: 'tafbogvekofwoodsvxzl',
+  supabaseProjectUrl: 'https://tafbogvekofwoodsvxzl.supabase.co',
   supabaseAnonKey:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9leHN4ZHNmaXdlendodW5hZnNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0Mzc5ODIsImV4cCI6MjA1NTAxMzk4Mn0.R6Kk8nMl39IcMKSgpgG0EaGnuxECEOufFTE-vC-BegE',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhZmJvZ3Zla29md29vZHN2eHpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4MjI3NzQsImV4cCI6MjA1NjM5ODc3NH0.b0-GrmVkqcLigCC3s96-FctV9R1oGAHNtvjpHPUsZl4',
   unsplashAccessKey: 'Rw6b_NBqAXZV4wTUOF7A2QtagLtB9apC2dQYZco1RUU',
   
 };

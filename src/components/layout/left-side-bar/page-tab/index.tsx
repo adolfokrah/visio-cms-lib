@@ -29,9 +29,7 @@ export default function PagesTab() {
   const [search, setSearch] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [treeItems, setTreeItems] = useState<PageTreeItem[]>([]);
-  // const [loading, setLoading] = useState(false);
   const { defaultLanguage } = useProjectConfigurationState();
-  // const [error, setError] = useState<string | null>(null);
 
   const { data, error, isLoading: loading } = useSWR(`/api/pages`, async ()=>{
     const db = supabase();
@@ -57,7 +55,7 @@ export default function PagesTab() {
   })
 
   useEffect(() => {
-    if(!data) return;
+    if(!data || pages.length) return;
 
     setItems(data.data as PageTreeItem[]);
     setPages(
