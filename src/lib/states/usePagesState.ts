@@ -62,6 +62,8 @@ export type Page = {
       blocks: PageBlock[][];
     };
   };
+  autoSave: boolean;
+  initialState: Record<string, any> | null;
 };
 
 type PagesStateType = {
@@ -73,11 +75,13 @@ type PagesStateType = {
   pageSwitched?: boolean;
   setPageSwitched: (flag: boolean) => void;
   setPageSeoFeaturedImages: (activePage: Page) => void;
+  updatePageData: (page: Page) => void;
+  getActivePage: ()=>Page|null;
 };
 
 export const usePagesState = create(
   persist<PagesStateType>(
-    (set) => ({
+    (set, get) => ({
       pages: [],
       selectedPage: '',
       setSelectedPage: (selectedPage) => set(() => ({ selectedPage, pageSwitched: true })),
@@ -100,6 +104,7 @@ export const usePagesState = create(
         if (seo && Object.keys(seo).length) {
           for (const key of Object.keys(seo)) {
             const featuredImage = seo[key]?.meta.featuredImage;
+            if(!featuredImage) continue;
             const { data } = await db
               .from('uploaded_files')
               .select('hashed_file_name')
@@ -117,6 +122,16 @@ export const usePagesState = create(
             pages: state.pages.map((page) => (page.id == activePage.id ? { ...page, seo } : page)),
           };
         });
+      },
+      updatePageData: (page) =>
+        set((state) => {
+          return {
+            pages: state.pages.map((p) => (p.id === page.id ? page : p)),
+          };
+        }),
+      getActivePage: () => {
+        const state = get();
+        return state.pages.find((page) => page.name === state.selectedPage) || null;
       },
     }),
     {

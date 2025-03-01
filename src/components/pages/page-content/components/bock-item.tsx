@@ -77,12 +77,8 @@ export default function BlockItem({
         <Popover open={pageBlock?.isSelected}>
           <PopoverTrigger asChild>
             <div className="visio-cms-relative">
-              {React.createElement(block, {
-                key: block.Schema.id,
-                ...blockInputs,
-                pageBlockId: pageBlock.id,
-              })}
-              <DroppableItem
+
+            <DroppableItem
                 position={droppableDirection == 'vertical' ? 'top' : 'left'}
                 index={index}
                 showPlaceHolder={isDraggingOver}
@@ -90,7 +86,13 @@ export default function BlockItem({
                 pageBlockId={parentBlockId}
                 allowedBlockIds={allowedBlockIds}
               />
-              {index + 1 == pageBlocks.length - 1 && (
+              {React.createElement(block, {
+                key: block.Schema.id,
+                ...blockInputs,
+                pageBlockId: pageBlock.id,
+              })}
+             
+              {index + 1 == pageBlocks.length && (
                 <DroppableItem
                   position={droppableDirection == 'vertical' ? 'bottom' : 'right'}
                   index={index + 1}

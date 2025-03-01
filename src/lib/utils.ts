@@ -568,12 +568,14 @@ export async function fetchProjectConfig() {
   }
 }
 
-export async function updatePageData(dataObject: { [key: string]: any }, pageId: string) {
+export async function updatePageData(dataObject: { [key: string]: any }, pageId: string, isManualSave = false) {
   const db = supabase();
   const { pages } = usePagesState.getState();
   const { user } = useAuthState.getState();
   const page = pages.find((page) => page.id === pageId);
-  if (!page) return;
+
+  if (!page || !page.autoSave && !isManualSave) return;
+
 
   const { data: foundPageData, error: foundPageError } = await db.from('pages').select().eq('id', page.id);
   if (foundPageError) throw foundPageError;
@@ -604,6 +606,7 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
     if (cronError) throw cronError;
   }
 
+  const filteredDataObject = filterObject(dataObject);
   const data = {
     name: page.name,
     slug: page.slug,
@@ -613,12 +616,30 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
     tags: page.tags,
     author: user?.user_metadata.id,
     publish_date: null,
-    ...dataObject,
+    ...filteredDataObject,
   };
 
   const { error } = await db.from('pages').update(data).eq('id', pageId);
   if (error) throw error;
 }
+
+function filterObject<T extends Record<string, any>>(obj: T): Partial<T> {
+  const allowedColumns = [
+    "name",
+    "slug",
+    "status",
+    "tags",
+    "seo",
+    "blocks_dev",
+    "blocks",
+    "folder_id",
+    "publish_date"
+  ];
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => allowedColumns.includes(key))
+  ) as Partial<T>;
+}
+
 
 export type PageData = {
   pageBlocks: PageBlock[];

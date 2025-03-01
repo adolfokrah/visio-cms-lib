@@ -22,7 +22,10 @@ export default function PageStatusAndVisibility() {
 
   return (
     <>
+    <div className="visio-cms-flex visio-cms-items-center visio-cms-justify-between">
       <Label className="!visio-cms-text-gray-300">Status</Label>
+      {loading && <Loader size={12} className="visio-cms-animate-spin visio-cms-mr-2 " />}
+      </div>
       <Tabs
         value={['Publish', 'Schedule'].includes(page?.status?.[activeLanguage] || 'Draft') ? 'Publish' : 'Draft'}
         className="visio-cms-w-full visio-cms-mt-3"
@@ -35,10 +38,9 @@ export default function PageStatusAndVisibility() {
       </Tabs>
       {['Publish', 'Schedule'].includes(page?.status?.[activeLanguage] || 'Draft') && (
         <div className="visio-cms-mt-3 ">
-          <div className="visio-cms-flex visio-cms-items-center visio-cms-justify-between">
+          
             <Label className="!visio-cms-text-gray-300">Schedule published</Label>
-            {loading && <Loader size={12} className="visio-cms-animate-spin visio-cms-mr-2 " />}
-          </div>
+            
           <div className="visio-cms-my-3">
             <RadioGroup
               value={page?.status?.[activeLanguage] || ''}

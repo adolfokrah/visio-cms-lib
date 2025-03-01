@@ -21,16 +21,16 @@ export default function DroppableItem({
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   return (
-    <Tooltip open={showPlaceHolder && !propName}>
+    <Tooltip open={showPlaceHolder && !propName} >
       <TooltipTrigger asChild disabled>
         <div
-          className={cn('visio-cms-absolute visio-cms-z-[200]', {
-            '!visio-cms-bg-blue-500': isDraggingOver,
-            'visio-cms-top-0 visio-cms-h-[5px] visio-cms-w-full': position === 'top',
-            'visio-cms-bottom-0 visio-cms-h-[5px]  visio-cms-w-full': position === 'bottom',
+          className={cn('visio-cms-z-[200]', {
+            '!visio-cms-h-[50px] visio-cms-transition-all visio-cms-duration-300': isDraggingOver,
+            'visio-cms-top-0  visio-cms-w-full': position === 'top',
+            'visio-cms-bottom-0   visio-cms-w-full': position === 'bottom',
             'visio-cms-cms-left-0 visio-cms-h-full visio-cms-top-0 visio-cms-w-[5px]': position === 'left',
             'visio-cms-cms-right-0 visio-cms-h-full visio-cms-w-[5px] visio-cms-top-0': position === 'right',
-            'visio-cms-bg-blue-200': showPlaceHolder && !propName,
+            'visio-cms-bg-blue-200 visio-cms-h-[10px]': showPlaceHolder && !propName,
           })}
           onDragOver={(e) => {
             if (e.dataTransfer.types.includes('text/plain')) {

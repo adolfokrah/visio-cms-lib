@@ -2,7 +2,7 @@ import Navbar from '@/components/layout/nav-bar';
 import SmallerScreenWarning from '../error-pages/smaller-screen-warning-page';
 import LeftSideBar from '@/components/layout/left-side-bar';
 import RightSideBar from '@/components/layout/right-side-bar';
-import PageTabs from '@/components/layout/page-tabs';
+import PageTabs from '@/components/layout/page-tabs-bar';
 import Canvas from '@/components/layout/canvas';
 import { useAuthState } from '@/lib/states/useAuthState';
 import { useEffect } from 'react';

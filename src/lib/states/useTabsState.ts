@@ -1,13 +1,14 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+export type Tab = {
+  name: string;
+  type: 'page' | 'globalBlock';
+  id: string;
+  active: boolean;
+}
 export type TabsState = {
-  tabs: {
-    name: string;
-    type: 'page' | 'globalBlock';
-    id: string;
-    active: boolean;
-  }[];
+  tabs: Tab[];
   setTabs: (tabs: TabsState['tabs']) => void;
 };
 

@@ -64,7 +64,7 @@ export default function LanguageControls() {
     <>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="!visio-cms-bg-transparent hover:!visio-cms-bg-dark-700 visio-cms-w-[60px] visio-cms-shadow-none">
+        <Button className="!visio-cms-bg-dark-700 hover:!visio-cms-bg-dark-900 visio-cms-w-[60px] visio-cms-shadow-none">
           {activePage?.activeLanguageLocale.toLocaleUpperCase()}
         </Button>
       </DropdownMenuTrigger>
@@ -101,8 +101,8 @@ export default function LanguageControls() {
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogCancel className='visio-cms-text-white'>No</AlertDialogCancel>
-        <AlertDialogAction onClick={()=>setPageNewTranslation(selectedTranslationToSet?.locale || '')}>Yes</AlertDialogAction>
+        <AlertDialogCancel className='visio-cms-text-white'>Cancel</AlertDialogCancel>
+        <AlertDialogAction onClick={()=>setPageNewTranslation(selectedTranslationToSet?.locale || '')}>Yes create translation</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
     </AlertDialog>

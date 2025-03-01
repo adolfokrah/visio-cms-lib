@@ -261,11 +261,13 @@ function PageItem({ item }: { item: PageTreeItem }) {
       ]);
     }
 
+
     const newPages = pages.map((page) => ({
       ...page,
       active: page.id == item.id,
       pinned: page.id == item.id ? true : page.pinned,
     }));
+
     setPages(newPages);
 
     const activePage = newPages.find((page) => page.active);

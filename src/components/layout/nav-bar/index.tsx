@@ -5,6 +5,8 @@ import UserAvatar from './user-avatar';
 import Share from './share';
 import { usePagesState } from '@/lib/states/usePagesState';
 import { PAGES } from '@/lib/constants';
+import { ExternalLink } from 'lucide-react';
+import SaveButton from './save-button';
 
 export default function Navbar() {
   const { pages } = usePagesState();
@@ -20,9 +22,14 @@ export default function Navbar() {
         <Share />
         {activePage && (
           <a target="_blank" href={`${PAGES.PREVIEW_PAGE}/${activePage.id}`}>
-            <Button className="visio-cms-my-2">Preview</Button>
+            <Button className="visio-cms-my-2 visio-cms-flex visio-cms-items-center" variant={'ghost'}>
+            Preview
+            <ExternalLink size={13} className='visio-cms-ml-2' />
+            </Button>
           </a>
         )}
+        <Separator orientation="vertical" className="visio-cms-bg-dark-900" />
+        <SaveButton/>
       </div>
     </div>
   );

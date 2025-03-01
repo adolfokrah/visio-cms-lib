@@ -63,6 +63,7 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
           photo: user?.user_metadata.photo,
         },
         folderId: data.folderId,
+        autoSave: false,
       };
 
       const { error, data: pageData } = await db
@@ -74,10 +75,10 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
           author: user?.user_metadata.id,
           tags: '',
           seo: {},
-          blocks: {},
-          blocks_dev: {},
+          blocks: newPage.blocks,
+          blocks_dev: newPage.blocks,
           folder_id: newPage?.folderId || null,
-          publish_date: newPage.publishDate,
+          publish_date: newPage.publishDate
         })
         .select();
 

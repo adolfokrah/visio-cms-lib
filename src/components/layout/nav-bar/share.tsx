@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import useInvitation from '@/lib/hooks/useInvitation';
 import { InvitedUser } from '@/lib/types';
 import { areAllEmailsValid, cn, stringToColor } from '@/lib/utils';
-import { Check, ChevronDown, Link, Loader } from 'lucide-react';
+import { Check, ChevronDown, Link, Loader, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Avatar, AvatarImage, AvatarFallback } from '../../ui/avatar';
 import { useAuthState } from '@/lib/states/useAuthState';
@@ -58,8 +58,10 @@ export default function Share() {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant={'outline'} className="visio-cms-my-2" onClick={fetchUsers}>
-            Share
+          <Button variant={'ghost'} className="visio-cms-my-2" onClick={fetchUsers}>
+          Share
+          <Share2 size={12} className='visio-cms-ml-2' />
+           
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -88,8 +90,9 @@ export default function Share() {
                 </Button>
               </div>
             </DialogTitle>
-            <DialogDescription>
-              <div className="visio-cms-flex visio-cms-gap-2 visio-cms-items-center visio-cms-mb-2">
+            <DialogDescription
+            />            
+              <div className="visio-cms-flex visio-cms-gap-2 visio-cms-text-white visio-cms-mb-4 visio-cms-items-center visio-cms-mb-2">
                 <Input
                   value={emailList}
                   placeholder="Inviter others by email"
@@ -184,7 +187,7 @@ export default function Share() {
                   );
                 })}
               </div>
-            </DialogDescription>
+         
           </DialogHeader>
         </DialogContent>
       </Dialog>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { usePagesState } from '../states/usePagesState';
+import { Page, usePagesState } from '../states/usePagesState';
 import { useTabState } from '../states/useTabsState';
 
 const usePageTabs = () => {
@@ -15,6 +15,7 @@ const usePageTabs = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const tabRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const { tabs, setTabs } = useTabState(); // Store tab references
+  
 
   useEffect(() => {
     const updateTabVisibility = () => {
@@ -110,12 +111,18 @@ const usePageTabs = () => {
     }
   };
 
-  const handleRemovePage = (id: string) => {
-    const newPages = pages.map((page) => ({
-      ...page,
-      active: page.id == id ? false : page.active,
-      pinned: page.id == id ? false : page.pinned,
-    }));
+  const handleRemovePage = (id: string, revertChanges = false) => {
+    const newPages = pages.map((page) => {
+      let newPage = { ...page };
+      if(revertChanges && page.id == id){
+        newPage = newPage.initialState as Page;
+      }
+      return {
+        ...newPage,
+        active: page.id == id ? false : page.active,
+        pinned: page.id == id ? false : page.pinned,
+      }
+    });
     setTabs(tabs.filter((tab) => tab.id != id));
     setPages(newPages);
   };
