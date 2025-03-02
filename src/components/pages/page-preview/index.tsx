@@ -14,7 +14,7 @@ export default function PagePreview({ id }: { id: string }) {
   const isBuilderMode = getProjectMode() === 'BUILDER';
   const page = pages.find((page) => page.id === id);
   const { setParams } = useParamState();
-  const {externalData, loading} = useExternalData(page?.slug || '');
+  const { externalData, loading } = useExternalData(page?.slug || '');
   const navigate = (path: string) => {
     window.location.pathname = path;
   };
@@ -34,7 +34,7 @@ export default function PagePreview({ id }: { id: string }) {
   if (fetchingUser) return null;
 
   if (loading) {
-    return null
+    return null;
   }
 
   return (
@@ -45,7 +45,12 @@ export default function PagePreview({ id }: { id: string }) {
         const foundGlobalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
         const id = foundGlobalBlock?.blockId || blockId;
         const block = blocks.find((block) => block.Schema.id == id);
-        const inputs = { ...block?.Schema.defaultPropValues, ...pageBlock?.inputs, ...foundGlobalBlock?.inputs, externalData };
+        const inputs = {
+          ...block?.Schema.defaultPropValues,
+          ...pageBlock?.inputs,
+          ...foundGlobalBlock?.inputs,
+          externalData,
+        };
 
         if (!block) return null;
 

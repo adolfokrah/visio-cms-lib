@@ -56,7 +56,7 @@ export const useProjectConfigurationState = create(
       },
       setTheme: (theme) => set(() => ({ theme })),
       setGlobalBlocks: (globalBlocks) => set(() => ({ globalBlocks })),
-      routeHandlers: async () => null
+      routeHandlers: async () => null,
     }),
     {
       name: 'project-configuration-storage',

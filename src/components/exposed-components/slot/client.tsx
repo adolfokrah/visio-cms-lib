@@ -15,7 +15,15 @@ type SlotProps = {
   allowedBlockIds?: string[];
   externalData?: Record<string, any>;
 };
-export default function ClientSlot({ defaultValue, direction = 'vertical', className, propName, pageBlockId, allowedBlockIds, externalData }: SlotProps) {
+export default function ClientSlot({
+  defaultValue,
+  direction = 'vertical',
+  className,
+  propName,
+  pageBlockId,
+  allowedBlockIds,
+  externalData,
+}: SlotProps) {
   const { activePage } = usePageContent();
   const { blocks: builderBlocks } = useProjectConfigurationState();
   const { blocks: liveBlocks, globalBlocks } = usePageContentState();
@@ -24,13 +32,13 @@ export default function ClientSlot({ defaultValue, direction = 'vertical', class
   if (defaultValue.length === 0 && activePage) {
     return (
       <div>
-         <EmptyPageDroppable
-        activePage={activePage}
-        propName={propName}
-        pageBlockId={pageBlockId}
-        className="!visio-cms-h-full !visio-cms-min-h-[50px]"
-        allowedBlockIds={allowedBlockIds}
-      />
+        <EmptyPageDroppable
+          activePage={activePage}
+          propName={propName}
+          pageBlockId={pageBlockId}
+          className="!visio-cms-h-full !visio-cms-min-h-[50px]"
+          allowedBlockIds={allowedBlockIds}
+        />
       </div>
     );
   }
@@ -42,8 +50,6 @@ export default function ClientSlot({ defaultValue, direction = 'vertical', class
     'visio-cms-flex-col': direction === 'vertical',
   });
 
-  
-
   if (!isBuilderMode) {
     return (
       <div className={cn(divClass)}>
@@ -51,7 +57,12 @@ export default function ClientSlot({ defaultValue, direction = 'vertical', class
           const globalBlock = globalBlocks?.find((b) => b.id === block?.globalBlockId);
           const Block = blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
           if (!Block) return null;
-          const inputs = { ...Block.Schema.defaultPropValues, ...block.inputs, ...globalBlock?.inputs, ...externalData };
+          const inputs = {
+            ...Block.Schema.defaultPropValues,
+            ...block.inputs,
+            ...globalBlock?.inputs,
+            ...externalData,
+          };
           return (
             <div key={block.id}>
               <Block {...inputs} />

@@ -15,7 +15,15 @@ type SlotProps = {
   allowedBlockIds?: string[];
   externalData?: Record<string, any>;
 };
-export default function Slot({ defaultValue, direction = 'vertical', className, propName, pageBlockId, allowedBlockIds, externalData }: SlotProps) {
+export default function Slot({
+  defaultValue,
+  direction = 'vertical',
+  className,
+  propName,
+  pageBlockId,
+  allowedBlockIds,
+  externalData,
+}: SlotProps) {
   const { activePage } = usePageContent();
   const { blocks: builderBlocks } = useProjectConfigurationState();
   const { blocks: liveBlocks, globalBlocks } = usePageContentState();
@@ -47,7 +55,12 @@ export default function Slot({ defaultValue, direction = 'vertical', className, 
           const globalBlock = globalBlocks?.find((b) => b.id === block?.globalBlockId);
           const Block = blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
           if (!Block) return null;
-          const inputs = { ...Block.Schema.defaultPropValues, ...block.inputs, ...globalBlock?.inputs, externalData: {...externalData} };
+          const inputs = {
+            ...Block.Schema.defaultPropValues,
+            ...block.inputs,
+            ...globalBlock?.inputs,
+            externalData: { ...externalData },
+          };
           return (
             <div key={block.id}>
               <Block {...inputs} />
@@ -57,13 +70,12 @@ export default function Slot({ defaultValue, direction = 'vertical', className, 
       </div>
     );
   }
-  
+
   return (
     <div className={cn(divClass)}>
       {defaultValue.map((pageBlock, index) => {
         const { blockId } = pageBlock;
         const block = blocks.find((block) => block.Schema.id === blockId);
-
 
         if (!block) return null;
         return (

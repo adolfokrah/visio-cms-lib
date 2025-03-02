@@ -23,13 +23,13 @@ export default function Navbar() {
         {activePage && (
           <a target="_blank" href={`${PAGES.PREVIEW_PAGE}/${activePage.id}`}>
             <Button className="visio-cms-my-2 visio-cms-flex visio-cms-items-center" variant={'ghost'}>
-            Preview
-            <ExternalLink size={13} className='visio-cms-ml-2' />
+              Preview
+              <ExternalLink size={13} className="visio-cms-ml-2" />
             </Button>
           </a>
         )}
         <Separator orientation="vertical" className="visio-cms-bg-dark-900" />
-        <SaveButton/>
+        <SaveButton />
       </div>
     </div>
   );

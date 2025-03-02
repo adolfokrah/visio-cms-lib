@@ -574,8 +574,7 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
   const { user } = useAuthState.getState();
   const page = pages.find((page) => page.id === pageId);
 
-  if (!page || !page.autoSave && !isManualSave) return;
-
+  if (!page || (!page.autoSave && !isManualSave)) return;
 
   const { data: foundPageData, error: foundPageError } = await db.from('pages').select().eq('id', page.id);
   if (foundPageError) throw foundPageError;
@@ -624,22 +623,9 @@ export async function updatePageData(dataObject: { [key: string]: any }, pageId:
 }
 
 function filterObject<T extends Record<string, any>>(obj: T): Partial<T> {
-  const allowedColumns = [
-    "name",
-    "slug",
-    "status",
-    "tags",
-    "seo",
-    "blocks_dev",
-    "blocks",
-    "folder_id",
-    "publish_date"
-  ];
-  return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => allowedColumns.includes(key))
-  ) as Partial<T>;
+  const allowedColumns = ['name', 'slug', 'status', 'tags', 'seo', 'blocks_dev', 'blocks', 'folder_id', 'publish_date'];
+  return Object.fromEntries(Object.entries(obj).filter(([key]) => allowedColumns.includes(key))) as Partial<T>;
 }
-
 
 export type PageData = {
   pageBlocks: PageBlock[];
@@ -655,7 +641,7 @@ export type PageData = {
 export async function getPageBlocks(
   slug: string,
   locale: string,
-  config: ProjectConfig ,
+  config: ProjectConfig,
 ): Promise<PageData & { error?: string }> {
   const url = `${config.supabaseProjectUrl}/functions/v1/get-page-blocks`;
   const options = {
@@ -670,7 +656,6 @@ export async function getPageBlocks(
   const response = await fetch(url, options);
 
   const externalData = config.routeHandlers ? await config.routeHandlers(slug) : null;
-
 
   if (response.status === 200) {
     const data = await response.json();

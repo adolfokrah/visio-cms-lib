@@ -18,7 +18,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog';
 import { Language } from '@/lib/types';
 
 export default function LanguageControls() {
@@ -26,7 +26,6 @@ export default function LanguageControls() {
   const { supportedLanguages, defaultLanguage } = useProjectConfigurationState();
   const activePage = pages.find((page) => page.active);
   const [selectedTranslationToSet, setSelectedTranslationToSet] = useState<Language | null>(null);
-
 
   const setPageNewTranslation = (locale: Language['locale']) => {
     const newPages = pages.map((page) => {
@@ -58,54 +57,58 @@ export default function LanguageControls() {
     });
 
     setPages(newPages);
-  }
+  };
 
   return (
     <>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className="!visio-cms-bg-dark-700 hover:!visio-cms-bg-dark-900 visio-cms-w-[60px] visio-cms-shadow-none">
-          {activePage?.activeLanguageLocale.toLocaleUpperCase()}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="visio-cms-w-[160px]">
-        {supportedLanguages.map((localeObject) => {
-          const { language, locale } = localeObject;
-          return (
-            <DropdownMenuItem
-              key={language}
-              onClick={() => {
-                
-                if(!activePage?.blocks?.[locale] && activePage?.activeLanguageLocale != locale) {
-                  setSelectedTranslationToSet(localeObject);
-                  return;
-                }
-  
-                setPageNewTranslation(locale);
-              }}
-            >
-              {language}
-              <DropdownMenuShortcut>{locale}</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          )
-        })}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button className="!visio-cms-bg-dark-700 hover:!visio-cms-bg-dark-900 visio-cms-w-[60px] visio-cms-shadow-none">
+            {activePage?.activeLanguageLocale.toLocaleUpperCase()}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="visio-cms-w-[160px]">
+          {supportedLanguages.map((localeObject) => {
+            const { language, locale } = localeObject;
+            return (
+              <DropdownMenuItem
+                key={language}
+                onClick={() => {
+                  if (!activePage?.blocks?.[locale] && activePage?.activeLanguageLocale != locale) {
+                    setSelectedTranslationToSet(localeObject);
+                    return;
+                  }
 
-    <AlertDialog open={selectedTranslationToSet ? true : false} onOpenChange={() => setSelectedTranslationToSet(null)}>
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Create a new translation </AlertDialogTitle>
-        <AlertDialogDescription>
-          Create the {selectedTranslationToSet?.language} translation for this page?
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogCancel className='visio-cms-text-white'>Cancel</AlertDialogCancel>
-        <AlertDialogAction onClick={()=>setPageNewTranslation(selectedTranslationToSet?.locale || '')}>Yes create translation</AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-    </AlertDialog>
-</>
+                  setPageNewTranslation(locale);
+                }}
+              >
+                {language}
+                <DropdownMenuShortcut>{locale}</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <AlertDialog
+        open={selectedTranslationToSet ? true : false}
+        onOpenChange={() => setSelectedTranslationToSet(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Create a new translation </AlertDialogTitle>
+            <AlertDialogDescription>
+              Create the {selectedTranslationToSet?.language} translation for this page?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="visio-cms-text-white">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => setPageNewTranslation(selectedTranslationToSet?.locale || '')}>
+              Yes create translation
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

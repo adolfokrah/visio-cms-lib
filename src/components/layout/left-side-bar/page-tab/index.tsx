@@ -20,8 +20,7 @@ import { PageTreeItem } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RESPONSIVE_VIEWS } from '@/lib/constants';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import useSWR from 'swr'
-
+import useSWR from 'swr';
 
 export default function PagesTab() {
   const { pages, setPages } = usePagesState();
@@ -31,7 +30,11 @@ export default function PagesTab() {
   const [treeItems, setTreeItems] = useState<PageTreeItem[]>([]);
   const { defaultLanguage } = useProjectConfigurationState();
 
-  const { data, error, isLoading: loading } = useSWR(`/api/pages`, async ()=>{
+  const {
+    data,
+    error,
+    isLoading: loading,
+  } = useSWR(`/api/pages`, async () => {
     const db = supabase();
     const { data: folders, error } = await db.from('folders').select('*');
     const { data: pagesData, error: pagesError } = await db.from('pages').select(`*, author(*)`);
@@ -42,20 +45,19 @@ export default function PagesTab() {
     const data = [
       ...folders.map((folder) => ({
         ...folder,
-        isExpanded: items
-          .filter((item) => item.type === 'Folder')
-          ?.find((itemFolder) => folder.id === itemFolder.id)?.isExpanded,
+        isExpanded: items.filter((item) => item.type === 'Folder')?.find((itemFolder) => folder.id === itemFolder.id)
+          ?.isExpanded,
         children: [],
         type: 'Folder',
       })),
       ...pagesData.map((page) => ({ id: page.id, name: page.name, type: 'Page' })),
     ];
 
-    return {data, pagesData}
-  })
+    return { data, pagesData };
+  });
 
   useEffect(() => {
-    if(!data || pages.length) return;
+    if (!data || pages.length) return;
 
     setItems(data.data as PageTreeItem[]);
     setPages(

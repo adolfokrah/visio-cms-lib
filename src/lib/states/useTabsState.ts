@@ -6,7 +6,7 @@ export type Tab = {
   type: 'page' | 'globalBlock';
   id: string;
   active: boolean;
-}
+};
 export type TabsState = {
   tabs: Tab[];
   setTabs: (tabs: TabsState['tabs']) => void;

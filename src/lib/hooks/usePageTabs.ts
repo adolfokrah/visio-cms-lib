@@ -15,7 +15,6 @@ const usePageTabs = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const tabRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const { tabs, setTabs } = useTabState(); // Store tab references
-  
 
   useEffect(() => {
     const updateTabVisibility = () => {
@@ -114,14 +113,14 @@ const usePageTabs = () => {
   const handleRemovePage = (id: string, revertChanges = false) => {
     const newPages = pages.map((page) => {
       let newPage = { ...page };
-      if(revertChanges && page.id == id){
+      if (revertChanges && page.id == id) {
         newPage = newPage.initialState as Page;
       }
       return {
         ...newPage,
         active: page.id == id ? false : page.active,
         pinned: page.id == id ? false : page.pinned,
-      }
+      };
     });
     setTabs(tabs.filter((tab) => tab.id != id));
     setPages(newPages);

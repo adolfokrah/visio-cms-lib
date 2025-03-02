@@ -56,7 +56,7 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
         status: {
           [defaultLanguage.locale]: 'Draft',
         },
-        blocks: {[defaultLanguage.locale]: []},
+        blocks: { [defaultLanguage.locale]: [] },
         author: {
           first_name: user?.user_metadata.first_name,
           last_name: user?.user_metadata.last_name,
@@ -78,7 +78,7 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
           blocks: newPage.blocks,
           blocks_dev: newPage.blocks,
           folder_id: newPage?.folderId || null,
-          publish_date: newPage.publishDate
+          publish_date: newPage.publishDate,
         })
         .select();
 

@@ -17,8 +17,8 @@ export default function BlockItem({
   propName,
   parentBlockId,
   droppableDirection = 'vertical',
-  allowedBlockIds=[],
-  externalData
+  allowedBlockIds = [],
+  externalData,
 }: {
   block: Block<Record<string, any>>;
   index: number;
@@ -35,10 +35,9 @@ export default function BlockItem({
   const globalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
   const { setRepeaterId } = useRepeaterState();
   const blockInputs = { ...block.Schema.defaultPropValues, ...pageBlock.inputs, ...globalBlock?.inputs };
-  if(externalData && Object.keys(externalData).length > 0){
-    blockInputs.externalData = {...externalData};
+  if (externalData && Object.keys(externalData).length > 0) {
+    blockInputs.externalData = { ...externalData };
   }
-
 
   return (
     <RightClickMenu
@@ -77,8 +76,7 @@ export default function BlockItem({
         <Popover open={pageBlock?.isSelected}>
           <PopoverTrigger asChild>
             <div className="visio-cms-relative">
-
-            <DroppableItem
+              <DroppableItem
                 position={droppableDirection == 'vertical' ? 'top' : 'left'}
                 index={index}
                 showPlaceHolder={isDraggingOver}
@@ -91,7 +89,7 @@ export default function BlockItem({
                 ...blockInputs,
                 pageBlockId: pageBlock.id,
               })}
-             
+
               {index + 1 == pageBlocks.length && (
                 <DroppableItem
                   position={droppableDirection == 'vertical' ? 'bottom' : 'right'}

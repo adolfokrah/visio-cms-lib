@@ -10,7 +10,7 @@ export default function EmptyPageDroppable({
   propName,
   pageBlockId,
   className,
-  allowedBlockIds=[],
+  allowedBlockIds = [],
 }: {
   activePage: Page;
   propName?: string;
@@ -51,7 +51,7 @@ export default function EmptyPageDroppable({
           const data = e.dataTransfer.getData('application/block');
 
           const block = JSON.parse(data);
-          if(allowedBlockIds?.length && !allowedBlockIds?.includes(block.blockId)){
+          if (allowedBlockIds?.length && !allowedBlockIds?.includes(block.blockId)) {
             toast.error(`This block is not allowed here, allowed blocks are: ${allowedBlockIds.join(', ')}`);
             return;
           }

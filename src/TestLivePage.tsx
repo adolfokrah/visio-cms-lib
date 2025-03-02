@@ -15,11 +15,7 @@ export default function TestLivePage() {
     const path = window.location.pathname;
 
     (async () => {
-      const data = await getPageBlocks(
-        path,
-        visioConfig.defaultLanguage.locale,
-        visioConfig
-      );
+      const data = await getPageBlocks(path, visioConfig.defaultLanguage.locale, visioConfig);
 
       if (data && !data.error) {
         setPageBlocks(data.pageBlocks);

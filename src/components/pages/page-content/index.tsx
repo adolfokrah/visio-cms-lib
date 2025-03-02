@@ -8,16 +8,15 @@ export default function PageContent() {
   const { activePage } = usePageContent();
   const { blocks } = useProjectConfigurationState();
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
-  const {externalData, loading} = useExternalData(activePage?.slug || '');
+  const { externalData, loading } = useExternalData(activePage?.slug || '');
 
   if (loading) {
-    return null
+    return null;
   }
 
   if (pageBlocks.length === 0 && activePage) {
     return <EmptyPageDroppable activePage={activePage} />;
   }
-
 
   return (
     <div id="visio-cms-page-content" className="visio-cms-h-auto">
@@ -26,7 +25,14 @@ export default function PageContent() {
         const block = blocks.find((block) => block.Schema.id === blockId);
         if (!block) return null;
         return (
-          <BlockItem key={pageBlock.id} block={block} index={index} pageBlock={pageBlock} pageBlocks={pageBlocks} externalData={externalData}/>
+          <BlockItem
+            key={pageBlock.id}
+            block={block}
+            index={index}
+            pageBlock={pageBlock}
+            pageBlocks={pageBlocks}
+            externalData={externalData}
+          />
         );
       })}
     </div>

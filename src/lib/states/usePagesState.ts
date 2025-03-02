@@ -76,7 +76,7 @@ type PagesStateType = {
   setPageSwitched: (flag: boolean) => void;
   setPageSeoFeaturedImages: (activePage: Page) => void;
   updatePageData: (page: Page) => void;
-  getActivePage: ()=>Page|null;
+  getActivePage: () => Page | null;
 };
 
 export const usePagesState = create(
@@ -104,7 +104,7 @@ export const usePagesState = create(
         if (seo && Object.keys(seo).length) {
           for (const key of Object.keys(seo)) {
             const featuredImage = seo[key]?.meta.featuredImage;
-            if(!featuredImage) continue;
+            if (!featuredImage) continue;
             const { data } = await db
               .from('uploaded_files')
               .select('hashed_file_name')

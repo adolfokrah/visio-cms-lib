@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import {isEqual} from "lodash";
+import { create } from 'zustand';
+import { isEqual } from 'lodash';
 
 interface PageState {
   isSaving: boolean;

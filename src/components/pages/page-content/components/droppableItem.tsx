@@ -9,7 +9,7 @@ export default function DroppableItem({
   showPlaceHolder,
   propName,
   pageBlockId,
-  allowedBlockIds=[]
+  allowedBlockIds = [],
 }: {
   position: 'top' | 'bottom' | 'left' | 'right';
   index: number;
@@ -21,7 +21,7 @@ export default function DroppableItem({
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   return (
-    <Tooltip open={showPlaceHolder && !propName} >
+    <Tooltip open={showPlaceHolder && !propName}>
       <TooltipTrigger asChild disabled>
         <div
           className={cn('visio-cms-z-[200]', {
@@ -49,7 +49,7 @@ export default function DroppableItem({
             const data = e.dataTransfer.getData('application/block');
 
             const block = JSON.parse(data);
-            if(allowedBlockIds?.length && !allowedBlockIds?.includes(block.blockId)) {
+            if (allowedBlockIds?.length && !allowedBlockIds?.includes(block.blockId)) {
               toast.error(`This block is not allowed here, allowed blocks are: ${allowedBlockIds.join(', ')}`);
               return;
             }

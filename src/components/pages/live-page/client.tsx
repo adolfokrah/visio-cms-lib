@@ -46,5 +46,5 @@ export default function Client({
 
   if (blocks.length < 1) return null;
 
-  return null
+  return null;
 }
