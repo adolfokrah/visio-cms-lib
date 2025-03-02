@@ -23,6 +23,7 @@ import { usePageContentState } from './states/usePageContentState';
 import { useAuthState } from './states/useAuthState';
 import { useParamState } from './states/useParamState';
 import lodash from 'lodash';
+import { useTabState } from './states/useTabsState';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -552,6 +553,7 @@ export async function fetchProjectConfig() {
   const db = supabase();
   const projectMode = getProjectMode();
   const { setTheme, setGlobalBlocks, setScripts } = useProjectConfigurationState.getState();
+  const {tabs} = useTabState.getState();
 
   const { setTheme: setPageContentTheme, setGlobalBlocks: setPageContentGlobalBlocks } = usePageContentState.getState();
   const { data, error } = await db.from('project_configuration').select().limit(1);
@@ -559,12 +561,17 @@ export async function fetchProjectConfig() {
   if (error) throw error;
 
   setTheme((data && data[0]?.theme) || { colorScheme: [] });
-  setGlobalBlocks((data && data[0]?.global_blocks) || []);
+  if(tabs.filter(tab=>tab.type === 'globalBlock').length === 0){
+    setGlobalBlocks((data && data[0]?.global_blocks) || []);
+  }
   setScripts((data && data[0]?.scripts) || { header: '', body: '' });
 
   if (projectMode === 'BUILDER') {
     setPageContentTheme((data && data[0]?.theme) || { colorScheme: [] });
-    setPageContentGlobalBlocks((data && data[0]?.global_blocks) || []);
+    if(tabs.filter(tab=>tab.type === 'globalBlock').length === 0){
+      setPageContentGlobalBlocks((data && data[0]?.global_blocks) || []);
+    }
+    
   }
 }
 

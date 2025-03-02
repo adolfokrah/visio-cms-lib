@@ -9,6 +9,7 @@ import { ResponsiveView, usePagesState } from '../states/usePagesState';
 import { toast } from 'sonner';
 import { getSelectedBlock, getSelectedBlockPath, updateOrInsertProjectConfig, updateValueByPath } from '../utils';
 import useBlockHistory from './useBlockHistory';
+import { cloneDeep } from 'lodash';
 
 export default function useGlobalBlock(onClose?: () => void) {
   const [loading, setLoading] = useState(false);
@@ -46,18 +47,17 @@ export default function useGlobalBlock(onClose?: () => void) {
 
     try {
       const id = uuidv4();
-      const newGlobalBlocks = [
-        ...globalBlocks,
-        {
-          id,
-          name,
-          blockId,
-          inputs: { ...pageBlock?.inputs },
-          selectedView: 'Desktop' as ResponsiveView,
-          autoSave: false,
-          isChanged: false,
-        },
-      ];
+      const newBlock = {
+        id,
+        name,
+        blockId,
+        inputs: { ...pageBlock?.inputs },
+        selectedView: 'Desktop' as ResponsiveView,
+        autoSave: false,
+        initialState: {},
+      };
+      newBlock.initialState = cloneDeep({ ...newBlock });
+      const newGlobalBlocks = [...globalBlocks, newBlock];
       await updateOrInsertProjectConfig({ global_blocks: newGlobalBlocks });
       setGlobalBlocks(newGlobalBlocks);
       addGlobalBlockForm.reset();

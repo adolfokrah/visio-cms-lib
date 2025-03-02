@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Page, usePagesState } from '../states/usePagesState';
 import { useTabState } from '../states/useTabsState';
+import { useProjectConfigurationState } from '../states/useProjectConfigState';
+import { GlobalBlock } from '../types';
 
 const usePageTabs = () => {
   const {
@@ -15,6 +17,7 @@ const usePageTabs = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const tabRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const { tabs, setTabs } = useTabState(); // Store tab references
+  const {globalBlocks, setGlobalBlocks} = useProjectConfigurationState();
 
   useEffect(() => {
     const updateTabVisibility = () => {
@@ -110,20 +113,33 @@ const usePageTabs = () => {
     }
   };
 
-  const handleRemovePage = (id: string, revertChanges = false) => {
-    const newPages = pages.map((page) => {
-      let newPage = { ...page };
-      if (revertChanges && page.id == id) {
-        newPage = newPage.initialState as Page;
-      }
-      return {
-        ...newPage,
-        active: page.id == id ? false : page.active,
-        pinned: page.id == id ? false : page.pinned,
-      };
-    });
+  const handleRemovePage = (id: string, revertChanges = false, type='page') => {
+    if(type === 'page'){
+      const newPages = pages.map((page) => {
+        let newPage = { ...page };
+        if (revertChanges && page.id == id) {
+          newPage = newPage.initialState as Page;
+        }
+        return {
+          ...newPage,
+          active: page.id == id ? false : page.active,
+          pinned: page.id == id ? false : page.pinned,
+        };
+      });
+      setPages(newPages);
+    }else{
+      setGlobalBlocks(globalBlocks.map((block) => {
+        let newBlock = { ...block };
+        if (revertChanges && block.id == id) {
+          newBlock = newBlock.initialState as GlobalBlock;
+        }
+        return {
+          ...newBlock
+        }
+      }));
+    }
     setTabs(tabs.filter((tab) => tab.id != id));
-    setPages(newPages);
+   
   };
 
   return {

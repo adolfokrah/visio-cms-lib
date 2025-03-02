@@ -20,6 +20,8 @@ export type GlobalBlock = {
   active?: boolean;
   history?: { currentIndex: number; inputs: { [key: string]: any }[] };
   selectedView: ResponsiveView;
+  autoSave: boolean;
+  initialState: { [key: string]: any };
 };
 
 export type ProjectConfiguration = {

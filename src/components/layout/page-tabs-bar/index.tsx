@@ -25,12 +25,14 @@ import {
   AlertDialogTitle,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
+import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
 
 export default function PageTabs() {
   const { hiddenTabs, containerRef, tabs, handleTabClick, tabRefs, handleRemovePage } = usePageTabs();
   const { pages } = usePagesState();
   const pinnedPages = tabs;
   const [closingTab, setClosingTab] = useState<null | Tab>(null);
+  const { globalBlocks } = useProjectConfigurationState();
 
   const tabClicked = useCallback(
     (id: string) => {
@@ -40,14 +42,21 @@ export default function PageTabs() {
   );
 
   const getPageAutoSave = useCallback(
-    (id: string) => {
-      const { initialState, ...page } = pages.find((page) => page?.id == id) || {};
-      const isChanged = !isEqual({ ...page, active: false }, { ...initialState, active: false });
-      const isAutoSave = 'autoSave' in page && page.autoSave;
-
+    (id: string, type: string) => {
+      let isChanged = false;
+      let isAutoSave = false;
+      if (type == 'globalBlock') {
+        const { initialState, ...block } = globalBlocks.find((block) => block?.id == id) || {};
+        isChanged = !isEqual({ ...block, active: false }, { ...initialState, active: false });
+        isAutoSave = 'autoSave' in block && block.autoSave;
+      } else {
+        const { initialState, ...page } = pages.find((page) => page?.id == id) || {};
+        isChanged = !isEqual({ ...page, active: false }, { ...initialState, active: false });
+        isAutoSave = 'autoSave' in page && page.autoSave;
+      }
       return { isChanged, isAutoSave };
     },
-    [pages],
+    [pages, globalBlocks],
   );
 
   const CloseButton = memo(
@@ -79,7 +88,7 @@ export default function PageTabs() {
         ref={containerRef}
       >
         {pinnedPages.map(({ name, id, type, active }) => {
-          const { isChanged, isAutoSave } = getPageAutoSave(id);
+          const { isChanged, isAutoSave } = getPageAutoSave(id, type);
           return (
             <div
               key={id}
@@ -127,7 +136,7 @@ export default function PageTabs() {
             {pinnedPages
               .filter((page) => hiddenTabs.includes(page.id))
               .map(({ name, id, type, active }) => {
-                const { isChanged, isAutoSave } = getPageAutoSave(id);
+                const { isChanged, isAutoSave } = getPageAutoSave(id, type);
                 return (
                   <DropdownMenuItem
                     key={name}
@@ -174,7 +183,7 @@ export default function PageTabs() {
               onClick={() => {
                 setClosingTab(null);
                 if (closingTab) {
-                  handleRemovePage(closingTab.id, true);
+                  handleRemovePage(closingTab.id, true, closingTab.type);
                 }
               }}
             >

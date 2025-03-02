@@ -5,8 +5,10 @@ import { sendMessageToParent } from '@/lib/utils';
 import React from 'react';
 
 export default function GlobalEditContent() {
+
   const { blocks } = useProjectConfigurationState();
   const { globalBlocks, tabs } = usePageContentState();
+
   usePageContent();
   const pinnedTab = tabs.find((tab) => tab.active);
   const foundGlobalBlock = globalBlocks.find((globalBlock) => globalBlock.id === pinnedTab?.id);
