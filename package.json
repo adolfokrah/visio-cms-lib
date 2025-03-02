@@ -12,8 +12,8 @@
       "types": "./dist/main.d.ts"
     },
     "./Cms": {
-      "import": "./dist/components/pages/index.es.js",
-      "types": "./dist/src/components/pages/index.d.ts"
+      "import": "./dist/pages/index.es.js",
+      "types": "./dist/src/pages/index.d.ts"
     },
     "./types": {
       "types": "./dist/src/lib/exposed-types.d.ts"
@@ -43,8 +43,8 @@
       "types": "./dist/exposedFunctions.d.ts"
     },
     "./LivePage": {
-      "import": "./dist/components/pages/live-page/index.es.js",
-      "types": "./dist/src/components/pages/live-page/index.d.ts"
+      "import": "./dist/pages/live-page/index.es.js",
+      "types": "./dist/src/pages/live-page/index.d.ts"
     }
   },
   "scripts": {
