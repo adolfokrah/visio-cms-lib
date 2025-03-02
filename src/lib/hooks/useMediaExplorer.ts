@@ -37,7 +37,7 @@ export default function useMediaExplorer({
   const { pages, setPageSeoFeaturedImages } = usePagesState();
   useEffect(() => {
     fetchFiles();
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     if (open == true && !files.find((file) => file.selected)) {
