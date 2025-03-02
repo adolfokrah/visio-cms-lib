@@ -1,5 +1,5 @@
-import BlockItem from '@/components/pages/page-content/components/bock-item';
-import EmptyPageDroppable from '@/components/pages/page-content/components/emptyPageDroppable';
+import BlockItem from '@/pages/builder/layout/canvas/page-content/components/bock-item';
+import EmptyPageDroppable from '@/pages/builder/layout/canvas/page-content/components/emptyPageDroppable';
 import { PageBlock } from '@/lib/exposed-types';
 import usePageContent from '@/lib/hooks/usePageContent';
 import { usePageContentState } from '@/lib/states/usePageContentState';

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { PlusIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import lodash from 'lodash';
-import AddNewPageForm from '../../add-new-page-form';
+import AddNewPageForm from '../../../../../components/add-new-page-form';
 import {
   DropdownMenu,
   DropdownMenuContent,

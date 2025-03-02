@@ -1,5 +1,5 @@
 import { useTabState } from '@/lib/states/useTabsState';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import BlocksTab from './blocks-tab';
 import LayersTab from './layers-tab';
 import PagesTab from './page-tab';

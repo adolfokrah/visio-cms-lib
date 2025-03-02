@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import usePage from '@/lib/hooks/usePage';
 import DeletePageAction from './delete-page-action';
-import AddNewPageForm from '../../add-new-page-form';
+import AddNewPageForm from '../../../../../components/add-new-page-form';
 import { useTabState } from '@/lib/states/useTabsState';
 import { toast } from 'sonner';
 

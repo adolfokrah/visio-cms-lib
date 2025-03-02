@@ -1,5 +1,5 @@
 import { usePagesState } from '@/lib/states/usePagesState';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageSettingsTab from './page-settings-tab';
 import { useMemo } from 'react';
 import { cn, getSelectedBlock } from '@/lib/utils';

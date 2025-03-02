@@ -17,14 +17,18 @@ export const useSave = () => {
 
   const clonedPage = cloneDeep(activePage);
   const { initialState, ...page } = clonedPage || {};
-  const {initialState: initialBlockState, ...globalBlock} = cloneDeep(activeGlobalBlock) || {};
-  const isChanged = activeGlobalBlock ? !isEqual(initialBlockState, globalBlock) :  !isEqual(page, initialState);
+  const { initialState: initialBlockState, ...globalBlock } = cloneDeep(activeGlobalBlock) || {};
+  const isChanged = activeGlobalBlock ? !isEqual(initialBlockState, globalBlock) : !isEqual(page, initialState);
 
   useEffect(() => {
     if (activePage && !activePage.initialState) {
       updatePageData({ ...activePage, initialState: cloneDeep(page) });
-    }else if(activeGlobalBlock && !activeGlobalBlock.initialState){
-      setGlobalBlocks(globalBlocks.map((block) => (block.id === activeTab?.id ? { ...block, initialState: cloneDeep(globalBlock) } : block)));
+    } else if (activeGlobalBlock && !activeGlobalBlock.initialState) {
+      setGlobalBlocks(
+        globalBlocks.map((block) =>
+          block.id === activeTab?.id ? { ...block, initialState: cloneDeep(globalBlock) } : block,
+        ),
+      );
     }
   }, [activeTab?.id]);
 
@@ -36,7 +40,13 @@ export const useSave = () => {
         toast.success('Page saved successfully');
         updatePageData({ ...activePage, autoSave: setAutosave, initialState: cloneDeep(page) });
       } else {
-        setGlobalBlocks(globalBlocks.map((block) => (block.id === activeTab?.id ? { ...block, autoSave: setAutosave, initialState: cloneDeep(globalBlock) } : block)));
+        setGlobalBlocks(
+          globalBlocks.map((block) =>
+            block.id === activeTab?.id
+              ? { ...block, autoSave: setAutosave, initialState: cloneDeep(globalBlock) }
+              : block,
+          ),
+        );
         await updateOrInsertProjectConfig({ global_blocks: globalBlocks });
         toast.success('Block saved successfully');
       }

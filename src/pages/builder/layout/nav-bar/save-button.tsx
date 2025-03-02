@@ -10,7 +10,7 @@ import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState
 export default function SaveButton() {
   const { isSaving, isChanged, onSavePage, activePage, updatePageData, activeGlobalBlock } = useSave();
   const { pages } = usePagesState();
-  const {setGlobalBlocks, globalBlocks} = useProjectConfigurationState();
+  const { setGlobalBlocks, globalBlocks } = useProjectConfigurationState();
 
   const id = activePage?.id;
   return (
@@ -20,7 +20,7 @@ export default function SaveButton() {
 
         <Switch
           id="auto-save"
-          checked={activeGlobalBlock?.autoSave || activePage?.autoSave  || false}
+          checked={activeGlobalBlock?.autoSave || activePage?.autoSave || false}
           onCheckedChange={(checked) => {
             if (activePage) {
               const { initialState, ...page } = pages.find((page) => page?.id == id) || {};
@@ -38,8 +38,12 @@ export default function SaveButton() {
               const isChanged = !isEqual({ ...block, autoSave: false }, { ...initialState, autoSave: false });
               if (isChanged && checked) {
                 onSavePage(checked);
-              }else{
-                setGlobalBlocks(globalBlocks.map((block) => (block.id === activeGlobalBlock?.id ? { ...block, autoSave: checked } : block)));
+              } else {
+                setGlobalBlocks(
+                  globalBlocks.map((block) =>
+                    block.id === activeGlobalBlock?.id ? { ...block, autoSave: checked } : block,
+                  ),
+                );
               }
             }
           }}

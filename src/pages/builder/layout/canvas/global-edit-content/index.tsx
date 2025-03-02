@@ -5,7 +5,6 @@ import { sendMessageToParent } from '@/lib/utils';
 import React from 'react';
 
 export default function GlobalEditContent() {
-
   const { blocks } = useProjectConfigurationState();
   const { globalBlocks, tabs } = usePageContentState();
 

@@ -14,7 +14,7 @@ import { InvitedUser } from '@/lib/types';
 import { areAllEmailsValid, cn, stringToColor } from '@/lib/utils';
 import { Check, ChevronDown, Link, Loader, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { Avatar, AvatarImage, AvatarFallback } from '../../ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useAuthState } from '@/lib/states/useAuthState';
 import {
   DropdownMenu,

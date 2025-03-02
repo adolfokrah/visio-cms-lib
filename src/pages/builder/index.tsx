@@ -1,9 +1,9 @@
-import Navbar from '@/components/layout/nav-bar';
+import Navbar from './layout/nav-bar';
 import SmallerScreenWarning from '../error-pages/smaller-screen-warning-page';
-import LeftSideBar from '@/components/layout/left-side-bar';
-import RightSideBar from '@/components/layout/right-side-bar';
-import PageTabs from '@/components/layout/page-tabs-bar';
-import Canvas from '@/components/layout/canvas';
+import LeftSideBar from './layout/left-side-bar';
+import RightSideBar from './layout/right-side-bar';
+import PageTabs from './layout/canvas/page-tabs-bar';
+import Canvas from './layout/canvas';
 import { useAuthState } from '@/lib/states/useAuthState';
 import { useEffect } from 'react';
 import { PAGES } from '@/lib/constants';

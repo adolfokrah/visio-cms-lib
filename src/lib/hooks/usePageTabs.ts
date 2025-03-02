@@ -17,7 +17,7 @@ const usePageTabs = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const tabRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const { tabs, setTabs } = useTabState(); // Store tab references
-  const {globalBlocks, setGlobalBlocks} = useProjectConfigurationState();
+  const { globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
 
   useEffect(() => {
     const updateTabVisibility = () => {
@@ -113,8 +113,8 @@ const usePageTabs = () => {
     }
   };
 
-  const handleRemovePage = (id: string, revertChanges = false, type='page') => {
-    if(type === 'page'){
+  const handleRemovePage = (id: string, revertChanges = false, type = 'page') => {
+    if (type === 'page') {
       const newPages = pages.map((page) => {
         let newPage = { ...page };
         if (revertChanges && page.id == id) {
@@ -127,19 +127,20 @@ const usePageTabs = () => {
         };
       });
       setPages(newPages);
-    }else{
-      setGlobalBlocks(globalBlocks.map((block) => {
-        let newBlock = { ...block };
-        if (revertChanges && block.id == id) {
-          newBlock = newBlock.initialState as GlobalBlock;
-        }
-        return {
-          ...newBlock
-        }
-      }));
+    } else {
+      setGlobalBlocks(
+        globalBlocks.map((block) => {
+          let newBlock = { ...block };
+          if (revertChanges && block.id == id) {
+            newBlock = newBlock.initialState as GlobalBlock;
+          }
+          return {
+            ...newBlock,
+          };
+        }),
+      );
     }
     setTabs(tabs.filter((tab) => tab.id != id));
-   
   };
 
   return {

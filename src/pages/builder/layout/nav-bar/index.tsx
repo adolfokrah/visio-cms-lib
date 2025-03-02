@@ -1,6 +1,6 @@
-import VisioLogo from '../../ui/visio-logo';
-import { Separator } from '../../ui/separator';
-import { Button } from '../../ui/button';
+import VisioLogo from '@/components/ui/visio-logo';
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
 import UserAvatar from './user-avatar';
 import Share from './share';
 import { usePagesState } from '@/lib/states/usePagesState';
