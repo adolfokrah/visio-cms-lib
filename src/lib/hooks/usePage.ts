@@ -11,6 +11,7 @@ import { useTreeView } from '../states/useTreeView';
 import { PageTreeItem } from '../types';
 import { useTabState } from '../states/useTabsState';
 import { toast } from 'sonner';
+import { cloneDeep } from 'lodash';
 
 export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
   const { pages, setPages } = usePagesState();
@@ -64,7 +65,10 @@ export default function usePage({ onPageAdded }: { onPageAdded?: () => void }) {
         },
         folderId: data.folderId,
         autoSave: false,
+        initialState: {}
       };
+
+      newPage.initialState = cloneDeep(newPage);
 
       const { error, data: pageData } = await db
         .from('pages')
