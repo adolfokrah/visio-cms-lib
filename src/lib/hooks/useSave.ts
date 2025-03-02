@@ -22,13 +22,13 @@ export const useSave = () => {
     }
   }, [activeTab?.id]);
 
-  const onSavePage = async () => {
+  const onSavePage = async (setAutosave = false) => {
     setSaving(true);
     try {
       if (activePage) {
         await updatePageDataApi(activePage, activePage.id, true);
         toast.success('Page saved successfully');
-        updatePageData({ ...activePage, initialState: cloneDeep(page) });
+        updatePageData({ ...activePage, autoSave: setAutosave,  initialState: cloneDeep(page) });
         setSaving(false);
       }
     } catch (error) {
