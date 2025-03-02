@@ -14,6 +14,7 @@ export default function SaveButton() {
     <div className="visio-cms-justify-between visio-cms-items-center visio-cms-flex visio-cms-gap-2">
       <div className="visio-cms-flex visio-cms-items-center visio-cms-space-x-2">
         <Label htmlFor="auto-save">Auto save</Label>
+
         <Switch
           id="auto-save"
           checked={activePage?.autoSave || false}

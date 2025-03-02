@@ -51,7 +51,6 @@ export default function useBlockHistory() {
       globalBlock.inputs = { ...inputs };
       const newGlobalBlocks = globalBlocks.map((block) => (block.id === blockId ? globalBlock : block));
       await updateOrInsertProjectConfig({ global_blocks: newGlobalBlocks });
-
       setGlobalBlocks(newGlobalBlocks);
     }
   };

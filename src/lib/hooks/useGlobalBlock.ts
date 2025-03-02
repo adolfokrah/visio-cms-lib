@@ -54,6 +54,8 @@ export default function useGlobalBlock(onClose?: () => void) {
           blockId,
           inputs: { ...pageBlock?.inputs },
           selectedView: 'Desktop' as ResponsiveView,
+          autoSave: false,
+          isChanged: false,
         },
       ];
       await updateOrInsertProjectConfig({ global_blocks: newGlobalBlocks });
