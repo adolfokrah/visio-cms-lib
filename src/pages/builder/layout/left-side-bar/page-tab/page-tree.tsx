@@ -261,11 +261,18 @@ function PageItem({ item }: { item: PageTreeItem }) {
       ]);
     }
 
-    const newPages = pages.map((page) => ({
-      ...page,
-      active: page.id == item.id,
-      pinned: page.id == item.id ? true : page.pinned,
-    }));
+    const newPages = pages.map((page) => {
+      const data = {
+        ...page,
+        active: page.id == item.id,
+        pinned: page.id == item.id ? true : page.pinned,
+      }
+      data.history = {[page.activeLanguageLocale]: {
+        currentIndex: 0,
+        blocks: [page.blocks?.[page.activeLanguageLocale] || []],
+      }};
+      return data;
+    });
 
     setPages(newPages);
 

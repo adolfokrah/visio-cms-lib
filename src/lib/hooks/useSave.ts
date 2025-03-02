@@ -18,7 +18,7 @@ export const useSave = () => {
   const clonedPage = cloneDeep(activePage);
   const { initialState, ...page } = clonedPage || {};
   const { initialState: initialBlockState, ...globalBlock } = cloneDeep(activeGlobalBlock) || {};
-  const isChanged = activeGlobalBlock ? !isEqual(initialBlockState, globalBlock) : !isEqual(page, initialState);
+  const isChanged = activeGlobalBlock ? !isEqual({...initialBlockState, history: []}, {...globalBlock, history: []}) : !isEqual({...page, history: []}, {...initialState, history: []});
 
   useEffect(() => {
     if (activePage && !activePage.initialState) {

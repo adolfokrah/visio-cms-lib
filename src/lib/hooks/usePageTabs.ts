@@ -124,6 +124,7 @@ const usePageTabs = () => {
           ...newPage,
           active: page.id == id ? false : page.active,
           pinned: page.id == id ? false : page.pinned,
+          history: undefined,
         };
       });
       setPages(newPages);
@@ -136,6 +137,7 @@ const usePageTabs = () => {
           }
           return {
             ...newBlock,
+            history: undefined
           };
         }),
       );

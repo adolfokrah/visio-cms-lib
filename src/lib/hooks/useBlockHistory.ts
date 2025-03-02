@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { PageBlock, usePagesState } from '../states/usePagesState';
 import { useProjectConfigurationState } from '../states/useProjectConfigState';
 import { updateOrInsertProjectConfig, updatePageData } from '../utils';
@@ -9,7 +10,7 @@ export default function useBlockHistory() {
     const pages = usePagesState.getState().pages;
     const page = pages.find((page) => page.active);
     if (page) {
-      const history = page.history?.[locale]?.blocks ?? [];
+      const history = cloneDeep(page.history?.[locale]?.blocks) ?? [];
       const currentIndex = page.history?.[locale]?.currentIndex ?? -1;
       const newHistory = history.slice(0, currentIndex + 1);
 
@@ -38,7 +39,7 @@ export default function useBlockHistory() {
   const addInputsToGlobalBlockHistory = async (blockId: string, inputs: Record<string, any>) => {
     const globalBlock = globalBlocks.find((block) => block.id === blockId);
     if (globalBlock) {
-      const history = globalBlock.history?.inputs ?? [{ ...globalBlock.inputs }];
+      const history =  cloneDeep(globalBlock.history?.inputs ) ?? [cloneDeep({ ...globalBlock.inputs })];
       const currentIndex = (globalBlock.history?.currentIndex || 0) ?? -1;
       const newHistory = history.slice(0, currentIndex + 1);
 

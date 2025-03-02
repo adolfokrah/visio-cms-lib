@@ -9,9 +9,9 @@ export default function UndoRedoControls() {
   const undoCheck = () => {
     if (activeGlobalPinnedBlock) {
       const globalBlockHistory = activeGlobalPinnedBlock.history;
-      return !globalBlockHistory || globalBlockHistory.inputs.length < 2 || (globalBlockHistory?.currentIndex || 0) < 1;
+      return !globalBlockHistory || globalBlockHistory.inputs.length < 1 || (globalBlockHistory?.currentIndex || 0) < 1;
     } else {
-      return !history || history?.blocks.length < 1 || history?.currentIndex < 0;
+      return !history || history?.blocks.length < 1 || history?.currentIndex < 1;
     }
   };
 
@@ -20,11 +20,11 @@ export default function UndoRedoControls() {
       const globalBlockHistory = activeGlobalPinnedBlock.history;
       return (
         !globalBlockHistory ||
-        globalBlockHistory?.inputs.length < 1 ||
+        globalBlockHistory?.inputs.length < 2 ||
         globalBlockHistory?.currentIndex === globalBlockHistory.inputs.length - 1
       );
     } else {
-      return !history || history?.blocks.length < 1 || history?.currentIndex === history.blocks.length - 1;
+      return !history || history?.blocks.length < 2 ||   history?.currentIndex === history.blocks.length - 1;
     }
   };
   return (

@@ -25,7 +25,6 @@ export default function GlobalBlocks() {
   const [blockToDelete, setBlockToDelete] = useState<string | null>(null);
   const { tabs, setTabs } = useTabState();
   const { pages, setPages } = usePagesState();
-
   const deleteGlobalBlock = async (id: string) => {
     try {
       const newGlobalBlocks = globalBlocks.filter((block) => block.id !== id);
@@ -84,6 +83,10 @@ export default function GlobalBlocks() {
                       { id, type: 'globalBlock', name, active: true },
                     ]);
                     setPages(pages.map((page) => ({ ...page, active: false })));
+                    setGlobalBlocks(globalBlocks?.map((block) => block.id == id ? { ...block, history: {
+                         currentIndex: 0,
+                          inputs: [block.inputs]
+                    } } : block));
                   }}
                   variant={'ghost'}
                   className="visio-cms-bg-dark-800 visio-cms-text-white visio-cms-invisible group-hover:visio-cms-visible"

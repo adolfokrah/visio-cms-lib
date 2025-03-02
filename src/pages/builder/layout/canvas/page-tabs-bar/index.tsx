@@ -47,11 +47,11 @@ export default function PageTabs() {
       let isAutoSave = false;
       if (type == 'globalBlock') {
         const { initialState, ...block } = globalBlocks.find((block) => block?.id == id) || {};
-        isChanged = !isEqual({ ...block, active: false }, { ...initialState, active: false });
+        isChanged = !isEqual({ ...block, active: false, history: [] }, { ...initialState, active: false, history:[] });
         isAutoSave = 'autoSave' in block && block.autoSave;
       } else {
         const { initialState, ...page } = pages.find((page) => page?.id == id) || {};
-        isChanged = !isEqual({ ...page, active: false }, { ...initialState, active: false });
+        isChanged = !isEqual({ ...page, active: false, history: []}, { ...initialState, active: false, history: [] });  
         isAutoSave = 'autoSave' in page && page.autoSave;
       }
       return { isChanged, isAutoSave };
