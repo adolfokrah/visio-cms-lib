@@ -13,7 +13,7 @@ import ResponsiveBar from './components/responsive-bar';
 import LanguageControls from './components/language-controls';
 import UndoRedoControls from './components/undo-redo-controls';
 import { usePagesState } from '@/lib/states/usePagesState';
-import { isEqual } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { Tab } from '@/lib/states/useTabsState';
 import {
   AlertDialog,
@@ -50,7 +50,16 @@ export default function PageTabs() {
         isChanged = !isEqual({ ...block, active: false, history: [] }, { ...initialState, active: false, history:[] });
         isAutoSave = 'autoSave' in block && block.autoSave;
       } else {
-        const { initialState, ...page } = pages.find((page) => page?.id == id) || {};
+        const { initialState, ...page } = cloneDeep(pages.find((page) => page?.id == id)) || {};
+
+        const mappedPageBlocks = 'blocks' in page && page.blocks?.[page?.activeLanguageLocale || '']
+        ? page.blocks[page?.activeLanguageLocale || ''].map((block) => ({ ...block, isSelected: false }))
+        : [];
+    
+        if (page && 'blocks' in page && page.blocks) {
+          page.blocks[page?.activeLanguageLocale || ''] = mappedPageBlocks;
+        }
+
         isChanged = !isEqual({ ...page, active: false, history: []}, { ...initialState, active: false, history: [] });  
         isAutoSave = 'autoSave' in page && page.autoSave;
       }

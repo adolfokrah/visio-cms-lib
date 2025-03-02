@@ -18,7 +18,20 @@ export const useSave = () => {
   const clonedPage = cloneDeep(activePage);
   const { initialState, ...page } = clonedPage || {};
   const { initialState: initialBlockState, ...globalBlock } = cloneDeep(activeGlobalBlock) || {};
-  const isChanged = activeGlobalBlock ? !isEqual({...initialBlockState, history: []}, {...globalBlock, history: []}) : !isEqual({...page, history: []}, {...initialState, history: []});
+  const mappedPageBlocks = 'blocks' in page && page.blocks?.[activePage?.activeLanguageLocale || '']
+    ? page.blocks[activePage?.activeLanguageLocale || ''].map((block) => ({ ...block, isSelected: false }))
+    : [];
+
+  if (page && 'blocks' in page && page.blocks) {
+    page.blocks[activePage?.activeLanguageLocale || ''] = mappedPageBlocks;
+  }
+  const isChanged = activeGlobalBlock 
+    ? !isEqual({ ...initialBlockState, history: [] }, { ...globalBlock, history: [] }) 
+    : !isEqual(
+        {...page, history: []}, 
+        { ...initialState, history: []}
+      );
+
 
   useEffect(() => {
     if (activePage && !activePage.initialState) {
