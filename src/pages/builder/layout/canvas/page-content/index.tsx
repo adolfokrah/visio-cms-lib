@@ -3,12 +3,14 @@ import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState
 import EmptyPageDroppable from './components/emptyPageDroppable';
 import BlockItem from './components/bock-item';
 import { useExternalData } from '@/lib/hooks/useExternalData';
+import { extractBlockData } from '@/lib/utils';
 
 export default function PageContent() {
   const { activePage } = usePageContent();
   const { blocks } = useProjectConfigurationState();
   const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] || [];
-  const { externalData, loading } = useExternalData(activePage?.slug || '');
+
+  const { externalData, loading } = useExternalData(activePage?.slug || '', pageBlocks);
 
   if (loading) {
     return null;
@@ -22,7 +24,7 @@ export default function PageContent() {
     <div id="visio-cms-page-content" className="visio-cms-h-auto">
       {activePage?.blocks?.[activePage.activeLanguageLocale]?.map((pageBlock, index) => {
         const { blockId } = pageBlock;
-        const block = blocks.find((block) => block.Schema.id === blockId);
+        const block = blocks.find((block) => block.id === blockId);
         if (!block) return null;
         return (
           <BlockItem
@@ -31,7 +33,7 @@ export default function PageContent() {
             index={index}
             pageBlock={pageBlock}
             pageBlocks={pageBlocks}
-            externalData={externalData}
+            externalData={extractBlockData({ ...externalData }, pageBlock.id)}
           />
         );
       })}

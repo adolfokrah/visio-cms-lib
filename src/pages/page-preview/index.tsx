@@ -4,7 +4,7 @@ import { useAuthState } from '@/lib/states/useAuthState';
 import { usePagesState } from '@/lib/states/usePagesState';
 import { useParamState } from '@/lib/states/useParamState';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import { getProjectMode } from '@/lib/utils';
+import { extractBlockData, getProjectMode } from '@/lib/utils';
 import React, { useEffect } from 'react';
 
 export default function PagePreview({ id }: { id: string }) {
@@ -14,7 +14,7 @@ export default function PagePreview({ id }: { id: string }) {
   const isBuilderMode = getProjectMode() === 'BUILDER';
   const page = pages.find((page) => page.id === id);
   const { setParams } = useParamState();
-  const { externalData, loading } = useExternalData(page?.slug || '');
+  const { externalData, loading } = useExternalData(page?.slug || '', page?.blocks ? page.blocks[page.activeLanguageLocale] : []);
   const navigate = (path: string) => {
     window.location.pathname = path;
   };
@@ -44,17 +44,17 @@ export default function PagePreview({ id }: { id: string }) {
 
         const foundGlobalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
         const id = foundGlobalBlock?.blockId || blockId;
-        const block = blocks.find((block) => block.Schema.id == id);
+        const block = blocks.find((block) => block.id == id);
         const inputs = {
-          ...block?.Schema.defaultPropValues,
+          ...block?.defaultPropValues,
           ...pageBlock?.inputs,
           ...foundGlobalBlock?.inputs,
-          externalData,
+          externalData: extractBlockData({ ...externalData }, pageBlock.id),
         };
 
         if (!block) return null;
 
-        return React.createElement(block, {
+        return React.createElement(block.component, {
           key: `${pageBlock.id}-${index}`,
           ...inputs,
           pageBlockId: pageBlock?.id,

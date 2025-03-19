@@ -11,7 +11,7 @@ export default function GlobalEditContent() {
   usePageContent();
   const pinnedTab = tabs.find((tab) => tab.active);
   const foundGlobalBlock = globalBlocks.find((globalBlock) => globalBlock.id === pinnedTab?.id);
-  const block = blocks.find((block) => block.Schema.id === foundGlobalBlock?.blockId);
+  const block = blocks.find((block) => block.id === foundGlobalBlock?.blockId);
   if (!block || !foundGlobalBlock) return null;
 
   return (
@@ -21,9 +21,9 @@ export default function GlobalEditContent() {
         sendMessageToParent({ type: 'remove-selected-repeater', content: '' });
       }}
     >
-      {React.createElement(block, {
-        key: block.Schema.id,
-        ...(foundGlobalBlock.inputs || block.Schema.defaultPropValues),
+      {React.createElement(block.component, {
+        key: block.id,
+        ...(foundGlobalBlock.inputs || block.defaultPropValues),
         pageBlockId: foundGlobalBlock.id,
       })}
     </div>

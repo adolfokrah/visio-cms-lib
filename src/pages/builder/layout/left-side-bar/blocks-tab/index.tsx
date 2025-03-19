@@ -70,13 +70,13 @@ function BlockItem({ BlockComponent }: { BlockComponent: Block<Record<string, an
         e.stopPropagation();
         e.dataTransfer.setData(
           'application/block',
-          JSON.stringify({ blockId: BlockComponent.Schema.id, isGlobal: false }),
+          JSON.stringify({ blockId: BlockComponent.id, isGlobal: false }),
         ); // Set the data to be transferred during drag
       }}
       className="visio-cms-p-3 visio-cms-rounded-md visio-cms-cursor-pointer visio-cms-flex visio-cms-gap-2 hover:visio-cms-bg-dark-700"
     >
       <Box size={14} />
-      {BlockComponent.Schema.name}
+      {BlockComponent.name}
     </div>
   );
 }

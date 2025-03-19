@@ -29,7 +29,7 @@ type NavbarProps = {
   }[];
 };
 
-const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons }) => {
+const Navbar: React.FC<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons }) => {
   const projectMode = getProjectMode();
   const params = getParams<{ locale: string; id: string; details: string }>();
 
@@ -140,7 +140,8 @@ const Navbar: Block<NavbarProps> = ({ links, pageBlockId = '', logo, sideButtons
   );
 };
 
-Navbar.Schema = {
+const NavbarSchema:Block<NavbarProps> = {
+  component: Navbar,
   name: 'Navbar',
   id: 'navbar',
   sideEditingProps: [
@@ -239,4 +240,4 @@ Navbar.Schema = {
   ],
 };
 
-export default Navbar;
+export default NavbarSchema;

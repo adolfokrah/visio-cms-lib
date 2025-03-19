@@ -1,11 +1,17 @@
 import { Block } from '@/lib/types';
 import RichTextEditor from '../exposed-components/rich-text-editor';
 
-const TextBlock: Block<{ content: string; pageBlockId?: string }> = ({ content, pageBlockId = '' }) => {
+type TextBlockProps = {
+  content: string;
+  pageBlockId?: string;
+}
+
+const TextBlock: React.FC<TextBlockProps> = ({ content, pageBlockId = '' }) => {
   return <RichTextEditor propName="content" pageBlockId={pageBlockId} defaultValue={content} />;
 };
 
-TextBlock.Schema = {
+const TextBlockSchema:Block<TextBlockProps> = {
+  component: TextBlock,
   name: 'Text block',
   id: 'text-block',
   sideEditingProps: [],
@@ -14,4 +20,4 @@ TextBlock.Schema = {
   },
 };
 
-export default TextBlock;
+export default TextBlockSchema;

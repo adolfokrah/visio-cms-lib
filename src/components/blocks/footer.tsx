@@ -106,7 +106,7 @@ interface NavigationItem {
   }[];
 }
 
-const Footer: Block<NavigationItem> = ({
+const Footer: React.FC<NavigationItem> = ({
   solutionsHeader,
   supportHeader,
   companyHeader,
@@ -271,7 +271,7 @@ const Footer: Block<NavigationItem> = ({
   );
 };
 
-Footer.Schema = {
+const FooterSchema:Block<NavigationItem> = {
   name: 'Footer',
   id: 'footer',
   sideEditingProps: [],
@@ -303,6 +303,7 @@ Footer.Schema = {
     },
   ],
   group: 'Navigation',
+  component: Footer
 };
 
-export default Footer;
+export default FooterSchema;

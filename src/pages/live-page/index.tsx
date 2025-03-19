@@ -1,6 +1,6 @@
 import { Page } from '@/lib/states/usePagesState';
 import { ProjectConfiguration } from '@/lib/types';
-import { PageData } from '@/lib/utils';
+import { extractBlockData, PageData } from '@/lib/utils';
 import Client from './client';
 
 export default function LivePage({
@@ -33,15 +33,16 @@ export default function LivePage({
       />
       {pageBlocks?.map((block) => {
         const globalBlock = projectConfiguration?.globalBlocks?.find((b) => b.id === block?.globalBlockId);
-        const Block = projectConfiguration.blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
+        const Block = projectConfiguration.blocks.find((b) => b.id === (globalBlock?.blockId || block.blockId));
         if (!Block) return null;
+        const Component = Block.component;
         const inputs = {
-          ...Block.Schema.defaultPropValues,
+          ...Block.defaultPropValues,
           ...block.inputs,
           ...globalBlock?.inputs,
-          externalData: { ...params?.externalData },
+          externalData: extractBlockData({ ...params?.externalData }, block.id) ,
         };
-        return <Block key={block.id} {...inputs} />;
+        return <Component key={block.id} {...inputs} />;
       })}
     </>
   );

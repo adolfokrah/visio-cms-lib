@@ -4,7 +4,7 @@ type VideoSectionProps = {
   src: string;
 };
 
-const VideoSection: Block<VideoSectionProps> = ({ src }) => {
+const VideoSection: React.FC<VideoSectionProps> = ({ src }) => {
   return (
     <iframe
       width="560"
@@ -18,7 +18,8 @@ const VideoSection: Block<VideoSectionProps> = ({ src }) => {
   );
 };
 
-VideoSection.Schema = {
+const VideoSectionSchema:Block<VideoSectionProps>  = {
+  component: VideoSection,
   name: 'video-section',
   id: 'VideoSection',
   sideEditingProps: [
@@ -33,4 +34,4 @@ VideoSection.Schema = {
   },
 };
 
-export default VideoSection;
+export default VideoSectionSchema;

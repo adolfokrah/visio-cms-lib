@@ -18,7 +18,7 @@ export type HeroProps = {
   }[];
 };
 
-const Hero: Block<HeroProps> = ({
+const Hero: React.FC<HeroProps> = ({
   mainHeader,
   announcement,
   subHeading,
@@ -93,7 +93,8 @@ const Hero: Block<HeroProps> = ({
   );
 };
 
-Hero.Schema = {
+const HeroSchema:Block<HeroProps> = {
+  component: Hero,
   name: 'hero',
   id: 'Hero',
   group: 'Content',
@@ -124,4 +125,4 @@ Hero.Schema = {
   ],
 };
 
-export default Hero;
+export default HeroSchema;

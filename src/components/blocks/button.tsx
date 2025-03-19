@@ -1,15 +1,16 @@
 import { Block } from '@/lib/types';
 import { Button } from '../ui/button';
 
-const ButtonBlock: Block = () => {
+const ButtonBlock = () => {
   return <Button>Click me</Button>;
 };
 
-ButtonBlock.Schema = {
+const ButtonBlockSchema:Block = {
   name: 'button',
   id: 'button',
   sideEditingProps: [],
   defaultPropValues: {},
+  component: ButtonBlock
 };
 
-export default ButtonBlock;
+export default ButtonBlockSchema;

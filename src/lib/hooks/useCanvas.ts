@@ -17,9 +17,9 @@ import { useListState } from '../states/useListState';
 import { toast } from 'sonner';
 import lodash from 'lodash';
 export default function useCanvas() {
-  const { pages, setPages } = usePagesState();
+  const {pages, setPages } = usePagesState();
   const activePage = pages.find((page) => page.active);
-  const { blocks, globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
+  const {  blocks, globalBlocks, setGlobalBlocks } = useProjectConfigurationState();
   const { undo, redo } = useUndoAndRedo();
   const [blockToAddAsGlobal, setBlockToAddAsGlobal] = useState<{
     pageBlockId: string;
@@ -43,32 +43,35 @@ export default function useCanvas() {
       const page = activePage;
 
       if (page) {
-        const blocks = page.blocks?.[page.activeLanguageLocale] ?? [];
-        const newBlocks = updateIsSelectedByBlockId(lodash.cloneDeep(blocks), '') as PageBlock[];
+        const pageBlocks = page.blocks?.[page.activeLanguageLocale] ?? [];
+        const newBlocks = updateIsSelectedByBlockId(lodash.cloneDeep(pageBlocks), '') as PageBlock[];
         const globalBlock = globalBlocks.find((block) => block.id === globalBlockId);
         const foundBlock = getSelectedBlock(newBlocks, pageBlockId);
         const copiedBlock = localStorage.getItem('copiedBlock');
         const inputs =
           fromClipBoard && copiedBlock
             ? JSON.parse(copiedBlock)?.inputs
-            : globalBlock?.inputs || block.Schema.defaultPropValues;
+            : globalBlock?.inputs || block.defaultPropValues;
 
-        if (propName && foundBlock) {
+        if (propName && foundBlock) { //block dropped in a slot
           const foundPropInput = getValueByPath(foundBlock?.inputs, propName.split('.')) || [];
-          foundPropInput.splice(position, 0, {
+          const newBlock = {
             id: uuidv4(),
-            blockId: block.Schema.id,
+            blockId: block.id,
             isSelected: true,
             inputs,
             isGlobalBlock,
             globalBlockId,
-          });
+          }
+          foundPropInput.splice(position, 0, newBlock);
           const newInputs = updateValueByPath(foundBlock?.inputs, propName.split('.'), foundPropInput);
           foundBlock.inputs = newInputs;
+
+
         } else {
           newBlocks.splice(position, 0, {
             id: uuidv4(),
-            blockId: block.Schema.id,
+            blockId: block.id,
             isSelected: true,
             inputs,
             isGlobalBlock,
@@ -135,7 +138,7 @@ export default function useCanvas() {
           data.content,
         );
 
-        const block = blocks.find((block) => block.Schema.id === blockId);
+        const block = blocks.find((block) => block.id === blockId);
         if (block) {
           setPageBlocks(
             block,

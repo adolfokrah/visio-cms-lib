@@ -32,8 +32,8 @@ export default function PropertiesTab() {
   const pageBlock = getSelectedBlock(pageBlocks);
   const activeGlobalPinnedBlock = globalBlocks.find((block) => block.id === tabs.find((tab) => tab.active)?.id);
   const selectedBlock = blocks.find(
-    (block) => block.Schema.id === pageBlock?.blockId || block.Schema.id === activeGlobalPinnedBlock?.blockId,
-  )?.Schema;
+    (block) => block.id === pageBlock?.blockId || block.id === activeGlobalPinnedBlock?.blockId,
+  );
 
   function removeNumbersFromString(str: string) {
     return str.replace(/\.\d+/g, '');

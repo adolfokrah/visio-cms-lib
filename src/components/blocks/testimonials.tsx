@@ -20,7 +20,7 @@ type TestimonialProps = {
   date: string;
 };
 
-const Testimonial: Block<TestimonialProps> = ({
+const Testimonial: React.FC<TestimonialProps> = ({
   backgroundColor,
   title,
   backgroundImage,
@@ -96,7 +96,8 @@ function DatePicker({
   );
 }
 
-Testimonial.Schema = {
+const TestimonialSchema: Block<TestimonialProps> = {
+  component: Testimonial,
   name: 'Testimonial Section',
   id: 'testimonial',
   sideEditingProps: [
@@ -196,4 +197,4 @@ Testimonial.Schema = {
   group: 'Testimonials',
 };
 
-export default Testimonial;
+export default TestimonialSchema;

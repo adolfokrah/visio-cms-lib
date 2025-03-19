@@ -19,7 +19,7 @@ const pageData = {
     name: 'John Doe',
   },
 };
-const BlogContent: Block<BlogContentProps> = ({ content, pageBlockId = '', image, title }) => {
+const BlogContent: React.FC<BlogContentProps> = ({ content, pageBlockId = '', image, title }) => {
   return (
     <div className="visio-cms-py-2">
       <div className="visio-cms-mx-auto visio-cms-max-w-2xl">
@@ -66,7 +66,7 @@ const BlogContent: Block<BlogContentProps> = ({ content, pageBlockId = '', image
   );
 };
 
-BlogContent.Schema = {
+const BlogContentSchema:Block<BlogContentProps> = {
   name: 'Blog content',
   id: 'blog-content',
   sideEditingProps: [],
@@ -81,6 +81,7 @@ BlogContent.Schema = {
     title: 'Blog title',
   },
   group: 'Content',
+  component: BlogContent
 };
 
-export default BlogContent;
+export default BlogContentSchema;

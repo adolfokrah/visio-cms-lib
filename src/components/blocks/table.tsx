@@ -10,7 +10,7 @@ type TableProps = {
   backgroundColor: Color;
 };
 
-const Table: Block<TableProps> = ({ rows, pageBlockId = '', backgroundColor }) => {
+const Table: React.FC<TableProps> = ({ rows, pageBlockId = '', backgroundColor }) => {
   return (
     <table style={{ background: backgroundColor?.colorHex }}>
       <List
@@ -53,7 +53,8 @@ const Table: Block<TableProps> = ({ rows, pageBlockId = '', backgroundColor }) =
   );
 };
 
-Table.Schema = {
+const TableSchema:Block<TableProps> = {
+  component: Table,
   id: 'books',
   name: 'Books',
   defaultPropValues: {
@@ -90,4 +91,4 @@ Table.Schema = {
   ],
 };
 
-export default Table;
+export default TableSchema;

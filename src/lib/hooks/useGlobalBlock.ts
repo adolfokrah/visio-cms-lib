@@ -32,7 +32,7 @@ export default function useGlobalBlock(onClose?: () => void) {
     const name = data.name;
     const pageBlocks = activePage?.blocks?.[activePage.activeLanguageLocale] ?? [];
     const pageBlock = getSelectedBlock(pageBlocks, data.pageBlockId);
-    const blockId = blocks.find((block) => block.Schema.id === pageBlock?.blockId)?.Schema.id;
+    const blockId = blocks.find((block) => block.id === pageBlock?.blockId)?.id;
     if (!pageBlock || !blockId) {
       setErrorMessage('Block not found');
       return;

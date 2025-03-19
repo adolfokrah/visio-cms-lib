@@ -4,7 +4,8 @@ import { PageBlock } from '@/lib/exposed-types';
 import usePageContent from '@/lib/hooks/usePageContent';
 import { usePageContentState } from '@/lib/states/usePageContentState';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import { cn, getProjectMode } from '@/lib/utils';
+import { cn, extractBlockData, getProjectMode } from '@/lib/utils';
+import { useExternalData } from '@/lib/hooks/useExternalData';
 
 type SlotProps = {
   defaultValue: PageBlock[];
@@ -29,6 +30,13 @@ export default function Slot({
   const { blocks: liveBlocks, globalBlocks } = usePageContentState();
   const isBuilderMode = getProjectMode() === 'BUILDER';
 
+  const {externalData: extra, loading} = useExternalData('', defaultValue)
+
+
+  if(loading) return null
+
+
+
   if (defaultValue.length === 0 && activePage) {
     return (
       <EmptyPageDroppable
@@ -41,6 +49,8 @@ export default function Slot({
     );
   }
 
+
+
   const blocks = getProjectMode() === 'LIVE' ? liveBlocks : builderBlocks;
 
   const divClass = cn('visio-cms-relative visio-cms-flex', className, {
@@ -51,19 +61,20 @@ export default function Slot({
   if (!isBuilderMode) {
     return (
       <div className={cn(divClass)}>
-        {defaultValue?.map((block) => {
-          const globalBlock = globalBlocks?.find((b) => b.id === block?.globalBlockId);
-          const Block = blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
+        {defaultValue?.map((pageBlock) => {
+          const globalBlock = globalBlocks?.find((b) => b.id === pageBlock?.globalBlockId);
+          const Block = blocks.find((b) => b.id === (globalBlock?.blockId || pageBlock.blockId));
           if (!Block) return null;
+          const Component = Block.component;
           const inputs = {
-            ...Block.Schema.defaultPropValues,
-            ...block.inputs,
+            ...Block.defaultPropValues,
+            ...pageBlock.inputs,
             ...globalBlock?.inputs,
-            externalData: { ...externalData },
+            externalData: extractBlockData({ ...externalData, ...extra }, pageBlock.id),
           };
           return (
-            <div key={block.id}>
-              <Block {...inputs} />
+            <div key={pageBlock.id}>
+              <Component {...inputs} />
             </div>
           );
         })}
@@ -75,7 +86,7 @@ export default function Slot({
     <div className={cn(divClass)}>
       {defaultValue.map((pageBlock, index) => {
         const { blockId } = pageBlock;
-        const block = blocks.find((block) => block.Schema.id === blockId);
+        const block = blocks.find((block) => block.id === blockId);
 
         if (!block) return null;
         return (
@@ -89,7 +100,7 @@ export default function Slot({
             pageBlock={pageBlock}
             pageBlocks={defaultValue}
             allowedBlockIds={allowedBlockIds}
-            externalData={externalData}
+            externalData={ extractBlockData({ ...externalData, ...extra }, pageBlock.id)}
           />
         );
       })}

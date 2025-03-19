@@ -126,9 +126,11 @@ export type BlockSchema<T = Record<string, any>> = {
   defaultPropValues: T;
   sideEditingProps: SideEditingProps<T>[];
   lists?: ListSchema<T>[];
+  component: React.FC<T>;
+  getExternalData?: (props: T) => Promise<Record<string, any>>;
 };
 
-export type ListSchema<T = Record<string, any>> = {
+export type ListSchema<T = Record<string, unknown>> = {
   propName: string;
   label: string;
   defaultValue: any;
@@ -137,7 +139,7 @@ export type ListSchema<T = Record<string, any>> = {
   maxCount?: number;
 };
 
-export type Block<T = Record<string, any>> = React.FC<T> & { Schema: BlockSchema<T> };
+export type Block<T = Record<string, unknown>> = BlockSchema<T>;
 
 export type BlockList = Block | Block<Record<any, any>>;
 

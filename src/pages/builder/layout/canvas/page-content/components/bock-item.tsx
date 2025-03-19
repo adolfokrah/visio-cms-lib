@@ -34,7 +34,7 @@ export default function BlockItem({
   const { globalBlocks } = usePageContentState();
   const globalBlock = globalBlocks.find((block) => block.id === pageBlock?.globalBlockId);
   const { setRepeaterId } = useRepeaterState();
-  const blockInputs = { ...block.Schema.defaultPropValues, ...pageBlock.inputs, ...globalBlock?.inputs };
+  const blockInputs = { ...block.defaultPropValues, ...pageBlock.inputs, ...globalBlock?.inputs };
   if (externalData && Object.keys(externalData).length > 0) {
     blockInputs.externalData = { ...externalData };
   }
@@ -84,8 +84,8 @@ export default function BlockItem({
                 pageBlockId={parentBlockId}
                 allowedBlockIds={allowedBlockIds}
               />
-              {React.createElement(block, {
-                key: block.Schema.id,
+              {React.createElement(block.component, {
+                key: block.id,
                 ...blockInputs,
                 pageBlockId: pageBlock.id,
               })}
@@ -120,7 +120,7 @@ export default function BlockItem({
             sideOffset={pageBlocks.length < 2 ? -40 : 0}
           >
             <BlockAction
-              blockName={globalBlock?.name || block.Schema.name}
+              blockName={globalBlock?.name || block.name}
               index={index}
               pageBlock={{ ...pageBlock, isGlobalBlock: globalBlock != null }}
               pageBlocks={pageBlocks}

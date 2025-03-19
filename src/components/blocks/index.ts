@@ -4,6 +4,7 @@ import ButtonBlock from './button';
 import Footer from './footer';
 import Hero from './hero';
 import Navbar from './navbar';
+import ProductsListSchema from './product-list';
 import Table from './table';
 import Testimonial from './testimonials';
 import TextBlock from './TextBlock';
@@ -19,6 +20,7 @@ const blocks = [
   Table,
   ButtonBlock,
   TextBlock,
+  ProductsListSchema
 ] as unknown as BlockList[];
 
 export default blocks;

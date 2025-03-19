@@ -4,6 +4,7 @@ import {
   BlockList,
   Color,
   Folder,
+  GlobalBlock,
   GroupedBlock,
   ListSchema,
   MediaFile,
@@ -161,7 +162,7 @@ export async function verifyToken({ token }: { token: string }) {
 
 export function groupBlocks(blocks: BlockList[]): { groupName: string; blocks: BlockList[] }[] {
   const grouped: GroupedBlock = blocks.reduce((acc: GroupedBlock, block) => {
-    const group = block.Schema.group || 'Ungrouped'; // Default to 'Ungrouped' if no group is specified
+    const group = block.group || 'Ungrouped'; // Default to 'Ungrouped' if no group is specified
     if (!acc[group]) {
       acc[group] = [];
     }
@@ -665,7 +666,8 @@ export async function getPageBlocks(
 
   if (response.status === 200) {
     const data = await response.json();
-    data.params = { externalData, ...data.params };
+    const blockExternalData = await getBlockExternalData(data.pageBlocks, config.blocks);
+    data.params = { externalData: {...externalData, ...blockExternalData}, ...data.params,  };
     return { ...data, error: null } as PageData;
   } else if (response.status === 404) {
     return { error: 'page not found' } as PageData & { error: string };
@@ -673,6 +675,49 @@ export async function getPageBlocks(
     // Handle other potential status codes if necessary
     return { error: `unexpected error: ${response.status}` } as PageData & { error: string };
   }
+}
+
+export async function getBlockExternalData(pageBlocks: PageBlock[] | GlobalBlock[], configBlocks: ProjectConfig['blocks'], cache: { [key: string]: any } = {}): Promise<{ [key: string]: any }> {
+  const extralData: {
+    blockExternalData: { [key: string]: any };
+    blockId: string;
+    pageBlockId: string;
+  }[] = []
+
+  for (const block of pageBlocks) {
+     const foundBlockData = configBlocks.find((b) => b.id === block.blockId);
+     console.log(configBlocks, 'found blog', pageBlocks)
+     const foundExternalBlockData = extralData.find((b) => b.blockId === block.blockId);
+      if (foundBlockData?.getExternalData) {
+        console.log(configBlocks, pageBlocks )
+        let blockExternalData = {}
+        try {
+           if(cache[block.id]) {
+              blockExternalData = cache[block.id]
+           }else{
+            blockExternalData = foundExternalBlockData ? foundExternalBlockData.blockExternalData  :  await foundBlockData.getExternalData(block.inputs)
+           }
+        } catch (error) {
+          blockExternalData = {}
+        }
+        const d = {
+          pageBlockId: block.id,
+          blockId: block.blockId,
+          blockExternalData
+        }
+        extralData.push(d);
+
+
+      }
+  }
+
+  const data: {[key:string]: any} = {}
+
+  for (const d of extralData) {
+    data[d.pageBlockId] = d.blockExternalData
+  }
+
+  return data
 }
 
 type PageMeta = {
@@ -884,4 +929,40 @@ export function getSelectedBlockPath(obj: any, blockId: string, path: string = '
   }
 
   return null; // If no matching block is found
+}
+
+interface Block {
+  products?: any[];
+  total?: number;
+  [key: string]: any;
+}
+
+interface Data {
+  books?: any[];
+  authorNumber?: number;
+  [key: string]: any;
+}
+
+export function extractBlockData(data: Data, blockId: string): Data & Block {
+
+  // Create a new object to store the result
+  const result: Data & Block = {};
+
+  // Iterate over each key in the original data object
+  for (const key in data) {
+    // Check if the key is a non-block ID key
+    if (!/^\d+$/.test(key)) {
+      // Add the key-value pair to the result object
+      result[key] = data[key];
+    }
+  }
+
+  // Check if the blockId exists in the data
+  if (data[blockId]) {
+    // Merge the block's properties into the result object
+    Object.assign(result, data[blockId]);
+  }
+
+
+  return result;
 }

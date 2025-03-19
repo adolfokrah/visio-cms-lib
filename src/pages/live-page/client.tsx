@@ -30,6 +30,7 @@ export default function Client({
     setParams(params);
     setPages(pages);
     setBlocks(projectConfiguration.blocks);
+
   }, [
     setAllowImageTransformation,
     setGlobalBlocks,

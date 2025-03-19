@@ -33,7 +33,7 @@ export default function LayersTab() {
   return (
     <div className="visio-cms-overflow-auto visio-cms-h-[calc(100vh-100px)] scrollbar-custom  visio-cms-px-1">
       {pageBlocks?.map(({ blockId, id, isSelected, globalBlockId }, index) => {
-        const blockComponent = blocks.find((block) => block.Schema.id === blockId);
+        const blockComponent = blocks.find((block) => block.id === blockId);
         const globalBlock = globalBlocks.find((block) => block.id === globalBlockId);
         if (!blockComponent) return null;
         return (
@@ -55,7 +55,7 @@ export default function LayersTab() {
               )}
             >
               {globalBlock != null ? <BoxSelect size={14} className="visio-cms-text-purple-400" /> : <Box size={14} />}
-              {globalBlock?.name || blockComponent.Schema.name}
+              {globalBlock?.name || blockComponent.name}
             </div>
           </div>
         );

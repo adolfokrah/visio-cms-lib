@@ -4,7 +4,7 @@ import { PageBlock } from '@/lib/exposed-types';
 import usePageContent from '@/lib/hooks/usePageContent';
 import { usePageContentState } from '@/lib/states/usePageContentState';
 import { useProjectConfigurationState } from '@/lib/states/useProjectConfigState';
-import { cn, getProjectMode } from '@/lib/utils';
+import { cn, extractBlockData, getProjectMode } from '@/lib/utils';
 
 type SlotProps = {
   defaultValue: PageBlock[];
@@ -27,7 +27,10 @@ export default function ClientSlot({
   const { activePage } = usePageContent();
   const { blocks: builderBlocks } = useProjectConfigurationState();
   const { blocks: liveBlocks, globalBlocks } = usePageContentState();
+
   const isBuilderMode = getProjectMode() === 'BUILDER';
+
+ 
 
   if (defaultValue.length === 0 && activePage) {
     return (
@@ -55,17 +58,19 @@ export default function ClientSlot({
       <div className={cn(divClass)}>
         {defaultValue?.map((block) => {
           const globalBlock = globalBlocks?.find((b) => b.id === block?.globalBlockId);
-          const Block = blocks.find((b) => b.Schema.id === (globalBlock?.blockId || block.blockId));
+          const Block = blocks.find((b) => b.id === (globalBlock?.blockId || block.blockId));
           if (!Block) return null;
+          const Component = Block.component;
+
           const inputs = {
-            ...Block.Schema.defaultPropValues,
+            ...Block.defaultPropValues,
             ...block.inputs,
             ...globalBlock?.inputs,
-            ...externalData,
+            externalData: extractBlockData({ ...externalData }, block.id),
           };
           return (
             <div key={block.id}>
-              <Block {...inputs} />
+              <Component {...inputs} />
             </div>
           );
         })}
@@ -77,8 +82,7 @@ export default function ClientSlot({
     <div className={cn(divClass)}>
       {defaultValue.map((pageBlock, index) => {
         const { blockId } = pageBlock;
-        const block = blocks.find((block) => block.Schema.id === blockId);
-
+        const block = blocks.find((block) => block.id === blockId);
         if (!block) return null;
         return (
           <BlockItem
@@ -91,6 +95,7 @@ export default function ClientSlot({
             pageBlock={pageBlock}
             pageBlocks={defaultValue}
             allowedBlockIds={allowedBlockIds}
+            externalData={extractBlockData({ ...externalData }, pageBlock.id)}
           />
         );
       })}
